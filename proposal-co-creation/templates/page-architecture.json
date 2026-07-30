@@ -1,0 +1,55 @@
+{
+  "contract_version": "2.0.0",
+  "project_id": "pj_000000000000000000000001",
+  "storyline_thesis": "先建立共同事实并暴露真正矛盾，再提出能够解释矛盾的核心方向，最后证明它如何转化为完整行动。",
+  "sections": [
+    {
+      "section_id": "sec-reframe",
+      "title": "重新理解问题",
+      "cognitive_job": "让客户接受表面需求不足以解释当前困境，必须先改变问题定义。",
+      "transition": "旧解释失效之后，自然需要一个更有解释力的新判断。"
+    },
+    {
+      "section_id": "sec-action",
+      "title": "把判断变成行动",
+      "cognitive_job": "证明核心方向能具体改变策略、内容、资源与执行选择。",
+      "transition": "形成可被承诺和执行的完整方案。"
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "section_id": "sec-reframe",
+      "page_job": "用客户输入与关键事实建立重新定义问题的必要性。",
+      "title_intent": "现有执行困境来自问题解释偏差，而不只是资源不足。",
+      "claim": "当客户输入与实际表现并置时，主要障碍发生在问题解释层。",
+      "content_blocks": [
+        {
+          "block_title": "客户当前判断",
+          "role": "建立共同起点",
+          "content_requirement": "清楚呈现客户目前如何描述问题、希望解决什么，以及这一判断如何影响现有动作。",
+          "suggested_form": "paragraph"
+        },
+        {
+          "block_title": "事实中的矛盾",
+          "role": "证明旧解释不足",
+          "content_requirement": "并置至少两类能够构成矛盾的真实材料，并解释它们为什么不能被原有判断同时解释。",
+          "suggested_form": "comparison"
+        },
+        {
+          "block_title": "对方案的含义",
+          "role": "引出新的问题定义",
+          "content_requirement": "说明如果继续沿用旧解释，后续策略和执行会出现什么偏差。",
+          "suggested_form": "paragraph"
+        }
+      ],
+      "evidence_needs": [
+        "客户对问题的原始表述",
+        "能够显示旧解释与实际表现不一致的事实"
+      ],
+      "chart_brief": null,
+      "layout_direction": null,
+      "transition": "既然旧解释不能成立，下一页需要提出更能解释这些事实的新判断。"
+    }
+  ]
+}

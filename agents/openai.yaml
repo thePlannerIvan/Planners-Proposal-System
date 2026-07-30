@@ -1,0 +1,4 @@
+interface:
+  display_name: "Planners-Proposal-System"
+  short_description: "从方法库、策略共创到逐页提案文案的一体化系统"
+  default_prompt: "使用 $planners-proposal-system 读取项目资料并进入正确的提案工作阶段。"

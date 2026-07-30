@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thePlannerIvan/Planners-Proposal-System/contracts/utility-test.schema.json",
+  "title": "B6 真实使用效用记录",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "status", "brief_id", "insight_test", "expression_test", "risks", "conclusion_zh"],
+  "properties": {
+    "contract_version": {"const": "1.0.0"},
+    "status": {"enum": ["tested", "pending_input"]},
+    "brief_id": {"type": ["string", "null"]},
+    "insight_test": {"type": "object"},
+    "expression_test": {"type": "object"},
+    "risks": {"type": "array", "items": {"enum": ["anchoring", "template_lock_in", "fabricated_claim", "coverage_gap", "retrieval_failure"]}},
+    "conclusion_zh": {"type": "string"}
+  }
+}

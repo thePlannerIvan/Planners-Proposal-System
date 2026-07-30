@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thePlannerIvan/Planners-Proposal-System/contracts/library-run-intent.schema.json",
+  "title": "方法库运行意图",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "route", "active_wiki", "selected_by", "selected_at"],
+  "properties": {
+    "contract_version": {"const": "1.0.0"},
+    "route": {"enum": ["isolated_bootstrap", "upgrade_existing"]},
+    "active_wiki": {"type": ["string", "null"]},
+    "selected_by": {"enum": ["human", "system_no_active_wiki"]},
+    "selected_at": {"type": "string", "minLength": 10, "maxLength": 40},
+    "note": {"type": "string", "maxLength": 1000}
+  }
+}

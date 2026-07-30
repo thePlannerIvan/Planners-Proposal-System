@@ -1,0 +1,22 @@
+{
+  "name": "planners-proposal-system",
+  "version": "5.6.0",
+  "description": "从方法库维护、策略共创到逐页文案与事实审计的一体化提案 Skill",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "test:router": "node evals/router/run.mjs",
+    "test:library": "node evals/library/run.mjs",
+    "test:co-creation": "node evals/co-creation/run.mjs",
+    "test:by-page-copy": "node evals/by-page-copy/run.mjs",
+    "test": "node evals/run-all.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thePlannerIvan/Planners-Proposal-System.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thePlannerIvan/Planners-Proposal-System/issues"
+  },
+  "homepage": "https://github.com/thePlannerIvan/Planners-Proposal-System#readme"
+}

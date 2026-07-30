@@ -1,0 +1,134 @@
+{
+  "contract_version": "1.0.0",
+  "wiki_module_id": "wm_c4529974c03ae469b67fb981",
+  "module_id": "mod_execution-planning",
+  "title": "执行规划与预算节奏",
+  "stable_decision": "模块「执行规划与预算节奏」共收录 2 个可复用方法，经跨案例验证和人工审阅。",
+  "unified_preconditions": [
+    "项目需包含与执行规划与预算节奏相关的分析材料",
+    "分析单元需通过B2分段验证"
+  ],
+  "lens_catalog": [
+    {
+      "lens_id": "lens_execution-planning-001",
+      "name": "年度预算分配与传播节奏规划",
+      "aliases": [],
+      "question": "如何将传播周期划分为清晰阶段，按阶段分配预算，并建立完整的KPI体系？",
+      "use_conditions": [
+        "品牌需要规划年度或项目周期的传播节奏和预算分配",
+        "已有品牌传播目标和总预算"
+      ],
+      "skip_conditions": [
+        "项目只需规划单一季度或单一Campaign的预算"
+      ],
+      "required_inputs": [
+        "项目/年度总预算",
+        "产品线/业务线清单与优先级",
+        "营销节点日历",
+        "各渠道成本和效能基准"
+      ],
+      "analysis_operations": [
+        "划分传播周期为3-5个阶段（如建立期→放大期→沉淀期），定义每阶段的核心目标和策略重心",
+        "按阶段分配预算（金额+占比），形成预算矩阵",
+        "设计预算结构（达人种草/信息流投放/品牌官方内容等各项占比），说明结构设计的策略依据",
+        "设定各阶段的KPI体系和关键里程碑"
+      ],
+      "output_types": [
+        "年度传播预算方案",
+        "KPI体系"
+      ],
+      "failure_modes": [
+        "年度规划过于刚性——需预留应对市场变化的弹性空间"
+      ],
+      "boundaries": [
+        "年度规划过于刚性——需预留应对市场变化的弹性空间"
+      ],
+      "variants": [
+        {
+          "variant_id": "lens_f8b22eb0072c378ed8f3bc6de545f938",
+          "name": "执行规划与预算节奏：如何围绕品牌核心场景设计可规模化复制的线下活动体系，将品牌理念落地为消费者可参与...",
+          "use_conditions": [
+            "品牌需要进行该模块相关的策略分析",
+            "有可获取的相关数据和消费者洞察"
+          ],
+          "analysis_operations": [
+            "围绕品牌核心场景（如城市行走）设计多种活动变体（看展/逛街/城市漫游/夜间行走等）",
+            "为每种活动设计标准化的操作流程（路线设计/合作方/KOL/参与者激励）",
+            "建立活动品牌化体系（命名/视觉/社交话题）便于传播",
+            "设计活动参与者到门店购买的转化机制"
+          ],
+          "source_module_instance_ids": [
+            "mi_f8b22eb0072c378ed8f3bc6d"
+          ]
+        }
+      ],
+      "source_module_instance_ids": [
+        "mi_2c3d2a67c7c4ed7f62de2683",
+        "mi_56a2fc583a32edaf959ab5e7",
+        "mi_7014b01e4b4edc56a9a588a5",
+        "mi_72d4a79fa36d08c91b6d2165"
+      ]
+    },
+    {
+      "lens_id": "lens_execution-planning-002",
+      "name": "年度内容日历与主题规划",
+      "aliases": [],
+      "question": "如何规划年度Campaign主题和月度Always-on内容节奏，使品牌传播既有爆发力又有日常渗透力？",
+      "use_conditions": [
+        "品牌需要全年内容规划而非单次执行"
+      ],
+      "skip_conditions": [
+        "品牌只需短期（1-3个月）的内容规划"
+      ],
+      "required_inputs": [
+        "年度品牌/传播主题",
+        "产品上市节奏",
+        "节日/节点日历",
+        "目标人群内容偏好"
+      ],
+      "analysis_operations": [
+        "确定季度Campaign主题，确保与品牌年度核心主题保持一致",
+        "按月度规划Always-on内容的主题方向和发布节奏",
+        "将各内容类型匹配到合适的目标人群和发布平台",
+        "整合为年度内容日历总览，标注Campaign爆发期和日常维护期的资源分配"
+      ],
+      "output_types": [
+        "年度内容日历",
+        "Campaign×Always-on节奏规划"
+      ],
+      "failure_modes": [
+        "传播节奏与产品上市节奏不同步"
+      ],
+      "boundaries": [
+        "传播节奏与产品上市节奏不同步"
+      ],
+      "variants": [],
+      "source_module_instance_ids": [
+        "mi_4b9d93b4b3c2a42d628aa0ef"
+      ]
+    }
+  ],
+  "recipes": [],
+  "page_expression_options": [],
+  "source_module_instance_ids": [
+    "mi_2c3d2a67c7c4ed7f62de2683",
+    "mi_4b9d93b4b3c2a42d628aa0ef",
+    "mi_56a2fc583a32edaf959ab5e7",
+    "mi_7014b01e4b4edc56a9a588a5",
+    "mi_72d4a79fa36d08c91b6d2165",
+    "mi_f8b22eb0072c378ed8f3bc6d"
+  ],
+  "wiki_version": "6.0.0",
+  "status": "active",
+  "approval": {
+    "human_approved": true,
+    "approved_at": "2026-07-27T12:18:11.789Z",
+    "reviewer_note": "B4审阅：1项变更批准"
+  },
+  "deletion": {
+    "deleted": false,
+    "reason": "",
+    "replaced_by": null
+  },
+  "created_from_hash": "368578159a43a86435e66fff60df542ca4f952aae24fa9be91e27b968920b1ee"
+}

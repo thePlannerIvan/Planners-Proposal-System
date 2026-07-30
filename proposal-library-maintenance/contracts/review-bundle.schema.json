@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thePlannerIvan/Planners-Proposal-System/contracts/review-bundle.schema.json",
+  "title": "B4 完整审阅包",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "route", "source_sha256", "items"],
+  "properties": {
+    "contract_version": {"const": "1.0.0"},
+    "route": {"enum": ["isolated_bootstrap", "upgrade_existing"]},
+    "source_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item_id", "method_kind", "source_id", "source_module_id", "module_meta", "proposal", "recommended_action", "allowed_decisions", "merge_targets", "module_targets", "comparison"],
+        "properties": {
+          "item_id": {"type": "string", "pattern": "^review_[a-f0-9]{24}$"},
+          "method_kind": {"enum": ["lens", "recipe"]},
+          "source_id": {"type": "string", "minLength": 1},
+          "source_module_id": {"type": ["string", "null"]},
+          "module_meta": {"type": ["object", "null"]},
+          "proposal": {"type": "object"},
+          "recommended_action": {"type": ["string", "null"]},
+          "allowed_decisions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+          "merge_targets": {"type": "array", "items": {"type": "object"}},
+          "module_targets": {"type": "array", "items": {"type": "object"}},
+          "comparison": {"type": ["object", "null"]}
+        }
+      }
+    }
+  }
+}

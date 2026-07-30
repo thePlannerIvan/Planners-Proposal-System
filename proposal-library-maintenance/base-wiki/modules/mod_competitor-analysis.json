@@ -1,0 +1,356 @@
+{
+  "contract_version": "1.0.0",
+  "wiki_module_id": "wm_2c018779507f8472d6c91196",
+  "module_id": "mod_competitor-analysis",
+  "title": "竞品分析",
+  "stable_decision": "模块「竞品分析」新增 1 个可复用方法，源自 2 个案例（斯凯奇跑步户外策略、斯凯奇健步文化策略）的跨案例验证。",
+  "unified_preconditions": [
+    "项目需包含与竞品相关的市场、产品、传播数据",
+    "竞品选择需基于明确的标准（市场份额/策略相关性/品类代表性等）"
+  ],
+  "lens_catalog": [
+    {
+      "lens_id": "lens_mod_competitor-analysis-d8e026bf",
+      "name": "竞品沟通策略谱系分析法",
+      "aliases": [],
+      "question": "如何在品类竞争格局复杂的情况下，按沟通策略维度系统分析竞品定位差异，识别品牌可占据的沟通空白？",
+      "use_conditions": [
+        "品类中竞品数量较多且定位分化明显",
+        "需要从竞品的沟通内容（而非仅产品功能）层面发现差异化机会",
+        "有竞品在主要传播渠道（社媒/广告/PR）的沟通素材可获取",
+        "品类竞争已从产品功能层面延伸到消费者生活方式层面"
+      ],
+      "skip_conditions": [
+        "品类竞争仍以产品功能参数为主，沟通策略差异不明显",
+        "缺乏竞品沟通内容数据",
+        "项目不需要沟通层面的差异化定位"
+      ],
+      "required_inputs": [
+        "主要竞品的品牌定位和传播主张",
+        "竞品在主要渠道的沟通内容和形式分析",
+        "竞品的目标人群和场景定位",
+        "品类沟通趋势变化数据",
+        "消费者对竞品沟通的感知和反应数据（如可用）"
+      ],
+      "analysis_operations": [
+        "确定竞争谱系维度：根据品类特征选择竞品分析的沟通维度框架（如场景维度：专业/城市/轻/运动；或情感维度：功能/时尚/极限/休闲等）",
+        "竞品定位映射：将每个竞品按选定维度放置在沟通图谱中，标记各竞品的核心沟通主张和关键词汇",
+        "密集区与空白区识别：分析图谱中各区域的竞品密集度，识别沟通高度同质化的竞争红海和尚未被充分占位的沟通蓝海",
+        "品牌差异化定位推导：基于空白区分析，结合品牌自身资产和能力，推导可占领的独特沟通位置",
+        "标杆案例拆解：收集跨品类中成功占据该沟通位置的品牌案例，提取可借鉴的沟通方法和执行路径"
+      ],
+      "output_types": [
+        "竞品沟通策略谱系图",
+        "竞争密集/空白区域分析",
+        "品牌差异化沟通定位方案",
+        "跨品类借鉴案例分析"
+      ],
+      "failure_modes": [
+        "谱系维度选择不当导致竞品分布无法区分差异化",
+        "将多个品类不兼容的沟通方式简单叠加",
+        "空白区无人占据可能是需求不存在而非机会"
+      ],
+      "boundaries": [
+        "该方法适用于沟通策略层面的差异化分析，不适用于技术/价格等维度的竞争分析",
+        "需结合品牌自身资产验证空白区的可触达性"
+      ],
+      "variants": [
+        {
+          "variant_id": "lens_2ee3e4a1aeaa918951ede46ee50e6473",
+          "name": "竞品分析：如何通过文化洞察和消费者痛点分析，建立品牌差异化沟通策略的完整证据链？...",
+          "use_conditions": [
+            "品牌需要进行该模块相关的策略分析",
+            "有可获取的相关数据和消费者洞察"
+          ],
+          "analysis_operations": [
+            "从宏观社会情绪中提炼与品类相关的文化张力",
+            "收集消费者在品类使用中的具体痛点（按身体部位/使用场景分类）",
+            "将文化洞察和消费者痛点关联到品牌产品利益",
+            "建立「文化洞察→消费者痛点→品牌利益」的三段式论证结构",
+            "用消费者原话和数据支撑每个论证环节"
+          ],
+          "source_module_instance_ids": [
+            "mi_2ee3e4a1aeaa918951ede46e"
+          ]
+        }
+      ],
+      "source_module_instance_ids": [
+        "mi_69d55bedf168b3113504a815",
+        "mi_b08ef66d0bee84b42e67efdb"
+      ],
+      "evidence": "源自SKECHERS户外策略（按专业户外/城市户外/轻户外/运动户外四类分析竞品定位+按功能/时尚/极限/休闲场景分析沟通策略）和GOWALK健步策略（竞技品牌vs Lululemon案例对比）的融合方法",
+      "abstraction_self_check": {
+        "passed": true,
+        "checks": {
+          "brand_terms_remaining": false,
+          "steps_not_actionable": false,
+          "conditions_case_specific": false,
+          "skip_data_driven": false,
+          "steps_too_generic": false,
+          "project_fill_value": false
+        },
+        "issues": [],
+        "needs_human_review": false,
+        "abstraction_difficulty": "medium"
+      },
+      "page_structure": [
+        {
+          "page": 1,
+          "title": "沟通谱系框架",
+          "content": "定义分析的沟通维度框架（如场景/调性/目标人群等维度），解释为什么选择这些维度以及各维度的判断标准。框架应能涵盖主要竞品的差异化位置"
+        },
+        {
+          "page": 2,
+          "title": "竞品沟通定位分布",
+          "content": "按选定维度将各竞品定位在谱系图上，标注其核心沟通主张和关键词。品牌自身也用异色标注，形成直观的'我们在哪，竞品在哪'的对比"
+        },
+        {
+          "page": 3,
+          "title": "密集区与空白区判断",
+          "content": "分析谱系中各区域的竞品密度，识别竞争红海和可能的空白机会。对每个空白区判断是'真实机会'还是'无人占据有其原因'，附判断依据"
+        },
+        {
+          "page": 4,
+          "title": "品牌差异化方向",
+          "content": "基于机会区分析，结合品牌自身资产和能力，提出1-2个可选择的差异化沟通定位方向。每个方向含定位表述、支撑理由和风险提示"
+        }
+      ]
+    },
+    {
+      "lens_id": "lens_portfolio-positioning-map",
+      "name": "多品牌组合竞争定位地图",
+      "aliases": [
+        "竞争定位地图",
+        "品牌组合定位"
+      ],
+      "question": "如何在一张图上展示多品牌在竞争空间中的位置并为每个品牌分配组合角色？",
+      "use_conditions": [
+        "多品牌同品类运营",
+        "品类有升级分化趋势"
+      ],
+      "skip_conditions": [
+        "单品牌不需要",
+        "价格与需求维度不适用"
+      ],
+      "required_inputs": [
+        "各品牌定位信息",
+        "品类竞争格局",
+        "消费升级趋势"
+      ],
+      "analysis_operations": [
+        "构建价格×需求层次坐标系",
+        "标示各品牌和竞品位置",
+        "结合趋势标注策略方向",
+        "检测内部蚕食风险"
+      ],
+      "page_structure": [
+        {
+          "page": 1,
+          "title": "定位坐标系全貌",
+          "content": "构建竞争坐标系展示各品牌位置\n回答：各品牌在竞争空间中的位置？\n证据：品牌定位；竞品数据；趋势",
+          "purpose": "构建竞争坐标系展示各品牌位置",
+          "question": "各品牌在竞争空间中的位置？",
+          "required_evidence": [
+            "品牌定位",
+            "竞品数据",
+            "趋势"
+          ],
+          "information_relationship": "hierarchical",
+          "connects_from": "从品类分析承接",
+          "connects_to": "为独立分析提供边界",
+          "common_misuse": "不只展示现状不标注方向"
+        },
+        {
+          "page": 2,
+          "title": "组合角色与区隔",
+          "content": "明确各品牌角色和区隔策略\n回答：各自角色？如何避免内耗？\n证据：定位地图；各品牌优势",
+          "purpose": "明确各品牌角色和区隔策略",
+          "question": "各自角色？如何避免内耗？",
+          "required_evidence": [
+            "定位地图",
+            "各品牌优势"
+          ],
+          "information_relationship": "comparative",
+          "connects_from": "从地图读取区间",
+          "connects_to": "为独立分析提供约束",
+          "common_misuse": "不给所有品牌同样角色"
+        }
+      ],
+      "output_types": [
+        "竞争定位地图",
+        "组合角色描述",
+        "蚕食风险检测",
+        "调整建议"
+      ],
+      "failure_modes": [
+        "地图太复杂无法指导",
+        "角色与实际定位不一致",
+        "仅描述现状无方向"
+      ],
+      "boundaries": [
+        "只提供框架不替代品牌深度审计",
+        "坐标维度需根据品类调整"
+      ],
+      "variants": [],
+      "source_module_instance_ids": [
+        "mi_ac5831c881c6301fb74b6e5d"
+      ],
+      "abstraction_self_check": {
+        "passed": true,
+        "checks": {},
+        "issues": [
+          "坐标维度选择需根据品类特征调整"
+        ],
+        "needs_human_review": false,
+        "abstraction_difficulty": "medium"
+      }
+    },
+    {
+      "lens_id": "lens_sub-brand-profile-template",
+      "name": "子品牌结构化分析模板",
+      "aliases": [
+        "品牌四页分析",
+        "子品牌档案"
+      ],
+      "question": "如何用统一框架完成单个子品牌的竞争定位分析？",
+      "use_conditions": [
+        "需要在品牌组合中分析单个子品牌",
+        "有竞品数据和消费者反馈"
+      ],
+      "skip_conditions": [
+        "品牌无需详细竞争分析"
+      ],
+      "required_inputs": [
+        "品牌的定位区间",
+        "细分赛道竞品数据",
+        "消费者反馈/评论",
+        "产品RTB资料"
+      ],
+      "analysis_operations": [
+        "竞品对标：识别核心竞品及其定位/产品线/优势/RTB",
+        "Brand's Best Self：确定品牌独特竞争优势和差异化角度",
+        "TA与核心需求：描画目标消费者画像，提炼未被满足的需求",
+        "品牌主张：综合竞品、优势和需求，输出品牌主张和产品支撑"
+      ],
+      "page_structure": [
+        {
+          "page": 1,
+          "title": "竞品对标分析",
+          "content": "系统梳理核心竞品的定位/产品/优势\n回答：谁在竞争？他们怎么做的？\n证据：竞品定位；产品线；RTB",
+          "purpose": "系统梳理核心竞品的定位/产品/优势",
+          "question": "谁在竞争？他们怎么做的？",
+          "required_evidence": [
+            "竞品定位",
+            "产品线",
+            "RTB"
+          ],
+          "information_relationship": "comparative",
+          "connects_from": "从定位地图获得品牌区间",
+          "connects_to": "输出竞品格局为后续差异化依据",
+          "common_misuse": "不要只列竞品信息没有分析判断"
+        },
+        {
+          "page": 2,
+          "title": "品牌核心优势定义",
+          "content": "确定品牌的独特竞争优势和差异化角度\n回答：我们的独特优势是什么？从哪里切入？\n证据：竞品分析；品牌能力",
+          "purpose": "确定品牌的独特竞争优势和差异化角度",
+          "question": "我们的独特优势是什么？从哪里切入？",
+          "required_evidence": [
+            "竞品分析",
+            "品牌能力"
+          ],
+          "information_relationship": "causal",
+          "connects_from": "承接竞品对标发现机会",
+          "connects_to": "输出优势为TA分析提供定位",
+          "common_misuse": "优势必须有支撑证据"
+        },
+        {
+          "page": 3,
+          "title": "TA画像与需求",
+          "content": "描画目标消费者并提炼未被满足的需求\n回答：目标是谁？他们真正需要什么？\n证据：消费者反馈；行为数据",
+          "purpose": "描画目标消费者并提炼未被满足的需求",
+          "question": "目标是谁？他们真正需要什么？",
+          "required_evidence": [
+            "消费者反馈",
+            "行为数据"
+          ],
+          "information_relationship": "sequential",
+          "connects_from": "从品牌优势定位TA群体",
+          "connects_to": "画像和需求输入品牌主张",
+          "common_misuse": "不只做人口统计描述"
+        },
+        {
+          "page": 4,
+          "title": "品牌主张",
+          "content": "综合前三页输出品牌主张和产品支撑\n回答：品牌承诺什么？凭什么相信？\n证据：竞品分析；优势；TA需求；RTB",
+          "purpose": "综合前三页输出品牌主张和产品支撑",
+          "question": "品牌承诺什么？凭什么相信？",
+          "required_evidence": [
+            "竞品分析",
+            "优势",
+            "TA需求",
+            "RTB"
+          ],
+          "information_relationship": "causal",
+          "connects_from": "汇总前三页结论",
+          "connects_to": "输出进入跨品牌对比汇总",
+          "common_misuse": "主张需要有产品支撑"
+        }
+      ],
+      "output_types": [
+        "竞品对标分析",
+        "品牌优势陈述",
+        "TA画像与需求",
+        "品牌主张"
+      ],
+      "failure_modes": [
+        "竞品选择偏差导致对标失真",
+        "Best Self缺乏数据支撑",
+        "品牌主张与产品实际脱节"
+      ],
+      "boundaries": [
+        "仅作分析不做执行规划",
+        "模板输出需与其他品牌对比验证区隔"
+      ],
+      "variants": [],
+      "source_module_instance_ids": [
+        "mi_5ba4774928db79336a883b11",
+        "mi_1aa00a23b22e94e4177a81ef",
+        "mi_c5e5740c68ebe4e14fc0b010",
+        "mi_ca399ead1c2f365989b4dcf0"
+      ],
+      "abstraction_self_check": {
+        "passed": true,
+        "checks": {},
+        "issues": [],
+        "needs_human_review": false,
+        "abstraction_difficulty": "medium"
+      }
+    }
+  ],
+  "recipes": [],
+  "page_expression_options": [],
+  "source_module_instance_ids": [
+    "mi_69d55bedf168b3113504a815",
+    "mi_b08ef66d0bee84b42e67efdb",
+    "mi_2ee3e4a1aeaa918951ede46e",
+    "mi_ac5831c881c6301fb74b6e5d",
+    "mi_5ba4774928db79336a883b11",
+    "mi_1aa00a23b22e94e4177a81ef",
+    "mi_c5e5740c68ebe4e14fc0b010",
+    "mi_ca399ead1c2f365989b4dcf0"
+  ],
+  "wiki_version": "7.0.1",
+  "status": "active",
+  "approval": {
+    "human_approved": true,
+    "reviewer_note": "B4：Ivan；6 项获准执行",
+    "approved_at": "2026-07-28T02:41:21.881Z"
+  },
+  "deletion": {
+    "deleted": false,
+    "reason": "",
+    "replaced_by": null
+  },
+  "created_from_hash": "c9de6027f701d21421ab041fda814ce30263c1acede1602297f68ff30dea0e5a"
+}

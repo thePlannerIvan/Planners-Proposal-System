@@ -1,0 +1,170 @@
+{
+  "contract_version": "1.0.0",
+  "wiki_module_id": "wm_d43dc2436abf075e2fe6927e",
+  "module_id": "mod_market-category",
+  "title": "市场与品类分析",
+  "stable_decision": "模块「市场与品类分析」新增 1 个可复用方法，源自斯凯奇跑步户外策略案例。",
+  "unified_preconditions": [
+    "项目需包含品类市场趋势数据和消费者行为变化数据",
+    "需要从宏观趋势到品类机会的完整推导链路"
+  ],
+  "lens_catalog": [
+    {
+      "lens_id": "lens_mod_market-category-38133da8",
+      "name": "社会趋势驱动的品类机会识别",
+      "aliases": [],
+      "question": "当消费者生活方式的宏观趋势发生变化时，如何将社会性趋势信号转化为具体的品类增长机会判断？",
+      "use_conditions": [
+        "品类增长动力主要受消费者生活方式变迁驱动",
+        "有可获取的社会趋势报告、消费者行为变化数据",
+        "需要从宏观趋势出发推导品类进入或扩张决策"
+      ],
+      "skip_conditions": [
+        "品类受政策、技术等非消费者趋势的刚性因素驱动为主",
+        "缺乏可靠的消费者趋势数据源"
+      ],
+      "required_inputs": [
+        "社会/消费趋势研究报告（如平台年度趋势预测）",
+        "品类市场规模和增长率历史数据",
+        "消费者生活方式变化数据（如运动参与率、健康意识等）",
+        "品牌在品类中的现有份额和渗透率",
+        "竞品在品类中的布局动态"
+      ],
+      "analysis_operations": [
+        "捕捉社会趋势信号：监测主要平台和趋势报告，识别与品类相关的消费者生活方式变化方向（如压力释放需求/轻量化运动/健康关注等）",
+        "量化趋势影响：将趋势信号与品类增长数据关联，计算趋势相关的品类增长空间和可持续性",
+        "竞争格局评估：分析品类中已有竞品数量和定位，判断品类竞争阶段（蓝海/红海/分化期），评估进入门槛",
+        "品牌契合度分析：将品类机会与品牌核心能力和发展战略匹配，判断品类扩张的品牌合理性",
+        "定位策略推导：基于以上分析，输出品牌在品类中的进入定位和首发策略建议"
+      ],
+      "output_types": [
+        "社会趋势→品类机会推导报告",
+        "品类竞争阶段判断与进入可行性分析",
+        "品牌品类定位策略"
+      ],
+      "failure_modes": [
+        "趋势信号过度解读，将短期热点误判为长期趋势",
+        "品类机会判断忽略了供给侧能力和渠道可行性",
+        "品牌能力与品类需求不匹配"
+      ],
+      "boundaries": [
+        "该方法适用于消费品领域，特别是与消费者生活方式直接相关的品类",
+        "趋势分析需区分短期热点和结构性趋势"
+      ],
+      "variants": [
+        {
+          "variant_id": "lens_c9a51594f9bf569deedc054d1df18ea5",
+          "name": "市场与品类分析：如何分析一个尚未成熟的品类的市场机会和品牌进入空间？...",
+          "use_conditions": [
+            "品牌需要进行该模块相关的策略分析",
+            "有可获取的相关数据和消费者洞察"
+          ],
+          "analysis_operations": [
+            "分析品类的市场规模/增速/集中度指标",
+            "与相邻成熟品类（如成人服饰）进行对标比较",
+            "识别品类尚未成熟的结构性原因（消费者/渠道/品牌供给）",
+            "判断品类的未来发展方向和品牌可占据的定位"
+          ],
+          "source_module_instance_ids": [
+            "mi_c9a51594f9bf569deedc054d"
+          ]
+        },
+        {
+          "variant_id": "lens_2970a69b8fb3a2fcffa42ed06a3ea75e",
+          "name": "市场与品类分析：如何从社会文化趋势（如轻运动经济）出发，识别品类的结构性增长机会？...",
+          "use_conditions": [
+            "品牌需要进行该模块相关的策略分析",
+            "有可获取的相关数据和消费者洞察"
+          ],
+          "analysis_operations": [
+            "捕捉社会文化宏观趋势信号（减压/轻量健身/运动社交化）",
+            "分析趋势对品类市场规模和结构的影响",
+            "识别趋势驱动下品类内新旧赛道的更替",
+            "定义品牌在趋势中的角色和机会空间"
+          ],
+          "source_module_instance_ids": [
+            "mi_2970a69b8fb3a2fcffa42ed0"
+          ]
+        },
+        {
+          "variant_id": "lens_4f952406faa80102a7377532cca60375",
+          "name": "市场与品类分析：如何结合品类市场数据和消费者参与趋势，评估品牌进入一个新品类的可行性和差异化赛道...",
+          "use_conditions": [
+            "品牌需要进行该模块相关的策略分析",
+            "有可获取的相关数据和消费者洞察"
+          ],
+          "analysis_operations": [
+            "分析目标品类的市场规模/增速/竞争集中度",
+            "绘制品类竞争格局图谱（按品牌定位维度）",
+            "分析消费者参与趋势数据（年龄/场景/动机/结伴方式）",
+            "从数据中识别品牌可进入的差异化空间"
+          ],
+          "source_module_instance_ids": [
+            "mi_4f952406faa80102a7377532"
+          ]
+        }
+      ],
+      "source_module_instance_ids": [
+        "mi_4d7bcde94cba50d23f93cf59"
+      ],
+      "evidence": "源自SKECHERS跑步户外策略：从'舒适解压成为社会新风潮'和'轻运动新经济'趋势出发，分析户外鞋服市场19.5%/15%增长率，得出斯凯奇应从'城市户外'方向切入户外品类的结论",
+      "abstraction_self_check": {
+        "passed": true,
+        "checks": {
+          "brand_terms_remaining": false,
+          "steps_not_actionable": false,
+          "conditions_case_specific": false,
+          "skip_data_driven": false,
+          "steps_too_generic": false,
+          "project_fill_value": false
+        },
+        "issues": [],
+        "needs_human_review": false,
+        "abstraction_difficulty": "medium"
+      },
+      "page_structure": [
+        {
+          "page": 1,
+          "title": "趋势信号扫描",
+          "content": "概述影响品类的消费者生活方式趋势变化。可以从平台报告、社会观察、消费数据等任何可用来源提炼，核心是回答'消费者在发生什么变化，这对品类意味着什么'"
+        },
+        {
+          "page": 2,
+          "title": "品类机会评估",
+          "content": "将趋势信号转化为品类层面的机会判断：品类规模与增长空间、竞争格局（谁在、多拥挤）、消费者需求缺口。不需要精确数字，趋势判断+定性评估即可"
+        },
+        {
+          "page": 3,
+          "title": "品牌适配性判断",
+          "content": "评估品牌进入该品类的可行性：品牌核心能力是否匹配、消费者认知是否有基础、渠道供应链是否支持。从战略一致性角度判断是'应该做'还是'能做'还是'两可'"
+        },
+        {
+          "page": 4,
+          "title": "进入策略与节奏",
+          "content": "如果结论是进入，输出品类定位建议和分阶段推进节奏（试水→验证→放量）。如果结论是不进入或不急于进入，说明判断理由和需要等待的信号条件"
+        }
+      ]
+    }
+  ],
+  "recipes": [],
+  "page_expression_options": [],
+  "source_module_instance_ids": [
+    "mi_4d7bcde94cba50d23f93cf59",
+    "mi_c9a51594f9bf569deedc054d",
+    "mi_2970a69b8fb3a2fcffa42ed0",
+    "mi_4f952406faa80102a7377532"
+  ],
+  "wiki_version": "7.0.0",
+  "status": "active",
+  "approval": {
+    "human_approved": true,
+    "approved_at": "2026-07-27T12:18:11.789Z",
+    "reviewer_note": "B4审阅：3项变更批准"
+  },
+  "deletion": {
+    "deleted": false,
+    "reason": "",
+    "replaced_by": null
+  },
+  "created_from_hash": "c00667b17fc9aa5ab138c2e49217bf3c4d53f5814e5146cd5e2122e12c135d4c"
+}

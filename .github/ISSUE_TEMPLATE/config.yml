@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: mailto:Lawyif@163.com
+    about: 请通过邮件私下报告安全问题
+  - name: Commercial support
+    url: https://demyth.info
+    about: 私有部署、企业适配和商业授权

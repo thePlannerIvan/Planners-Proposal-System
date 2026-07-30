@@ -1,0 +1,9 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","title":"Semantic Unit Plan","type":"object","additionalProperties":false,
+  "required":["contract_version","source_record_id","source_sha256","page_count","units","discarded_pages"],
+  "properties":{
+    "contract_version":{"const":"1.0.0"},"source_record_id":{"type":"string","pattern":"^cr_[a-f0-9]{24}$"},"source_sha256":{"type":"string","pattern":"^[a-f0-9]{64}$"},"page_count":{"type":"integer","minimum":1},
+    "units":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["unit_id","page_ids","page_numbers","purpose_zh","boundary_reason_zh"],"properties":{"unit_id":{"type":"string","pattern":"^su_[a-f0-9]{24}$"},"page_ids":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","pattern":"^pg_[a-f0-9]{24}$"}},"page_numbers":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"integer","minimum":1}},"purpose_zh":{"type":"string","minLength":1,"maxLength":500},"boundary_reason_zh":{"type":"string","minLength":1,"maxLength":1200},"support_page_ids":{"type":"array","uniqueItems":true,"items":{"type":"string","pattern":"^pg_[a-f0-9]{24}$"}}}}},
+    "discarded_pages":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["page_id","page_number","reason"],"properties":{"page_id":{"type":"string","pattern":"^pg_[a-f0-9]{24}$"},"page_number":{"type":"integer","minimum":1},"reason":{"enum":["cover_or_contents","team_or_credentials","contact_or_legal","blank_or_transition","pure_visual_no_logic","irrelevant"]}}}}
+  }
+}

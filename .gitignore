@@ -1,0 +1,34 @@
+# Internal engineering surfaces: never publish
+_internal/
+
+# Project and customer artifacts
+.proposal-work/
+deliverable/
+output/
+outputs/
+dist/
+build/
+_output/
+proposal-skill-system-vnext-tests/
+planners-proposal-system-tests/
+
+# Secrets and local configuration
+.env
+.env.*
+*.pem
+*.key
+*.token
+
+# Runtime and caches
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+*.log
+.DS_Store
+
+# Generated client files
+*.pptx
+*.keynote

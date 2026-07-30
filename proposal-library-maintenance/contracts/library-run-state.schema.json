@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thePlannerIvan/Planners-Proposal-System/contracts/library-run-state.schema.json",
+  "title": "方法库 v4 正式运行状态",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "intent", "route", "active_wiki", "status", "current_stage", "stages", "installation_permitted", "review", "blockers"],
+  "properties": {
+    "contract_version": {"const": "4.0.0"},
+    "intent": {"enum": ["bootstrap", "upgrade"]},
+    "route": {"enum": ["isolated_bootstrap", "upgrade_existing"]},
+    "active_wiki": {"type": ["string", "null"]},
+    "status": {"enum": ["ready", "in_progress", "waiting_for_human", "blocked", "complete"]},
+    "current_stage": {"enum": ["B1", "B2", "B3a", "B3b", "B3c", "B3d", "B4", "B5", "B6"]},
+    "stages": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status", "receipt"],
+        "properties": {
+          "status": {"enum": ["pending", "passed", "blocked"]},
+          "receipt": {"type": ["object", "null"]}
+        }
+      }
+    },
+    "installation_permitted": {"type": "boolean"},
+    "review": {"type": ["object", "null"]},
+    "blockers": {"type": "array", "items": {"type": "string"}}
+  }
+}

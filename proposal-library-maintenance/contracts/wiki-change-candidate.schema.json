@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thePlannerIvan/Planners-Proposal-System/contracts/wiki-change-candidate.schema.json",
+  "title": "B3d 已有 Wiki 对照结果",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "curation_sha256", "active_wiki_index_sha256", "changes"],
+  "properties": {
+    "contract_version": {"const": "2.0.0"},
+    "curation_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "active_wiki_index_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item_id", "method_kind", "source_id", "source_module_id", "recommended_action", "target_module_id", "target_id", "matched_ids", "comparison", "semantic_delta_zh", "rationale_zh", "confidence", "needs_human_review"],
+        "properties": {
+          "item_id": {"type": "string", "pattern": "^align_[a-f0-9]{24}$"},
+          "method_kind": {"enum": ["lens", "recipe"]},
+          "source_id": {"type": "string", "minLength": 1},
+          "source_module_id": {"type": ["string", "null"], "pattern": "^mod_[a-z0-9][a-z0-9-]{2,63}$"},
+          "recommended_action": {"enum": ["new", "merge", "variant", "revision", "add_source", "reroute", "no_change"]},
+          "target_module_id": {"type": ["string", "null"], "pattern": "^mod_[a-z0-9][a-z0-9-]{2,63}$"},
+          "target_id": {"type": ["string", "null"]},
+          "matched_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "comparison": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["question_zh", "operations_zh", "inputs_outputs_zh", "boundaries_zh", "page_structure_zh"],
+            "properties": {
+              "question_zh": {"type": "string", "minLength": 1},
+              "operations_zh": {"type": "string", "minLength": 1},
+              "inputs_outputs_zh": {"type": "string", "minLength": 1},
+              "boundaries_zh": {"type": "string", "minLength": 1},
+              "page_structure_zh": {"type": "string", "minLength": 1}
+            }
+          },
+          "semantic_delta_zh": {"type": "string", "minLength": 1},
+          "rationale_zh": {"type": "string", "minLength": 1},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "needs_human_review": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

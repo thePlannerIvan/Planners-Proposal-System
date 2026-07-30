@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thePlannerIvan/Planners-Proposal-System/contracts/library-curation.schema.json",
+  "title": "B3c 本轮内部归并后的冻结方法库",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "source_record_ids", "modules", "recipes", "rejected_recipes", "terminal_results", "curation_notes_zh"],
+  "properties": {
+    "contract_version": {"const": "2.0.0"},
+    "source_record_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^cr_[a-f0-9]{24}$"}},
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["module_id", "title_zh", "stable_decision_zh", "unified_preconditions_zh", "lenses"],
+        "properties": {
+          "module_id": {"type": "string", "pattern": "^mod_[a-z0-9][a-z0-9-]{2,63}$"},
+          "title_zh": {"type": "string", "minLength": 1},
+          "stable_decision_zh": {"type": "string", "minLength": 1},
+          "unified_preconditions_zh": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "lenses": {"type": "array", "items": {"$ref": "#/$defs/lens"}}
+        }
+      }
+    },
+    "recipes": {"type": "array", "items": {"$ref": "#/$defs/recipe"}},
+    "rejected_recipes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_recipe_ids", "reason_zh"],
+        "properties": {
+          "source_recipe_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^rcp_[a-f0-9]{24}$"}},
+          "reason_zh": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "terminal_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_result_ids", "terminal_state", "reason_zh"],
+        "properties": {
+          "source_result_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^le_[a-f0-9]{24}$"}},
+          "terminal_state": {"enum": ["case_only", "insufficient_evidence", "no_lens", "rejected_duplicate", "rejected_weak_abstraction"]},
+          "reason_zh": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "curation_notes_zh": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page", "title_zh", "purpose_zh", "question_zh", "evidence_needed_zh", "information_relationship", "from_previous_zh", "to_next_zh", "misuse_warning_zh"],
+      "properties": {
+        "page": {"type": "integer", "minimum": 1},
+        "title_zh": {"type": "string", "minLength": 1},
+        "purpose_zh": {"type": "string", "minLength": 1},
+        "question_zh": {"type": "string", "minLength": 1},
+        "evidence_needed_zh": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "information_relationship": {"enum": ["parallel", "sequential", "hierarchical", "comparative", "causal"]},
+        "from_previous_zh": {"type": "string", "minLength": 1},
+        "to_next_zh": {"type": "string", "minLength": 1},
+        "misuse_warning_zh": {"type": "string", "minLength": 1}
+      }
+    },
+    "lens": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lens_id", "source_result_ids", "source_unit_ids", "source_page_ids", "name_zh", "question_zh", "aliases_zh", "use_conditions_zh", "skip_conditions_zh", "required_inputs_zh", "operations_zh", "output_types_zh", "failure_modes_zh", "boundaries_zh", "page_structure", "page_structure_check", "abstraction_check"],
+      "properties": {
+        "lens_id": {"type": "string", "pattern": "^lens_[a-z0-9][a-z0-9-]{2,63}$"},
+        "source_result_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^le_[a-f0-9]{24}$"}},
+        "source_unit_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^su_[a-f0-9]{24}$"}},
+        "source_page_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^pg_[a-f0-9]{24}$"}},
+        "name_zh": {"type": "string", "minLength": 1},
+        "question_zh": {"type": "string", "minLength": 1},
+        "aliases_zh": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "use_conditions_zh": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "skip_conditions_zh": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "required_inputs_zh": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "operations_zh": {"type": "array", "minItems": 3, "maxItems": 7, "items": {"type": "string", "minLength": 1}},
+        "output_types_zh": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "failure_modes_zh": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "boundaries_zh": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "page_structure": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/page"}},
+        "page_structure_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["uncovered_operations_zh", "uncovered_outputs_zh", "coverage_rationale_zh"],
+          "properties": {
+            "uncovered_operations_zh": {"type": "array", "maxItems": 0, "items": {"type": "string"}},
+            "uncovered_outputs_zh": {"type": "array", "maxItems": 0, "items": {"type": "string"}},
+            "coverage_rationale_zh": {"type": "string", "minLength": 1}
+          }
+        },
+        "abstraction_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["passed", "project_residue", "issues_zh"],
+          "properties": {
+            "passed": {"const": true},
+            "project_residue": {"type": "array", "maxItems": 0},
+            "issues_zh": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recipe_id", "name_zh", "purpose_zh", "source_recipe_ids", "source_unit_ids", "required_lens_ids", "optional_lens_ids", "steps", "use_conditions_zh", "skip_conditions_zh"],
+      "properties": {
+        "recipe_id": {"type": "string", "pattern": "^recipe_[a-z0-9][a-z0-9-]{2,63}$"},
+        "name_zh": {"type": "string", "minLength": 1},
+        "purpose_zh": {"type": "string", "minLength": 1},
+        "source_recipe_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^rcp_[a-f0-9]{24}$"}},
+        "source_unit_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^su_[a-f0-9]{24}$"}},
+        "required_lens_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^lens_[a-z0-9][a-z0-9-]{2,63}$"}},
+        "optional_lens_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^lens_[a-z0-9][a-z0-9-]{2,63}$"}},
+        "steps": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["step_index", "lens_id", "role_zh", "input_zh", "output_zh", "dependency_zh"],
+            "properties": {
+              "step_index": {"type": "integer", "minimum": 1},
+              "lens_id": {"type": "string", "pattern": "^lens_[a-z0-9][a-z0-9-]{2,63}$"},
+              "role_zh": {"type": "string", "minLength": 1},
+              "input_zh": {"type": "array", "items": {"type": "string", "minLength": 1}},
+              "output_zh": {"type": "array", "items": {"type": "string", "minLength": 1}},
+              "dependency_zh": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "use_conditions_zh": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "skip_conditions_zh": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

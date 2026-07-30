@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "如果本项目帮助了你的工作，请引用这个仓库。"
+title: "Planners-Proposal-System"
+type: software
+authors:
+  - name: "阿祖不看 TVC"
+email: "Lawyif@163.com"
+url: "https://demyth.info"
+repository-code: "https://github.com/thePlannerIvan/Planners-Proposal-System"
+license: "AGPL-3.0-only"
+version: "5.6.0"
+date-released: "2026-07-30"

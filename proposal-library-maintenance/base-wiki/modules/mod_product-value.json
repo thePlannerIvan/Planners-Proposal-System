@@ -1,0 +1,456 @@
+{
+  "contract_version": "1.0.0",
+  "wiki_module_id": "wm_bb651f9f827c5a9d004bff52",
+  "module_id": "mod_product-value",
+  "title": "产品价值与卖点提炼",
+  "stable_decision": "模块「产品价值与卖点提炼」共收录 6 个可复用方法，经跨案例验证和人工审阅。",
+  "unified_preconditions": [
+    "项目需包含与产品价值与卖点提炼相关的分析材料",
+    "分析单元需通过B2分段验证"
+  ],
+  "lens_catalog": [
+    {
+      "lens_id": "lens_product-value-001",
+      "name": "分消费者群体的产品偏好与产品线规划",
+      "aliases": [],
+      "question": "如何基于不同消费者群体（存量用户vs增量用户）的产品偏好差异，针对性地规划产品线以实现增长？",
+      "use_conditions": [
+        "需要基于消费者群体差异来规划产品线和定位",
+        "已有不同消费者群体的产品偏好调研数据"
+      ],
+      "skip_conditions": [
+        "产品线已确定且不需要调整"
+      ],
+      "required_inputs": [
+        "存量用户vs增量用户产品偏好调研",
+        "品类相关消费趋势数据",
+        "消费者概念测试反馈",
+        "竞品产品线对标信息"
+      ],
+      "analysis_operations": [
+        "划分存量用户和增量用户，对比两组在产品形态/功能/价位上的偏好差异",
+        "建立品类的完整定位频谱（从基础功能型到高端享受型），标注品牌当前位置和可扩展方向",
+        "针对增量用户（轻度/流失/潜在）设计降低使用门槛、强化品类价值的产品策略",
+        "针对存量用户按需求亚型设计差异化产品线，规划从入门到高端的完整产品线布局"
+      ],
+      "output_types": [
+        "产品线规划方案"
+      ],
+      "failure_modes": [
+        "消费者声称的需求与实际购买行为可能不一致——需交叉验证"
+      ],
+      "boundaries": [
+        "消费者声称的需求与实际购买行为可能不一致——需交叉验证"
+      ],
+      "variants": [
+        {
+          "variant_id": "lens_0808120780007c4c80475a60f387a1c3",
+          "name": "产品价值与卖点提炼：如何为每个运动场景建立消费者痛点×产品科技×功能利益的系统映射？...",
+          "use_conditions": [
+            "品牌需要进行该模块相关的策略分析",
+            "有可获取的相关数据和消费者洞察"
+          ],
+          "analysis_operations": [
+            "列出产品适用的全部运动场景（跑步/骑行/健身房/居家健身操/跳绳/日常跑跳）",
+            "为每个场景识别3-5个消费者具体痛点",
+            "将品牌产品科技逐项对应到痛点解决方案",
+            "为每个解决方案提炼可传播的功能利益点",
+            "将全部映射整合为产品核心主张"
+          ],
+          "source_module_instance_ids": [
+            "mi_0808120780007c4c80475a60"
+          ]
+        }
+      ],
+      "source_module_instance_ids": [
+        "mi_61c19e630a427f8833651d2f"
+      ]
+    },
+    {
+      "lens_id": "lens_product-value-002",
+      "name": "产品竞争力评估与差异化价值定位",
+      "aliases": [],
+      "question": "如何系统评估产品的核心优势和弱点，通过与竞品对比提炼差异化卖点，并经过消费者概念验证后确定品牌价值定位？",
+      "use_conditions": [
+        "需要系统评估产品在竞争中的优劣势并提炼差异化价值",
+        "已有消费者对产品的反馈数据和竞品对标信息"
+      ],
+      "skip_conditions": [
+        "产品尚未上市且无消费者反馈数据"
+      ],
+      "required_inputs": [
+        "消费者定性调研/产品反馈",
+        "产品配置信息",
+        "竞品产品参数和卖点信息",
+        "消费者概念测试反馈数据"
+      ],
+      "analysis_operations": [
+        "从功能/设计/体验/价格/品牌五个维度识别产品的核心优势，诚实评估消费者感知中的关键弱点",
+        "识别品类中所有产品都具备的通用优势（table stakes），与品牌专属优势区分开",
+        "定义消费者最关注的竞争维度，在关键维度上逐项对比本品与竞品",
+        "基于竞争优势提炼可量化或可演示的核心卖点，转化为消费者语言进行概念验证",
+        "基于优劣势分析和概念验证结果，定义产品在品牌体系中的角色和差异化价值主张"
+      ],
+      "output_types": [
+        "产品竞争力评估报告",
+        "差异化价值定位方案"
+      ],
+      "failure_modes": [
+        "功能清单罗列不等于价值提炼——需区分Must Have基础功能和差异化价值点"
+      ],
+      "boundaries": [
+        "功能清单罗列不等于价值提炼——需区分Must Have基础功能和差异化价值点"
+      ],
+      "variants": [
+        {
+          "variant_id": "variant_product-value-002-v1",
+          "name": "SWOT驱动版（产品优劣势→品牌角色）",
+          "use_conditions": [
+            "产品新上市或重新定位，需要先建立基础优劣势认识"
+          ],
+          "analysis_operations": [
+            "从功能/设计/体验/价格/品牌五个维度识别产品的核心优势，诚实评估消费者感知中的关键弱点"
+          ],
+          "source_module_instance_ids": [
+            "mi_5e6f94400105a7ed98a4f0b8"
+          ]
+        },
+        {
+          "variant_id": "variant_product-value-002-v2",
+          "name": "竞品对比驱动版（参数对比→卖点提炼→概念验证）",
+          "use_conditions": [
+            "已有清晰的竞争维度定义，需要量化的竞品对比"
+          ],
+          "analysis_operations": [
+            "从功能/设计/体验/价格/品牌五个维度识别产品的核心优势，诚实评估消费者感知中的关键弱点"
+          ],
+          "source_module_instance_ids": [
+            "mi_5e6f94400105a7ed98a4f0b8"
+          ]
+        },
+        {
+          "variant_id": "variant_product-value-002-v3",
+          "name": "品牌定位驱动版（卖点→品牌定位支撑）",
+          "use_conditions": [
+            "品牌定位已明确，需确保产品卖点一致支撑品牌定位"
+          ],
+          "analysis_operations": [
+            "从功能/设计/体验/价格/品牌五个维度识别产品的核心优势，诚实评估消费者感知中的关键弱点"
+          ],
+          "source_module_instance_ids": [
+            "mi_5e6f94400105a7ed98a4f0b8"
+          ]
+        }
+      ],
+      "source_module_instance_ids": [
+        "mi_5e6f94400105a7ed98a4f0b8",
+        "mi_9aa72029653749e0715c81dc",
+        "mi_c3d03e511660b647cfabe9ff"
+      ]
+    },
+    {
+      "lens_id": "lens_product-value-004",
+      "name": "核心技术跨产品线差异化价值定位",
+      "aliases": [],
+      "question": "当品牌拥有可跨产品线使用的核心技术/专利时，如何将该技术在不同产品线上做差异化的价值表达，避免产品线间的自我竞争？",
+      "use_conditions": [
+        "品牌拥有可跨多个产品线共享的核心技术或专利"
+      ],
+      "skip_conditions": [
+        "品牌没有跨产品线共享的核心技术"
+      ],
+      "required_inputs": [
+        "核心技术/专利的技术参数",
+        "消费需求金字塔模型",
+        "各产品线的技术规格和定位"
+      ],
+      "analysis_operations": [
+        "将核心技术拆解为技术参数和消费者可感知的价值维度",
+        "分析技术价值在消费者需求金字塔上的定位：从基础功能需求到高端差异化需求的跨级提升路径",
+        "为不同定位的产品线设计差异化的技术价值表达，确保各产品线间不互相侵蚀",
+        "按使用场景和人群需求区隔不同产品线，确保每个产品线有独立的价值主张和受众"
+      ],
+      "output_types": [
+        "跨产品线技术价值定位方案"
+      ],
+      "failure_modes": [
+        "技术参数直接当作用户利益——需将技术能力转化为消费者可感知的价值"
+      ],
+      "boundaries": [
+        "技术参数直接当作用户利益——需将技术能力转化为消费者可感知的价值"
+      ],
+      "variants": [],
+      "source_module_instance_ids": [
+        "mi_39cde1f89441ad7071a7b2b3"
+      ]
+    },
+    {
+      "lens_id": "lens_product-value-006",
+      "name": "价格段×消费需求×卖点的三层映射分析",
+      "aliases": [],
+      "question": "如何通过价格段图谱、消费需求金字塔和卖点差异化三层映射，在品类中找到品牌产品的最佳价格-价值定位？",
+      "use_conditions": [
+        "品牌面临多价格段竞争，需要系统理解价格-价值-卖点的对应关系",
+        "已有竞品和自有产品的价格段数据、卖点信息"
+      ],
+      "skip_conditions": [
+        "品类中价格不是主要竞争维度"
+      ],
+      "required_inputs": [
+        "竞品价格段和卖点信息",
+        "消费者需求金字塔模型",
+        "各产品线技术规格和定价"
+      ],
+      "analysis_operations": [
+        "绘制品类价格段分布图，标注各段的竞品密度和代表品牌",
+        "构建从基础功能需求到高端差异化需求的消费者需求金字塔",
+        "将各品牌的卖点映射到价格×需求矩阵上，识别卖点重叠区和差异化空白区",
+        "基于三层映射，为品牌自身产品线在矩阵中进行定位，提出定价区间和差异化卖点方向"
+      ],
+      "output_types": [
+        "价格-需求-卖点映射矩阵",
+        "品牌定价与卖点策略建议"
+      ],
+      "failure_modes": [
+        "只画矩阵不解释坐标和证据——每个定位必须由消费者认知数据支撑"
+      ],
+      "boundaries": [
+        "只画矩阵不解释坐标和证据——每个定位必须由消费者认知数据支撑"
+      ],
+      "variants": [
+        {
+          "variant_id": "variant_product-value-006-v1",
+          "name": "自有产品定位版",
+          "use_conditions": [
+            "为品牌自身产品线寻找最佳价格-价值定位"
+          ],
+          "analysis_operations": [
+            "绘制品类价格段分布图，标注各段的竞品密度和代表品牌"
+          ],
+          "source_module_instance_ids": [
+            "mi_882095bfdf2df048b60de295"
+          ]
+        },
+        {
+          "variant_id": "variant_product-value-006-v2",
+          "name": "竞品定位扫描版",
+          "use_conditions": [
+            "扫描竞品在价格-价值矩阵中的分布，寻找定位空白"
+          ],
+          "analysis_operations": [
+            "绘制品类价格段分布图，标注各段的竞品密度和代表品牌"
+          ],
+          "source_module_instance_ids": [
+            "mi_882095bfdf2df048b60de295"
+          ]
+        }
+      ],
+      "source_module_instance_ids": [
+        "mi_882095bfdf2df048b60de295"
+      ]
+    },
+    {
+      "lens_id": "lens_product-value-007",
+      "name": "核心成分/原料功效图谱→产品痛点→产品概念开发",
+      "aliases": [],
+      "question": "如何建立从核心成分/原料功效出发，经过消费者使用痛点诊断，最终开发出针对不同人群的产品概念的完整流程？",
+      "use_conditions": [
+        "产品开发中，核心成分/原料/技术是产品价值的核心载体"
+      ],
+      "skip_conditions": [
+        "产品价值不依赖核心成分/原料"
+      ],
+      "required_inputs": [
+        "核心成分/原料的功效与配方组合数据",
+        "社交媒体/电商平台消费者痛点数据",
+        "消费者人群需求信息"
+      ],
+      "analysis_operations": [
+        "步骤一：构建核心成分与不同配方组合的功效匹配关系图谱",
+        "步骤二：分析消费者使用痛点、舆情数据和销售趋势，识别产品改进方向",
+        "步骤三：将不同人群的需求与配方能力匹配，按人群设计差异化产品概念并分类输出"
+      ],
+      "output_types": [
+        "产品概念开发方案"
+      ],
+      "failure_modes": [
+        "成分功效→产品概念的直接转化忽略了消费者接受度——需在概念阶段加入消费者验证"
+      ],
+      "boundaries": [
+        "成分功效→产品概念的直接转化忽略了消费者接受度——需在概念阶段加入消费者验证"
+      ],
+      "variants": [],
+      "source_module_instance_ids": [
+        "mi_24dbd4437c70f184fcc64885"
+      ]
+    },
+    {
+      "lens_id": "lens_product-value-010",
+      "name": "产品功能-风格双维度价值评估框架",
+      "aliases": [],
+      "question": "当产品价值由功能属性和风格/设计属性共同决定时，如何构建功能×风格双维度需求矩阵，按消费者偏好标注优先级，并跨品类提炼可复用的评估框架？",
+      "use_conditions": [
+        "产品品类中功能属性和风格/设计属性对消费者决策都重要",
+        "已有消费者FGD或访谈数据"
+      ],
+      "skip_conditions": [
+        "品类中风格/设计属性对购买决策不重要"
+      ],
+      "required_inputs": [
+        "消费者FGD/访谈数据（含功能需求和风格偏好原话）",
+        "产品品类定义",
+        "功能属性评估维度",
+        "风格属性评估维度"
+      ],
+      "analysis_operations": [
+        "按产品品类分别提取功能属性清单（如防护/舒适/便携/耐用等及其子维度）和风格/设计属性清单（如版型/颜色/材质/设计元素等）",
+        "在每个维度下整理消费者偏好，按Must Have（基础门槛）和Better to Have（差异化加分）两级标注优先级",
+        "构建功能×风格双维度的完整需求矩阵，在每个交叉点上标注消费者证据和优先级",
+        "识别跨品类的通用评估模式（可复用框架）与品类特定的差异化调整"
+      ],
+      "output_types": [
+        "产品功能-风格需求矩阵",
+        "消费者偏好优先级排序",
+        "品类设计指导方向"
+      ],
+      "failure_modes": [
+        "功能清单罗列不等于价值提炼——需区分基础门槛功能和差异化加分功能"
+      ],
+      "boundaries": [
+        "功能清单罗列不等于价值提炼——需区分基础门槛功能和差异化加分功能"
+      ],
+      "variants": [
+        {
+          "variant_id": "variant_product-value-010-v1",
+          "name": "基础版（品类特定需求梳理）",
+          "use_conditions": [
+            "首次在某品类应用该框架"
+          ],
+          "analysis_operations": [
+            "按产品品类分别提取功能属性清单（如防护/舒适/便携/耐用等及其子维度）和风格/设计属性清单（如版型/颜色/材质/设计元素等）"
+          ],
+          "source_module_instance_ids": [
+            "mi_3748a96a4df8dcd464696442"
+          ]
+        },
+        {
+          "variant_id": "variant_product-value-010-v2",
+          "name": "优先级版（Must Have vs Better to Have）",
+          "use_conditions": [
+            "资源受限，需要功能优先级取舍"
+          ],
+          "analysis_operations": [
+            "按产品品类分别提取功能属性清单（如防护/舒适/便携/耐用等及其子维度）和风格/设计属性清单（如版型/颜色/材质/设计元素等）"
+          ],
+          "source_module_instance_ids": [
+            "mi_3748a96a4df8dcd464696442"
+          ]
+        },
+        {
+          "variant_id": "variant_product-value-010-v3",
+          "name": "跨品类通用版",
+          "use_conditions": [
+            "需要在多个品类上统一应用评估框架"
+          ],
+          "analysis_operations": [
+            "按产品品类分别提取功能属性清单（如防护/舒适/便携/耐用等及其子维度）和风格/设计属性清单（如版型/颜色/材质/设计元素等）"
+          ],
+          "source_module_instance_ids": [
+            "mi_3748a96a4df8dcd464696442"
+          ]
+        }
+      ],
+      "source_module_instance_ids": [
+        "mi_3748a96a4df8dcd464696442"
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "recipe_id": "recipe_product-value-001",
+      "name": "不同消费群体产品偏好与产品线规划",
+      "purpose": "该Recipe由2个分析单元组成顺序流程。第1步：shenghetang-0107案例的「要获得新增量，各消费群体心仪的产品形态是什么？」；第2步：shenghetang-0107案例的「针对轻度消费者和中重度消费者，如何规划产品线和定位实现增长？」",
+      "required_lens_ids": [
+        "lens_product-value-001"
+      ],
+      "optional_lens_ids": [],
+      "sequence": [
+        "lens_product-value-001"
+      ],
+      "use_conditions": [
+        "适用场景的输入数据需完整"
+      ],
+      "skip_conditions": [
+        "两步骤的衔接逻辑为案例内推导，尚未在其他案例中验证连贯性"
+      ],
+      "source_module_instance_ids": [
+        "mi_61c19e630a427f8833651d2f"
+      ]
+    },
+    {
+      "recipe_id": "recipe_product-value-007",
+      "name": "核心原料功效图谱→产品痛点诊断→产品概念开发",
+      "purpose": "该Recipe由3个分析单元组成顺序流程。第1步：movefree-category-round1案例的「软骨素作为核心成分，与不同配方组合能产生什么功效？」；第2步：movefree-category-round1案例的「现有氨糖软骨素产品有哪些使用痛点和改进机会？」；第3步：movefree-category-round1案例的「针对不同人群的机会，具体可以开发什么产品？」",
+      "required_lens_ids": [
+        "lens_product-value-007"
+      ],
+      "optional_lens_ids": [],
+      "sequence": [
+        "lens_product-value-007"
+      ],
+      "use_conditions": [
+        "适用场景的输入数据需完整"
+      ],
+      "skip_conditions": [
+        "各步骤的衔接为案例内推导，概念方案缺少消费者验证数据"
+      ],
+      "source_module_instance_ids": [
+        "mi_24dbd4437c70f184fcc64885"
+      ]
+    },
+    {
+      "recipe_id": "recipe_product-value-010",
+      "name": "Burton户外产品功能-风格价值评估框架",
+      "purpose": "该Recipe整合了Burton消费者调研中三类产品的价值评估方法：① 皮肤衣：按功能属性（防晒/可收纳/超轻/降温/柔软）和风格属性（版型修身/颜色季节适配）两个维度建立产品价值评估矩阵；② 卫衣：按滑雪场景功能需求（干燥保暖/防水/高领防寒）和风格需求（视觉冲击力设计要素）交叉评估；③ 时尚群体消费驱动力：识别风格+酷+高价格的关键购买驱动力，梳理从功能需求到时尚需求的延伸路径（basic plus原则、mix & match方法）。三个子方法共同构成户外产品的功能-风格双维度价值评估框架，核心程序一致：功能属性清单→风格属性清单→消费者偏好优先级标注→需求交叉矩阵。",
+      "required_lens_ids": [
+        "lens_product-value-010"
+      ],
+      "optional_lens_ids": [],
+      "sequence": [
+        "lens_product-value-010"
+      ],
+      "use_conditions": [
+        "适用场景的输入数据需完整"
+      ],
+      "skip_conditions": [],
+      "source_module_instance_ids": [
+        "mi_61c19e630a427f8833651d2f"
+      ]
+    }
+  ],
+  "page_expression_options": [],
+  "source_module_instance_ids": [
+    "mi_24dbd4437c70f184fcc64885",
+    "mi_3748a96a4df8dcd464696442",
+    "mi_39cde1f89441ad7071a7b2b3",
+    "mi_5e6f94400105a7ed98a4f0b8",
+    "mi_61c19e630a427f8833651d2f",
+    "mi_882095bfdf2df048b60de295",
+    "mi_9aa72029653749e0715c81dc",
+    "mi_c3d03e511660b647cfabe9ff",
+    "mi_0808120780007c4c80475a60"
+  ],
+  "wiki_version": "6.0.0",
+  "status": "active",
+  "approval": {
+    "human_approved": true,
+    "approved_at": "2026-07-27T12:18:11.789Z",
+    "reviewer_note": "B4审阅：1项变更批准"
+  },
+  "deletion": {
+    "deleted": false,
+    "reason": "",
+    "replaced_by": null
+  },
+  "created_from_hash": "16fa44c9c83cac58eea0da755f8ec2282d66267050c1a57a2c1585cb31055c0b"
+}

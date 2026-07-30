@@ -1,0 +1,205 @@
+{
+  "contract_version": "1.0.0",
+  "wiki_module_id": "wm_45a672b208c92891162dfb23",
+  "module_id": "mod_content-execution",
+  "title": "内容策略与执行",
+  "stable_decision": "模块「内容策略与执行」共收录 3 个可复用方法，经跨案例验证和人工审阅。",
+  "unified_preconditions": [
+    "项目需包含与内容策略与执行相关的分析材料",
+    "分析单元需通过B2分段验证"
+  ],
+  "lens_catalog": [
+    {
+      "lens_id": "lens_content-execution-001",
+      "name": "市场分层×品牌支柱×人群细分的内容策略框架",
+      "aliases": [],
+      "question": "如何构建一个三维内容策略框架：按市场成熟度分层、将品牌支柱转化为内容IP体系、针对细分人群设计分层沟通？",
+      "use_conditions": [
+        "品牌面向多个不同成熟度的市场",
+        "品牌有明确的品牌支柱可转化为内容IP"
+      ],
+      "skip_conditions": [
+        "品牌只面向单一市场且消费者同质化高"
+      ],
+      "required_inputs": [
+        "品牌支柱定义",
+        "市场分层数据",
+        "目标消费者细分画像"
+      ],
+      "analysis_operations": [
+        "按市场成熟度分层，为每层设定内容策略侧重点（认知建立/价值传递/生活方式/社群归属等）",
+        "将品牌支柱转化为内容IP体系：每个支柱对应一种内容IP类型（产品价值IP/使用场景IP/人物故事IP），定义各IP的角色、内容形式和更新节奏",
+        "针对每类细分人群设计三层递进沟通模型：WHY层（动机理解与共鸣）→WHAT层（利益认知与信任）→HOW层（实践方式与行动指引）",
+        "将三个维度整合为统一的内容策略矩阵"
+      ],
+      "output_types": [
+        "三维内容策略矩阵"
+      ],
+      "failure_modes": [
+        "内容策略脱离品牌定位——内容创意可能偏离品牌调性"
+      ],
+      "boundaries": [
+        "内容策略脱离品牌定位——内容创意可能偏离品牌调性"
+      ],
+      "variants": [
+        {
+          "variant_id": "lens_59ddc23010da1ace6a4b0981af04885a",
+          "name": "内容策略与执行：如何将品牌传播主题转化为多形式、多场景的内容创意矩阵？...",
+          "use_conditions": [
+            "品牌需要进行该模块相关的策略分析",
+            "有可获取的相关数据和消费者洞察"
+          ],
+          "analysis_operations": [
+            "围绕核心传播主题开发多种内容形式（纪录片/播客/社交话题/线下活动）",
+            "将品牌理念融入消费者的日常场景（居家/办公/通勤/周末）",
+            "为每种内容形式设计可独立传播又可互相引流的连接点",
+            "建立「主题→形式→场景→渠道」的内容分发矩阵"
+          ],
+          "source_module_instance_ids": [
+            "mi_59ddc23010da1ace6a4b0981"
+          ]
+        },
+        {
+          "variant_id": "lens_e734aba28ea66d02fc5fd71d09acdddc",
+          "name": "内容策略与执行：如何为品牌建立DOs/DON'Ts风格指南，确保品牌在视觉和内容层面的一致性？...",
+          "use_conditions": [
+            "品牌需要进行该模块相关的策略分析",
+            "有可获取的相关数据和消费者洞察"
+          ],
+          "analysis_operations": [
+            "定义品牌核心风格原则（如孩子气vs小大人/简约聪颖vs纷繁杂乱）",
+            "为每个原则提供正面和反面的视觉参考",
+            "将风格原则与品牌价值观和消费者洞察关联",
+            "建立可操作的品牌内容审核checklist"
+          ],
+          "source_module_instance_ids": [
+            "mi_e734aba28ea66d02fc5fd71d"
+          ]
+        }
+      ],
+      "source_module_instance_ids": [
+        "mi_f4b17c4ff1b339bee297cf15"
+      ]
+    },
+    {
+      "lens_id": "lens_content-execution-002",
+      "name": "品牌人格化定位的消费者体验落地设计",
+      "aliases": [],
+      "question": "当品牌有一个人格化定位（如亲切、有趣、专业等），如何将其拆解为可操作的消费者体验设计策略？",
+      "use_conditions": [
+        "品牌有一个清晰的人格化定位或品牌人格描述",
+        "品牌与消费者的接触涉及线下体验或社区互动"
+      ],
+      "skip_conditions": [
+        "品牌与消费者的接触仅限于线上内容触达"
+      ],
+      "required_inputs": [
+        "品牌人格化定位描述",
+        "本地文化元素与社区洞察调研",
+        "消费者接触点地图"
+      ],
+      "analysis_operations": [
+        "将品牌人格化定位拆解为2-3个可操作的体验维度（如唤起熟悉感、营造互动温暖、增加趣味参与等）",
+        "针对每个体验维度设计具体策略：选择什么在地化元素/设计什么互动机制/策划什么形式的活动",
+        "绘制全触点消费者体验地图，将体验设计分配到各触点",
+        "评估各项体验设计的实施优先级和所需资源"
+      ],
+      "output_types": [
+        "消费者体验设计方案"
+      ],
+      "failure_modes": [
+        "体验设计脱离品牌人格——活动创意与品牌定位脱节"
+      ],
+      "boundaries": [
+        "体验设计脱离品牌人格——活动创意与品牌定位脱节"
+      ],
+      "variants": [],
+      "source_module_instance_ids": [
+        "mi_6d133c22e2434fce31b58989"
+      ]
+    },
+    {
+      "lens_id": "lens_content-execution-003",
+      "name": "曝光+转化双轨内容矩阵策略",
+      "aliases": [],
+      "question": "如何同时兼顾品牌声量放大和销量转化两个目标，设计曝光轨和转化轨双线并行的内容矩阵？",
+      "use_conditions": [
+        "品牌同时有品牌声量和销售转化的双重目标",
+        "内容平台支持从内容到购买的完整链路"
+      ],
+      "skip_conditions": [
+        "品牌当前只需曝光或只需转化"
+      ],
+      "required_inputs": [
+        "同品类或跨品类内容策略标杆案例",
+        "产品线和场景细分",
+        "产品场景归属矩阵",
+        "内容素材库"
+      ],
+      "analysis_operations": [
+        "曝光轨设计：确立创意向和种草向两条内容路径，按产品线和场景类型规划曝光内容主题与形式",
+        "转化轨设计：规划圈层种草、好物推荐和深度测评三类转化内容，在每种内容中预埋购买链路",
+        "产品×场景归属映射：将各产品按场景类型分类（期待性场景/日常性场景），匹配相应的曝光和转化内容形式",
+        "双轨协同设计：建立曝光内容到转化内容的用户流转路径，统一发布日历确保双轨节奏协调"
+      ],
+      "output_types": [
+        "双轨内容矩阵",
+        "内容日历"
+      ],
+      "failure_modes": [
+        "双轨之间缺乏衔接机制——曝光内容无法有效导流到转化内容"
+      ],
+      "boundaries": [
+        "双轨之间缺乏衔接机制——曝光内容无法有效导流到转化内容"
+      ],
+      "variants": [],
+      "source_module_instance_ids": [
+        "mi_9b402882ac1f392c4af44651"
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "recipe_id": "recipe_content-execution-003",
+      "name": "曝光+转化双轨小红书内容矩阵策略",
+      "purpose": "该Recipe由2个分析单元组成顺序流程。第1步：shokz-annual案例的「如何设计曝光型内容矩阵，放大韶音在小红书上的品牌声量？」；第2步：shokz-annual案例的「如何设计转化型内容矩阵实现销量转化？」",
+      "required_lens_ids": [
+        "lens_content-execution-003"
+      ],
+      "optional_lens_ids": [],
+      "sequence": [
+        "lens_content-execution-003"
+      ],
+      "use_conditions": [
+        "适用场景的输入数据需完整"
+      ],
+      "skip_conditions": [
+        "两条轨之间的衔接机制和ROI量化路径未明确；仅单一案例"
+      ],
+      "source_module_instance_ids": [
+        "mi_9b402882ac1f392c4af44651"
+      ]
+    }
+  ],
+  "page_expression_options": [],
+  "source_module_instance_ids": [
+    "mi_6d133c22e2434fce31b58989",
+    "mi_9b402882ac1f392c4af44651",
+    "mi_f4b17c4ff1b339bee297cf15",
+    "mi_59ddc23010da1ace6a4b0981",
+    "mi_e734aba28ea66d02fc5fd71d"
+  ],
+  "wiki_version": "6.0.0",
+  "status": "active",
+  "approval": {
+    "human_approved": true,
+    "approved_at": "2026-07-27T12:18:11.789Z",
+    "reviewer_note": "B4审阅：2项变更批准"
+  },
+  "deletion": {
+    "deleted": false,
+    "reason": "",
+    "replaced_by": null
+  },
+  "created_from_hash": "cb475b8207218da3840eed1a87816b535f4e6c67e87abf60808dbe8f7a4114ac"
+}

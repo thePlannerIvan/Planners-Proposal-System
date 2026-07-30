@@ -1,0 +1,104 @@
+{
+  "contract_version": "1.0.0",
+  "wiki_module_id": "wm_617a65e82e678e814c86a3de",
+  "module_id": "mod_measurement",
+  "title": "效果衡量与KPI",
+  "stable_decision": "模块「效果衡量与KPI」共收录 2 个可复用方法，经跨案例验证和人工审阅。",
+  "unified_preconditions": [
+    "项目需包含与效果衡量与KPI相关的分析材料",
+    "分析单元需通过B2分段验证"
+  ],
+  "lens_catalog": [
+    {
+      "lens_id": "lens_measurement-001",
+      "name": "年度投放效果测量与品类竞争格局分析",
+      "aliases": [],
+      "question": "如何系统衡量年度投放效果，并将品牌表现与品类竞争格局关联分析以指导下一周期优化？",
+      "use_conditions": [
+        "品牌已完成至少一个周期的投放，积累了足够的衡量数据"
+      ],
+      "skip_conditions": [
+        "投放数据积累不足"
+      ],
+      "required_inputs": [
+        "年度投放消耗/曝光/互动/转化数据",
+        "关键词SOC/SOV占比数据",
+        "人群渗透率与重合度年度对比"
+      ],
+      "analysis_operations": [
+        "汇总年度投放核心指标（消耗/曝光量/互动量/转化量/ROI等），对比目标评估达成情况",
+        "按渠道和Campaign维度拆解效果数据，识别高效投放组合和低效投入",
+        "分析品类竞争格局：品牌在品类关键词中的占比、人群渗透率和年度变化趋势",
+        "基于效果和竞争分析，提出下一周期的渠道/预算/内容优化方向"
+      ],
+      "output_types": [
+        "年度投放效果报告",
+        "优化策略建议"
+      ],
+      "failure_modes": [
+        "归因模型选择影响结论——不同归因方式可能导致相反的优化方向"
+      ],
+      "boundaries": [
+        "归因模型选择影响结论——不同归因方式可能导致相反的优化方向"
+      ],
+      "variants": [],
+      "source_module_instance_ids": [
+        "mi_f5e5dbcd2d13b3a8ac95957f"
+      ]
+    },
+    {
+      "lens_id": "lens_measurement-002",
+      "name": "品牌舆情监测与口碑维护体系",
+      "aliases": [],
+      "question": "如何建立系统化的品牌舆情监测体系，并设计从问题识别到正面覆盖的完整口碑维护方案？",
+      "use_conditions": [
+        "品牌面临舆情风险或需要建立系统化的口碑管理机制"
+      ],
+      "skip_conditions": [
+        "品牌知名度不足以产生规模化的舆情讨论"
+      ],
+      "required_inputs": [
+        "品牌NPS与大盘对比",
+        "首屏负面率数据",
+        "负面词云"
+      ],
+      "analysis_operations": [
+        "追踪品牌关键舆情指标（NPS/首屏负面率/负面高频词等）的变化趋势",
+        "建立舆情管控闭环流程：问题识别监测→正面回应机制→持续舆情维护→正面内容覆盖建设",
+        "梳理高频负面问题并建立标准应对话术库",
+        "设计口碑维护的操作流程、响应时效和团队分工"
+      ],
+      "output_types": [
+        "舆情管控体系方案"
+      ],
+      "failure_modes": [
+        "舆情监测敏感度阈值设置不当——过敏感导致噪音，过迟钝漏掉关键信号"
+      ],
+      "boundaries": [
+        "舆情监测敏感度阈值设置不当——过敏感导致噪音，过迟钝漏掉关键信号"
+      ],
+      "variants": [],
+      "source_module_instance_ids": [
+        "mi_f5e5dbcd2d13b3a8ac95957f"
+      ]
+    }
+  ],
+  "recipes": [],
+  "page_expression_options": [],
+  "source_module_instance_ids": [
+    "mi_f5e5dbcd2d13b3a8ac95957f"
+  ],
+  "wiki_version": "5.0.0",
+  "status": "active",
+  "approval": {
+    "human_approved": true,
+    "reviewer_note": "全部 42 个 Lens 已通过 v5 审阅。跨模块与模块内合并已完成。",
+    "approved_at": "2026-07-25T12:24:21.165161"
+  },
+  "deletion": {
+    "deleted": false,
+    "reason": null,
+    "replaced_by": null
+  },
+  "created_from_hash": "d9f68bad1fa3df9a0add310c7ba4a6d6b1be7ad7465f66ed104e90613aa06bc0"
+}

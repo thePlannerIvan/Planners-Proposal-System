@@ -1,0 +1,44 @@
+name: Bug report
+description: 报告可复现的流程、脚本或审阅问题
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "请勿上传客户机密、账号凭证或未公开提案。"
+  - type: dropdown
+    id: workflow
+    attributes:
+      label: 受影响工作流
+      options:
+        - Router / 安装
+        - Library Maintenance
+        - Co-creation
+        - By-page Copy
+        - Review HTML
+        - Fact Audit
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为与最小复现
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 模型、客户端与系统版本
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 已脱敏日志
+      render: shell

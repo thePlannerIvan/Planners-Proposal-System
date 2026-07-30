@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lens Extraction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "source_unit_id", "results"],
+  "properties": {
+    "contract_version": {"const": "1.0.0"},
+    "source_unit_id": {"type": "string", "pattern": "^su_[a-f0-9]{24}$"},
+    "results": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+      "required": ["result_id", "terminal_state", "source_page_ids", "original_observation_zh", "reason_zh", "lens"],
+      "properties": {
+        "result_id": {"type": "string", "pattern": "^le_[a-f0-9]{24}$"},
+        "terminal_state": {"enum": ["lens_candidate", "case_only", "insufficient_evidence", "no_lens", "new_module_candidate"]},
+        "module_id": {"type": ["string", "null"], "pattern": "^mod_[a-z0-9][a-z0-9-]{2,63}$"},
+        "source_page_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^pg_[a-f0-9]{24}$"}},
+        "original_observation_zh": {"type": "string", "minLength": 1},
+        "reason_zh": {"type": "string", "minLength": 1},
+        "lens": {"type": ["object", "null"], "additionalProperties": false,
+          "required": ["name_zh", "question_zh", "required_inputs_zh", "operations_zh", "output_structure_zh", "use_conditions_zh", "skip_conditions_zh", "failure_modes_zh", "page_structure", "page_structure_check", "abstraction_check"],
+          "properties": {
+            "name_zh": {"type": "string", "minLength": 1}, "question_zh": {"type": "string", "minLength": 1},
+            "required_inputs_zh": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "operations_zh": {"type": "array", "minItems": 3, "maxItems": 7, "items": {"type": "string", "minLength": 1}},
+            "output_structure_zh": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "use_conditions_zh": {"type": "array", "items": {"type": "string", "minLength": 1}}, "skip_conditions_zh": {"type": "array", "items": {"type": "string", "minLength": 1}}, "failure_modes_zh": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "page_structure": {"type": "array", "minItems": 2, "items": {"type": "object", "additionalProperties": false, "required": ["purpose_zh", "question_zh", "evidence_needed_zh", "information_relationship_zh", "from_previous_zh", "to_next_zh", "misuse_warning_zh"], "properties": {"purpose_zh": {"type": "string", "minLength": 1}, "question_zh": {"type": "string", "minLength": 1}, "evidence_needed_zh": {"type": "array", "items": {"type": "string", "minLength": 1}}, "information_relationship_zh": {"type": "string", "minLength": 1}, "from_previous_zh": {"type": "string", "minLength": 1}, "to_next_zh": {"type": "string", "minLength": 1}, "misuse_warning_zh": {"type": "string", "minLength": 1}}}},
+            "page_structure_check": {"type": "object", "additionalProperties": false, "required": ["uncovered_operations_zh", "uncovered_outputs_zh", "coverage_rationale_zh"], "properties": {"uncovered_operations_zh": {"type": "array", "maxItems": 0, "items": {"type": "string"}}, "uncovered_outputs_zh": {"type": "array", "maxItems": 0, "items": {"type": "string"}}, "coverage_rationale_zh": {"type": "string", "minLength": 1}}},
+            "abstraction_check": {"type": "object", "additionalProperties": false, "required": ["passed", "project_residue", "issues"], "properties": {"passed": {"type": "boolean"}, "project_residue": {"type": "array", "items": {"type": "string"}}, "issues": {"type": "array", "items": {"type": "string"}}}}
+          }
+        }
+      }
+    }}
+  }
+}
