@@ -25,6 +25,19 @@
         }
       }
     },
+    "appendix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["appendix_id", "title", "content"],
+        "properties": {
+          "appendix_id": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "content": { "type": "string", "minLength": 1, "maxLength": 8000 }
+        }
+      }
+    },
     "pages": {
       "type": "array",
       "minItems": 1,
@@ -83,7 +96,8 @@
               { "type": "string", "minLength": 1, "maxLength": 1000 }
             ]
           },
-          "transition": { "type": "string", "maxLength": 800 }
+          "transition": { "type": "string", "maxLength": 800 },
+          "boundary": { "type": "string", "maxLength": 800 }
         }
       }
     }

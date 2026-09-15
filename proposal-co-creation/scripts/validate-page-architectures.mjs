@@ -24,7 +24,7 @@ function validate(document) {
     error(errors, 'invalid_type', null, '根节点必须是 JSON 对象');
     return errors;
   }
-  const allowedRoot = new Set(['contract_version', 'project_id', 'storyline_thesis', 'sections', 'pages']);
+  const allowedRoot = new Set(['contract_version', 'project_id', 'storyline_thesis', 'sections', 'pages', 'appendix']);
   for (const key of Object.keys(document)) {
     if (!allowedRoot.has(key)) error(errors, 'extra_field', key, `不允许字段：${key}`, recordId);
   }
@@ -60,6 +60,7 @@ function validate(document) {
       const allowed = new Set([
         'page_number', 'section_id', 'page_job', 'title_intent', 'claim',
         'content_blocks', 'evidence_needs', 'chart_brief', 'layout_direction', 'transition',
+        'boundary',
       ]);
       for (const key of Object.keys(page)) if (!allowed.has(key)) error(errors, 'extra_field', `${path}.${key}`, '不允许字段', recordId);
       if (page.page_number !== index + 1) error(errors, 'page_number_gap', `${path}.page_number`, `应为 ${index + 1}`, recordId);
