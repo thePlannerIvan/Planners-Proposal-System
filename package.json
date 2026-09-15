@@ -1,6 +1,6 @@
 {
   "name": "planners-proposal-system",
-  "version": "5.6.0",
+  "version": "0.2.0",
   "description": "从方法库维护、策略共创到逐页文案与事实审计的一体化提案 Skill",
   "license": "AGPL-3.0-only",
   "type": "module",
