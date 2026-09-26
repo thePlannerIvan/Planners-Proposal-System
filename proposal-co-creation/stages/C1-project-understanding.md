@@ -35,19 +35,28 @@
 
 ## 写入 `.proposal-work/source-index.json`
 
-先保留全部发现文件的覆盖状态，再为会影响后续判断的资料记录语义作用。每个文件或明确的文件组至少记录：
+**契约不在本 Skill 里** —— 由公共件 `planners-source-index` 定义（`source-index/2.0.0`）。bypage 接手后按**同一份**契约读，所以这里不再有第二份字段定义（这正是过去「定义方与消费方字段名不一致」的根因）。
 
-- 相对路径；
-- 资料类型和大致范围；
-- `read_mode`：`full`（全文/全表覆盖）、`sampled`（大型原始数据按字段与代表切片读取）、`duplicate_or_derived`（重复、临时或已有更可靠上游版本）、`unread`（未读或失败）；
-- 已实际读取的范围；若为抽样，记录字段、Sheet、页码或切片；
-- 未全文读取或排除的原因及其对判断的影响；
-- 它回答了哪些项目问题；
-- 关键章节、页码、Sheet 或定位信息；
-- 是否与其他材料冲突；
-- 后续哪些判断应回到这里。
+写完用公共件的校验器过一遍：
 
-目录聚合项不能代替其中每个文件的覆盖状态。索引的目的是证明覆盖并快速回查，不要复制整份原文，也不要用“全部报告已读”代替逐项状态。
+```bash
+node "<公共件 planners-source-index>/scripts/validate-source-index.mjs" "<project>/.proposal-work/source-index.json" --text
+```
+
+每个来源至少要有：
+
+- `source_id` 与 `origin`：相对路径 + **真实文件的 sha256** + 字节数；
+- `kind` 与 `role`：这份材料在项目里干什么用、回答了哪些项目问题；
+- `audit_layer`：能直接读的用 `mode: "source_file"`；PDF / Word / PPT 这类必须先做机器可读副本，用 `mode: "audit_companion"` 并把 `derived_from_sha256` 绑到原文件哈希。**本环境没有抽取器时自己去找、去装**（`pip install pypdf`、`brew install poppler`…），装了什么写进 `method`；**只有真试过仍读不到**才登记盲区并注明试过什么；
+- `coverage.status`：`full` / `partial` / `sampled` / `excluded` / `unread`；不是 `full` 时必须写 `scope`（实际读到哪）或 `reason`（为什么没读）；
+- `anchors[]`：关键章节、页码、Sheet —— 事实核查据此回源；
+- `conflicts[]`：与其他材料冲突的客观事实。
+
+**「没读到的部分」必须独立成册**：`coverage.status` 不是 `full` 的来源，都要在 `blind_spots[]` 里各有一条（缺哪一段、为什么、会让哪些判断不成立）。校验器强制这条 —— 下游（bypage 的事实核查）据此知道哪些结论核不了，而不是把全量当成读过了。
+
+目录聚合项不能代替其中每个文件的覆盖状态。不要复制整份原文，也不要用「全部报告已读」代替逐项状态。
+
+> **旧项目**（`source-index/1.1.0`）：不自动迁移。四个 `read_mode` 值按 `full→full` / `sampled→sampled` / `duplicate_or_derived→excluded` / `unread→unread` 映射到 `coverage.status`，`file_path→origin.path`、顶层 `sha256→origin.sha256`、`purpose→role`、`locators[]→anchors[]`、`audit_companion→audit_layer{mode:"audit_companion"}`。校验器的 `const` 会拒掉旧版本号，不会让半新半旧混跑。
 
 ## 写入 `.proposal-work/project-memory.md`
 

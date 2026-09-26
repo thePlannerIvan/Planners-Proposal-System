@@ -32,10 +32,9 @@
 → Co-creation
 → 主方向与 Storyline
 → Page Architecture
-→ By-page Copy
-→ 数字事实审计
-→ HTML 审阅
-→ proposal.md + assets/
+→ 结构审阅
+→ 交给 planners-bypage：逐页文案 · 语言 · 事实核查 · 终稿审阅
+→ by-page.md + assets/（由 bypage 产出）
 ```
 
 整个系统只有一个公开入口：`$planners-proposal-system`。Router 会根据用户意图和项目状态渐进读取对应内部工作流，不需要分别安装或记忆多个 Skill 名称。
@@ -102,7 +101,6 @@ planners-proposal-system/
 ├── agents/
 ├── proposal-library-maintenance/
 ├── proposal-co-creation/
-├── proposal-by-page-copy/
 ├── evals/
 └── package.json
 ```

@@ -1,4 +1,18 @@
 #!/usr/bin/env node
+/**
+ * B4 审阅页生成器（页面只写一份，两种宿主都能跑）。
+ *
+ * 上缝改了四件事，每一件都对应一条被真事逼出来的规则：
+ *   · **R3** 入口里只有**一个裸着独占一行**的 `{{REVIEW_BRIDGE}}`；桥由宿主注入，页面不放副本、不认端口与路径。
+ *   · **R11** 页首有一个**永久可见**的刷新出口（`⟳`），不依赖任何告警出现 ——
+ *     "页面 JS 变了、数据没变"这个场景下，刷新入口如果嵌在告警里就永远拿不到。
+ *   · **R5** 状态行分档说：宿主"收下了" ≠ "通知到了"。同一次提交重发意味着"之前已送达"，不说"保存失败"。
+ *   · **R5b** 页面知道、机器看不见的**前提进数据**：① 这一页绑定的审阅包还是不是磁盘上那一份（`pre_check`）；
+ *     ② 人的整体意见（`overall_note_zh`）。两者都由收件层摘进收据，**不写进原生记录**（原生契约有 additionalProperties:false）。
+ *   · **R7** 页面**不存状态**：没有 localStorage/sessionStorage 草稿。存了就会出现"模型改完、页面还挂着"，
+ *     而且不透明帧里顶层读 localStorage 当场抛。所以每一轮都是干净的未处置，一次点击即批准，没有"要清空的东西"。
+ *   · **R10** 逐单位不是唯一入口：页脚永远有一条**不针对任何方法**的整体意见。
+ */
 import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -37,10 +51,12 @@ button{cursor:pointer}
 .route{font-size:12px;padding:5px 10px;border:1px solid #5d5a53;border-radius:999px;color:#e7e0d3}
 .project-origin{margin-left:auto;display:flex;align-items:center;gap:9px;color:#aaa49a;font-size:12px;letter-spacing:.04em;white-space:nowrap}
 .project-origin b{color:#f0ebe2}.project-origin a{color:#d7a38e;text-decoration:none;border-bottom:1px solid #76594d}
-.progress-wrap{margin-left:auto;display:flex;align-items:center;gap:12px}
+.progress-wrap{display:flex;align-items:center;gap:12px}
 .progress-track{width:180px;height:5px;border-radius:5px;background:#55514a;overflow:hidden}
 .progress-fill{height:100%;width:0;background:#e5a487;transition:width .2s}
 .progress-text{font-variant-numeric:tabular-nums;font-size:13px}
+.reload{border:1px solid #67625a;background:transparent;color:#eee;border-radius:6px;padding:7px 11px;font-size:15px;line-height:1}
+.reload:hover{border-color:#fff}
 .shell{display:grid;grid-template-columns:310px minmax(0,1fr);min-height:calc(100vh - 72px)}
 .sidebar{border-right:1px solid var(--line);background:#ebe5da;padding:22px 16px 120px;position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}
 .sidebar h2{font-family:"Songti SC","Noto Serif CJK SC",serif;font-size:18px;margin:0 8px 15px}
@@ -65,7 +81,7 @@ button{cursor:pointer}
 .state-dot{width:8px;height:8px;border:1px solid #999;border-radius:50%;margin-top:4px}
 .state-dot.done{border-color:var(--ok);background:var(--ok)}
 .state-dot.defer{border-color:var(--warn);background:var(--warn)}
-.main{padding:36px clamp(24px,4vw,70px) 140px;max-width:1320px;width:100%;margin:auto}
+.main{padding:36px clamp(24px,4vw,70px) 190px;max-width:1320px;width:100%;margin:auto}
 .notice{border-left:4px solid var(--accent);background:var(--card);padding:15px 18px;margin-bottom:25px;display:flex;gap:14px;align-items:flex-start}
 .notice strong{font-size:16px}.notice p{margin:3px 0 0;color:var(--muted);font-size:14px;line-height:1.7}
 .eyebrow{font-size:13px;letter-spacing:.08em;color:var(--accent);font-weight:800}
@@ -126,14 +142,19 @@ button{cursor:pointer}
 .json-editor{width:100%;min-height:260px;border:1px solid #777168;border-radius:6px;background:#151412;color:#eee;padding:12px;font:11px/1.5 "SFMono-Regular",Consolas,monospace;resize:vertical}
 details.tech{margin-top:22px;color:var(--muted);font-size:11px}
 details.tech pre{white-space:pre-wrap;word-break:break-word;background:#e9e3d8;border:1px solid var(--line);padding:12px;border-radius:6px;max-height:320px;overflow:auto}
-.bottom-bar{position:fixed;left:310px;right:0;bottom:0;background:rgba(255,253,248,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px clamp(24px,4vw,70px);display:flex;align-items:center;gap:10px;z-index:18}
+.bottom-bar{position:fixed;left:310px;right:0;bottom:0;background:rgba(255,253,248,.97);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px clamp(24px,4vw,70px);display:grid;gap:8px;z-index:18}
+.bottom-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bottom-row .label{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.overall-row{border-top:1px dashed var(--line);padding-top:8px}
+.overall-row input{flex:1;min-width:240px;border:1px solid var(--line);border-radius:6px;background:var(--card);padding:8px 10px}
+.overall-row button{border:1px solid var(--line);background:var(--card);border-radius:6px;padding:8px 12px;font-size:12px}
 .prev,.next{border:1px solid var(--line);background:transparent;border-radius:5px;padding:8px 11px}
 .save{margin-left:auto;border:0;background:var(--accent);color:#fff;border-radius:6px;padding:10px 16px;font-weight:800}
 .save:disabled{opacity:.45;cursor:not-allowed}
 .save-status{font-size:11px;color:var(--muted)}
-.toast{position:fixed;right:24px;bottom:80px;padding:10px 14px;border-radius:6px;color:#fff;background:var(--ink);z-index:50;font-size:12px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.toast{position:fixed;right:24px;bottom:120px;padding:10px 14px;border-radius:6px;color:#fff;background:var(--ink);z-index:50;font-size:12px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 .toast.error{background:var(--bad)}
-.project-credit{margin-left:310px;padding:30px 24px 105px;text-align:center;color:#8a847a;font-size:11px;font-weight:700;letter-spacing:.02em}
+.project-credit{margin-left:310px;padding:30px 24px 200px;text-align:center;color:#8a847a;font-size:11px;font-weight:700;letter-spacing:.02em}
 .project-credit a{color:#5f5a52;text-decoration:none;border-bottom:1px solid #c8c0b5}
 .project-credit .xhs{margin-left:8px;color:#9b5a48}
 .completion{position:fixed;inset:0;background:rgba(37,35,31,.78);display:none;place-items:center;padding:24px;z-index:100;backdrop-filter:blur(8px)}
@@ -163,6 +184,7 @@ details.tech pre{white-space:pre-wrap;word-break:break-word;background:#e9e3d8;b
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
     <span class="progress-text" id="progressText">0/0 已处置</span>
   </div>
+  <button class="reload" id="reload" title="重新加载页面（页面本身被更新过、或想丢弃未保存的输入时用它）">&#8635; 刷新</button>
 </header>
 <div class="shell">
   <aside class="sidebar">
@@ -188,16 +210,24 @@ details.tech pre{white-space:pre-wrap;word-break:break-word;background:#e9e3d8;b
 </div>
 <footer class="project-credit">Planners-Proposal-System © 2026 阿祖不看 TVC · <a href="https://demyth.info" target="_blank" rel="noreferrer">demyth.info</a><span class="xhs">小红书：阿祖不看 TVC</span></footer>
 <div class="bottom-bar">
-  <button class="prev" id="prev">← 上一项</button>
-  <button class="next" id="next">下一项 →</button>
-  <span class="save-status" id="saveStatus">决定会自动保存在本机草稿中</span>
-  <button class="save" id="save" disabled>保存全部审阅决定</button>
+  <div class="bottom-row">
+    <button class="prev" id="prev">← 上一项</button>
+    <button class="next" id="next">下一项 →</button>
+    <span class="save-status" id="saveStatus">内容已画出；正在接审阅宿主 —— 连上之前这一页是只读的。</span>
+    <button class="save" id="save" disabled>保存全部审阅决定</button>
+  </div>
+  <div class="bottom-row overall-row">
+    <span class="label">整体意见（不针对任何一个方法）</span>
+    <input id="overallNote" type="text" placeholder="例如：这批方法整体不对 —— 都停在拆解，没有一步给判断。">
+    <button id="submitOverall">只提交整体意见</button>
+    <span class="save-status" id="overallStatus"></span>
+  </div>
 </div>
 <div class="completion" id="completion" role="dialog" aria-modal="true" aria-labelledby="completionTitle">
   <div class="completion-card">
     <div class="completion-mark">✓</div>
     <h2 id="completionTitle">反馈已保存</h2>
-    <p>请返回 Codex 对话，并发送「已完成」。模型会验证本轮决定并继续安装或修改。</p>
+    <p>请返回 Codex 对话，并发送「已完成」。模型会先跑收件脚本、再跑门，然后继续安装或修改。</p>
     <div class="completion-path" id="completionPath"></div>
     <div class="completion-actions">
       <button class="primary" id="copyCompleted">复制「已完成」</button>
@@ -205,23 +235,29 @@ details.tech pre{white-space:pre-wrap;word-break:break-word;background:#e9e3d8;b
     </div>
   </div>
 </div>
+{{REVIEW_BRIDGE}}
 <script>
 const bundle=${data};
 const bundleHash=${JSON.stringify(bundleHash)};
-const storageKey='library-b4-review:'+bundleHash;
 const labels={approve:'批准',revise:'修改后批准',new:'作为新方法',merge:'合并到已有 Lens',variant:'作为已有 Lens 变体',revision:'修订已有方法',add_source:'仅补充来源',reroute:'改到其他 Module',no_change:'无变化',reject:'拒绝',defer:'暂缓'};
 const comparisonLabels={question_zh:'解决的问题',operations_zh:'操作链',inputs_outputs_zh:'输入与输出',boundaries_zh:'适用边界',page_structure_zh:'页面结构'};
+// R7：**页面不存状态** —— 没有本机草稿、没有浏览器端存储。
+// ① 存了就会出现"模型改完、页面还挂着"（页面里那份与文件里那份打架）；
+// ② 不透明源（有插件时页面就在那种帧里）里碰浏览器存储会当场抛 SecurityError。
+// 所以每一轮重新打开都是干净的未处置：**一次点击就能批准，没有要人清空的东西**。
 let decisions={};
 let activeIndex=0;
 let filter='all';
 let selectedIds=new Set();
-try{const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');if(saved&&typeof saved==='object')decisions=saved}catch{}
+// R5b：页面知道、机器看不见的前提 —— 这一页绑定的审阅包还是不是**磁盘上那一份**。
+// 结论进 payload（pre_check / pre_check_note），由收件层摘进收据，不写进原生记录。
+let bundleCheck={state:'unknown',note:'页面还没连上审阅宿主：这一份决定没有经过版本核对。'};
 
 const esc=value=>String(value??'').replace(/[&<>"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char]));
 const list=value=>Array.isArray(value)?value:[];
 const proposalName=item=>item.proposal.name_zh||item.proposal.name||item.source_id;
 const moduleName=item=>item.module_meta?.title_zh||item.source_module_id||'跨 Module Recipe';
-const persist=()=>{localStorage.setItem(storageKey,JSON.stringify(decisions));updateChrome()};
+const persist=()=>updateChrome();
 const decisionFor=item=>decisions[item.item_id]||null;
 const current=()=>bundle.items[activeIndex];
 const routeIsUpgrade=bundle.route==='upgrade_existing';
@@ -246,7 +282,9 @@ function renderList(){
   bundle.items.forEach((item,index)=>{
     const decision=decisionFor(item);const complete=isCompleteDecision(item,decision);
     const visible=filter==='all'||(filter==='pending'&&!complete)||(filter==='done'&&complete);
-    const li=document.createElement('li');li.className='nav-item'+(visible?'':' hidden');
+    const li=document.createElement('li');
+    li.className='nav-item'+(visible?'':' hidden');
+    li.dataset.item=item.item_id;
     li.innerHTML='<div class="nav-row"><input class="nav-check" type="checkbox" aria-label="选择 '+esc(proposalName(item))+'" '+(selectedIds.has(item.item_id)?'checked':'')+'><button class="nav-button '+(index===activeIndex?'active':'')+'" data-index="'+index+'"><span class="nav-num">'+String(index+1).padStart(2,'0')+'</span><span class="nav-copy"><strong>'+esc(proposalName(item))+'</strong><span>'+esc(moduleName(item))+' · '+esc(item.method_kind)+'</span></span><span class="state-dot '+(complete?(decision.decision==='defer'?'defer':'done'):'')+'"></span></button></div>';
     li.querySelector('.nav-check').onchange=event=>{if(event.target.checked)selectedIds.add(item.item_id);else selectedIds.delete(item.item_id)};
     li.querySelector('.nav-button').onclick=()=>{activeIndex=index;render()};
@@ -403,7 +441,7 @@ function decisionPanel(item,decision){
   const needsEdited=['revise','merge','revision'].includes(selected);
   const targets=targetOptions(item,decision);
   const modules=list(item.module_targets).map(target=>'<option value="'+esc(target.module_id)+'" '+(decision?.target_module_id===target.module_id?'selected':'')+'>'+esc(target.label_zh||target.module_id)+'</option>').join('');
-  return '<section class="decision-panel"><h2>你的决定</h2><p class="hint">模型建议不会自动选中；只有你的点击才计入已处置。合并和修订必须提交人工确认后的完整最终方法，安装器不会自动拼接或覆盖。</p><div class="decision-options">'+buttons+'</div><div class="decision-details '+((needsTarget||needsModule)?'':'hidden')+'"><label class="'+(needsTarget?'':'hidden')+'">明确目标方法<select class="target-select"><option value="">请选择目标</option>'+targets+'</select></label><label class="'+(needsModule?'':'hidden')+'">目标 Module<select class="module-select"><option value="">请选择 Module</option>'+modules+'</select></label></div><label class="field-label" style="margin-top:14px;color:#c6c0b7">审阅备注</label><textarea class="note" placeholder="说明判断依据、修改要求或拒绝原因">'+esc(decision?.note_zh||'')+'</textarea><div class="editor-wrap '+(needsEdited?'open':'')+'"><div class="editor-tools"><span>提交完整最终 proposal JSON；ID 保持冻结 ID 不变</span><span><button class="load-proposal">载入新提案</button> <button class="load-target">载入既有目标</button></span></div><textarea class="json-editor" spellcheck="false" placeholder="载入一个对象作为起点，完成语义合并或修订后再批准">'+esc(decision?.edited_text||'')+'</textarea></div></section>';
+  return '<section class="decision-panel"><h2>你的决定</h2><p class="hint">模型建议不会自动选中；只有你的点击才计入已处置。合并和修订必须提交人工确认后的完整最终方法，安装器不会自动拼接或覆盖。暂缓（defer）的意思是「这一轮先不动它」，不是待办：下一轮重新打开这一页时它和其他方法一样是未处置，不会挂在你身上。</p><div class="decision-options">'+buttons+'</div><div class="decision-details '+((needsTarget||needsModule)?'':'hidden')+'"><label class="'+(needsTarget?'':'hidden')+'">明确目标方法<select class="target-select"><option value="">请选择目标</option>'+targets+'</select></label><label class="'+(needsModule?'':'hidden')+'">目标 Module<select class="module-select"><option value="">请选择 Module</option>'+modules+'</select></label></div><label class="field-label" style="margin-top:14px;color:#c6c0b7">审阅备注</label><textarea class="note" placeholder="说明判断依据、修改要求或拒绝原因">'+esc(decision?.note_zh||'')+'</textarea><div class="editor-wrap '+(needsEdited?'open':'')+'"><div class="editor-tools"><span>提交完整最终 proposal JSON；ID 保持冻结 ID 不变</span><span><button class="load-proposal">载入新提案</button> <button class="load-target">载入既有目标</button></span></div><textarea class="json-editor" spellcheck="false" placeholder="载入一个对象作为起点，完成语义合并或修订后再批准">'+esc(decision?.edited_text||'')+'</textarea></div></section>';
 }
 function renderCard(){
   const item=current();const decision=decisionFor(item);
@@ -458,7 +496,7 @@ function toast(message,error=false){
   const el=document.createElement('div');el.className='toast'+(error?' error':'');el.textContent=message;document.body.appendChild(el);setTimeout(()=>el.remove(),3200);
 }
 function showCompletion(path){
-  document.querySelector('#completionPath').textContent=path||'review-feedback.json';
+  document.querySelector('#completionPath').textContent=path||'review-submissions.json';
   document.querySelector('#completion').classList.add('open');
 }
 document.querySelector('#copyCompleted').onclick=async()=>{
@@ -467,7 +505,7 @@ document.querySelector('#copyCompleted').onclick=async()=>{
 document.querySelector('#closeCompletion').onclick=()=>document.querySelector('#completion').classList.remove('open');
 document.querySelector('#routeLabel').textContent=routeIsUpgrade?'增补已有库':'独立新建库';
 document.querySelector('#noticeTitle').textContent=routeIsUpgrade?'增补已有方法库':'建立独立方法库';
-document.querySelector('#noticeText').textContent=routeIsUpgrade?'逐项核验新方法与既有 Wiki 的真实差异。合并、变体、修订和补来源必须明确目标。':'逐项审阅完整 Lens 与 Recipe。本路线没有合并到已有 Lens 的选项。';
+document.querySelector('#noticeText').textContent=routeIsUpgrade?'逐项核验新方法与既有 Wiki 的真实差异。合并、变体、修订和补来源必须明确目标。':'逐项审阅完整 Lens 与 Recipe。本路线没有合并到已有 Lens 的选项。若要说的不是某一条方法，用页脚那句整体意见。';
 document.querySelectorAll('.filter').forEach(button=>button.onclick=()=>{filter=button.dataset.filter;document.querySelectorAll('.filter').forEach(item=>item.classList.toggle('active',item===button));renderList()});
 document.querySelector('#selectPending').onclick=()=>{
   selectedIds=new Set(bundle.items.filter(item=>!isCompleteDecision(item,decisionFor(item))).map(item=>item.item_id));
@@ -484,7 +522,75 @@ document.querySelector('#rejectSelected').onclick=()=>{
 };
 document.querySelector('#prev').onclick=()=>{if(activeIndex>0){activeIndex--;render();window.scrollTo(0,0)}};
 document.querySelector('#next').onclick=()=>{if(activeIndex<bundle.items.length-1){activeIndex++;render();window.scrollTo(0,0)}};
-document.querySelector('#save').onclick=async()=>{
+document.querySelector('#reload').onclick=()=>location.reload();
+
+let review=null;
+const BRIDGE_TIMEOUT_MS=1500;   // 握手要有上限：不返回就按"没有桥"降级继续画
+function connectWithTimeout(ms){
+  return new Promise(resolve=>{
+    let done=false;
+    const finish=value=>{if(!done){done=true;resolve(value)}};
+    setTimeout(()=>finish(null),ms);
+    try{ReviewBridge.connect().then(finish,()=>finish(null))}catch{finish(null)}
+  });
+}
+function caps(){return (review&&Array.isArray(review.capabilities))?review.capabilities:[]}
+function sayStatus(text){const status=document.querySelector('#saveStatus');if(status)status.textContent=text}
+// R5：宿主"接受了" ≠ "通知到了"。三档分开说，不把已送达说成失败。
+function wakeTier(woke){
+  if(!woke||woke.error)return '；没能通知模型（'+((woke&&woke.error)||'宿主没回话')+'）—— 请回对话说一声「已完成」';
+  if(woke.verified)return '，宿主已核对：通知进了队列';
+  if(woke.woke===false)return '；这个宿主不能唤醒模型（没有插件），请回对话说一声「已完成」';
+  return '；宿主接受了这次唤醒，但没有核对是否送到 —— 模型没反应就回对话说一声';
+}
+// R5b：把"这一页绑定的审阅包还算不算当前那一份"核出来。**核不了就说核不了**，不许默认成功。
+async function verifyBundle(link){
+  if(!link||typeof link.readText!=='function'){
+    return {state:'unavailable',note:'这个宿主不给页面读文件（readText 不可用）：页面没法核对审阅包是不是磁盘上那一份。'};
+  }
+  const subtle=window.crypto&&window.crypto.subtle;
+  if(!subtle||typeof subtle.digest!=='function'){
+    return {state:'unavailable',note:'这个帧里没有 crypto.subtle（不是安全上下文）：页面算不了哈希，没法核对审阅包。'};
+  }
+  try{
+    const text=await link.readText('review-bundle.json');
+    const digest=await subtle.digest('SHA-256',new TextEncoder().encode(text));
+    const hex=[...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+    if(hex===bundleHash)return {state:'ok',note:'已核对：磁盘上的审阅包与这一页绑定的是同一份。'};
+    return {state:'stale',note:'磁盘上的审阅包已经变了（页面绑定 '+bundleHash.slice(0,12)+'… ≠ 磁盘上的 '+hex.slice(0,12)+'…）：这一份决定可能是对着旧内容下的。'};
+  }catch(error){
+    return {state:'unavailable',note:'页面读不到磁盘上的审阅包（'+String(error&&error.message||error)+'）：这一份决定没有经过版本核对。'};
+  }
+}
+// R10：整体意见**不针对任何一个方法**，所以它不要求任何一项被处置。
+// 它走数据通道（写进 review-submissions.json）＋门铃（wake 只报"有一句整体意见，去收件"）——
+// 原生记录里没有这条字段（additionalProperties:false），所以收件层把它摘进收据，不伪造逐项决定。
+async function submitOverall(){
+  const status=document.querySelector('#overallStatus');
+  const note=document.querySelector('#overallNote').value.trim();
+  if(!note){if(status)status.textContent='先写一句整体意见，再点这个按钮。';return}
+  if(!review){if(status)status.textContent='没连上审阅宿主：这一页的提交进不去（请让宿主打开它）。';return}
+  try{
+    const payload={
+      contract_version:'1.0.0',
+      review_bundle_sha256:bundleHash,
+      route:bundle.route,
+      saved_at:new Date().toISOString(),
+      reviewer:'B4 人工审阅',
+      pre_check:bundleCheck.state==='ok',
+      pre_check_note:bundleCheck.note,
+      overall_note_zh:note,
+      decisions:[],
+    };
+    await review.write(payload);
+    let woke=null;
+    try{woke=await review.wake({unit:'整批方法（只提交整体意见，没有逐项处置；整体意见在 review-submissions.json 里，收件时看收据）'})}catch(error){woke={error:error.message}}
+    if(status)status.textContent='整体意见已交给审阅宿主（'+(review.transport||'未知通道')+'）'+wakeTier(woke);
+    showCompletion('review-submissions.json');
+  }catch(error){if(status)status.textContent='整体意见没能送出去：'+error.message}
+}
+document.querySelector('#submitOverall').onclick=submitOverall;
+async function save(){
   try{
     const output=[];
     for(const item of bundle.items){
@@ -501,16 +607,44 @@ document.querySelector('#save').onclick=async()=>{
       }
       output.push({item_id:item.item_id,decision:draft.decision,target_module_id:draft.target_module_id||null,target_id:draft.target_id||null,edited_proposal,note_zh:draft.note_zh||''});
     }
-    const payload={contract_version:'1.0.0',review_bundle_sha256:bundleHash,route:bundle.route,saved_at:new Date().toISOString(),reviewer:'B4 人工审阅',decisions:output};
-    const response=await fetch('/save-feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
-    const result=await response.json();
-    if(!response.ok)throw new Error(result.error||'保存失败');
-    document.querySelector('#saveStatus').textContent='已保存：'+result.feedback_path;
-    toast('全部审阅决定已保存');
-    showCompletion(result.feedback_path);
+    if(!review)throw new Error('页面没连上审阅宿主：这一页必须由宿主打开（DSH 侧栏，或本 Skill 的审阅入口起的本地宿主）');
+    // R5b：前提进数据。原生记录里没有这两个字段，所以它们由收件层摘进收据（不写进 review-feedback.json）。
+    const payload={
+      contract_version:'1.0.0',
+      review_bundle_sha256:bundleHash,
+      route:bundle.route,
+      saved_at:new Date().toISOString(),
+      reviewer:'B4 人工审阅',
+      pre_check:bundleCheck.state==='ok',
+      pre_check_note:bundleCheck.note,
+      overall_note_zh:document.querySelector('#overallNote').value.trim(),
+      decisions:output,
+    };
+    await review.write(payload);
+    let woke=null;
+    try{woke=await review.wake({unit:'整批方法（'+output.length+' 项）'+(payload.overall_note_zh?'；另有一句整体意见':'')})}catch(error){woke={error:error.message}}
+    sayStatus('已交给审阅宿主（'+(review.transport||'未知通道')+'）'+wakeTier(woke));
+    showCompletion('review-submissions.json');
   }catch(error){toast(error.message,true)}
-};
+}
+document.querySelector('#save').onclick=save;
+
 render();
+// 渲染**必须排在第一个 await 之前**（验证 12/13）：桥是增强，不是氧气 —— 握手永不返回时，
+// 上面这几行已经把页面完整画出来了。下面才去握手、补状态、核版本。
+(async function boot(){
+  // 状态行**当场**说清（不能等握手回来才说）：这一刻还没连上，所以这一页是只读的。
+  sayStatus('内容已画出；正在接审阅宿主 —— 连上之前这一页是只读的。');
+  try{if(window.ReviewBridge)review=await connectWithTimeout(BRIDGE_TIMEOUT_MS)}catch{review=null}
+  if(!review){
+    sayStatus(window.ReviewBridge
+      ?'连不上审阅宿主（握手超时）：内容可以完整看，但反馈存不进去。页面是**只读**的。'
+      :'这一页没有连上审阅宿主：内容可以完整看，但反馈存不进去。页面是**只读**的（请让宿主打开它）。');
+    return;
+  }
+  bundleCheck=await verifyBundle(review);
+  sayStatus(bundleCheck.note+' 通道：'+(review.transport||'未知'));
+})();
 </script>
 </body>
 </html>`;

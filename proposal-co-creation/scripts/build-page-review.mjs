@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
+import { existsSync } from 'node:fs';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -25,6 +26,24 @@ const validation = spawnSync(process.execPath, [
 if (validation.status !== 0) throw new Error(`Page Architecture 验证失败：${validation.stdout || validation.stderr}`);
 const architecture = JSON.parse(raw);
 const sourceSha256 = createHash('sha256').update(raw).digest('hex');
+// 上一轮（同面才算）：指纹相同才认；被标过 revise 的页**本轮没有默认值**（R7：不许把人的决定重置成默认通过）
+let priorRound = null;
+if (args['--previous'] && existsSync(resolve(args['--previous']))) {
+  try {
+    const doc = JSON.parse(readFileSync(resolve(args['--previous']), 'utf8'));
+    if (doc && doc.review_kind === 'co_creation_page_architecture' && Array.isArray(doc.decisions)) {
+      const byPage = new Map(doc.decisions.map(item => [Number(item.page_number), item]));
+      priorRound = {
+        saved_at: typeof doc.saved_at === 'string' ? doc.saved_at : null,
+        overall_decision: doc.overall_decision || null,
+        decisions: byPage,
+        // 指纹不同 → 这一轮不沿用（旧反馈作废，并由入口/页面说出来）
+        stale: typeof doc.source_sha256 === 'string' && doc.source_sha256 !== sourceSha256,
+      };
+      if (priorRound.stale) priorRound = { ...priorRound, decisions: new Map() };
+    }
+  } catch { priorRound = null; }
+}
 const pages = architecture.pages.map(page => ({
   page_number: page.page_number,
   title: page.title_intent,
@@ -37,6 +56,20 @@ const pages = architecture.pages.map(page => ({
     { label: '进入下一页', value: page.transition || '本页为收束页' },
   ],
   sections: [],
+  // R7：上一轮被标 revise 的页 → 没有默认值，必须复核后重新选；原话只作只读参考
+  ...(() => {
+    const prior = priorRound && priorRound.decisions.get(page.page_number);
+    const wasRevise = !!(prior && prior.decision === 'revise');
+    return {
+      default_decision: wasRevise ? null : 'approve',
+      requires_recheck: wasRevise,
+      prior: prior ? {
+        decision: prior.decision || null,
+        feedback_zh: typeof prior.feedback_zh === 'string' ? prior.feedback_zh : '',
+        attachments: Array.isArray(prior.attachments) ? prior.attachments.length : 0,
+      } : null,
+    };
+  })(),
 }));
 const html = renderPageReviewHtml({
   reviewKind: 'co_creation_page_architecture',
@@ -44,6 +77,7 @@ const html = renderPageReviewHtml({
   subtitle: `请从整条说服路径判断 ${architecture.pages.length} 页是否完整、准确且有必要。一个 Storyline 节点可以展开为多页。`,
   sourceSha256,
   pages,
+  priorRound: priorRound ? { saved_at: priorRound.saved_at, stale: !!priorRound.stale } : null,
   notice: '所有页面默认通过。重点只看章节推进、标题、核心判断和分行内容块；图表、配图与版式通常留到 By-page Copy。输入任何反馈后，本页会自动切换为“需要修改”。',
 });
 mkdirSync(dirname(outputPath), { recursive: true });

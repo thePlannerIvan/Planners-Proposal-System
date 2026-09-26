@@ -56,7 +56,7 @@ node "<Planners-Proposal-System 目录>/proposal-library-maintenance/scripts/lib
 
 ## B4 与安装
 
-B4 必须用 `start-review-session` 直接打开 review URL，并把运行状态设为 `waiting_for_human`。命令打开页面后立即返回；模型告诉用户在网页保存后回到 Codex 发送“已完成”，然后结束当前回合，不保持终端等待或轮询。用户返回后先确认本次 `review-feedback.json` 存在并运行 B4 Validator，才能继续 B5。审阅对象是完整 Lens/Variant/Recipe/Module 变更和页面结构，不是 B2 页面切分。增补路线才显示“合并到哪个既有 Lens”；新建路线不显示合并选项。先完成 Lens 决策，再审 Recipe 的最终依赖；依赖被拒绝、暂缓或没有安装去向时不能批准 Recipe。`merge` 和 `revision` 必须提交人工确认后的完整最终对象，安装器不得自动拼接或用新对象覆盖旧对象。反馈必须逐项结构化保存，未处置项不能安装。
+B4 必须用 `start-review-session` 起审阅宿主、打开 review URL，并把运行状态设为 `waiting_for_human`。宿主生命周期归公共模组（`planners-review-core/scripts/review-host.mjs`），本 Skill 不再自带 server；默认开浏览器、`--no-open` 关，**开不了浏览器不是致命错误**（如实回 `opened:false` 就继续）。命令返回后立即返回；模型告诉用户在网页保存后回到 Codex 发送“已完成”，然后结束当前回合，不保持终端等待或轮询。用户返回后按**被钉住的顺序**：先 `review-inbox.mjs --surface <审阅目录>/review-surface.json` 收件（提交 → 原生 `review-feedback.json`，并把页面的前提与整体意见放进收据），**再**运行 B4 Validator（收件之前跑它一定失败），才能继续 B5。审阅对象是完整 Lens/Variant/Recipe/Module 变更和页面结构，不是 B2 页面切分。增补路线才显示“合并到哪个既有 Lens”；新建路线不显示合并选项。先完成 Lens 决策，再审 Recipe 的最终依赖；依赖被拒绝、暂缓或没有安装去向时不能批准 Recipe。`merge` 和 `revision` 必须提交人工确认后的完整最终对象，安装器不得自动拼接或用新对象覆盖旧对象。反馈必须逐项结构化保存，未处置项不能安装。页面也可以**不逐项处置、只交一句整体意见**：那一条走提交文件与收据，不写原生记录（原生契约要求逐项决定，不许替人补）。页面不存状态：上一轮的文字不预填、`defer`（这一轮先不动它）不变成下一轮的待办。
 
 阶段通过只能由 `verify` 校验回执、产物哈希和调度器内置的当前阶段强制 Validator 后推进。调度器拒绝其他 Validator。B5 还必须通过安装后 Wiki 引用图完整性检查，确保 Recipe、step、Lens、Module 与索引没有悬空引用。失败时记录 blocker，修复同一阶段产物后重试；不得用占位结果、模型自报完成或直接修改 run-state 绕过。
 
@@ -64,7 +64,7 @@ B4 必须用 `start-review-session` 直接打开 review URL，并把运行状态
 
 - `stages/`：模型在各阶段需要看到的完整中文任务定义。
 - `contracts/`：阶段输出及最终 Wiki 的机器可读边界；不替代语义任务说明。
-- `scripts/`：分页、打包、校验、B4 server/页面和 B5 安装。
+- `scripts/`：分页、打包、校验、B4 审阅面（surface / 页面 / 收件层）和 B5 安装；**宿主生命周期不在这里**（公共模组唯一一份）。
 - `base-wiki/`：随 Skill 提供的活动基础库；增补时只从 B3d 起读取。
 
 不再存在独立 `instructions/` 或活跃 `workflow/`；阶段目的、方法、禁止事项、命令和完成标准只在 `stages/B*.md` 维护一份。机械阶段映射、必需 Validator、状态推进与恢复条件只存在于 `library-dispatch.mjs`。

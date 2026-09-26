@@ -45,6 +45,11 @@ button{cursor:pointer}
 .origin{margin-left:auto;display:flex;gap:9px;align-items:center;font-size:10px;color:#aaa49a;white-space:nowrap}
 .origin b{color:#f0ebe2}.origin a{color:#d8a58e;text-decoration:none;border-bottom:1px solid #76594d}
 .progress{display:flex;align-items:center;gap:10px;margin-left:8px}
+.reload{background:transparent;border:1px solid #55514a;border-radius:6px;padding:5px 10px;font-size:13px;color:inherit;cursor:pointer;white-space:nowrap}
+.reload:hover{background:rgba(255,255,255,.08)}
+.prior-round{margin:10px 0 0;border:1px solid var(--line);border-left-width:4px;background:#f6f2ea;border-radius:6px;padding:10px 14px;font-size:13.5px;line-height:1.6}
+.prior-round b{color:#5f594f}
+.prior-round p{margin:5px 0 0}
 .track{width:145px;height:5px;background:#55514a;border-radius:6px;overflow:hidden}
 .fill{height:100%;width:0;background:#e5a487;transition:width .2s}
 .shell{display:grid;grid-template-columns:310px minmax(0,1fr);min-height:calc(100vh - 74px)}
@@ -128,6 +133,7 @@ footer a{color:var(--accent)}
   <div class="kind">${safeTitle}</div>
   <div class="origin"><b>OPEN SOURCE WORKFLOW</b><a href="https://demyth.info" target="_blank" rel="noreferrer">demyth.info</a><span>小红书：阿祖不看 TVC</span></div>
   <div class="progress"><div class="track"><div class="fill" id="progressFill"></div></div><span id="progressText">0/${pages.length}</span></div>
+  <button class="reload" id="reload" title="重新加载页面（页面本身被更新过、或想丢弃未保存的输入时用它）">&#8635; 刷新</button>
 </header>
 <div class="shell">
   <aside class="sidebar">
@@ -160,9 +166,13 @@ footer a{color:var(--accent)}
     </div>
   </div>
 </div>
+{{REVIEW_BRIDGE}}
 <script>
 const REVIEW = ${data};
-const decisions = new Map(REVIEW.pages.map(page => [page.page_number, 'approve']));
+// R7：上一轮被标过「需要修改」的页**没有默认值**（必须复核后重新选一次），
+// 其余页按产出方的 default_decision 默认通过。原话只作只读参考，不预填进输入框。
+const decisions = new Map(REVIEW.pages.filter(page => page.default_decision !== null)
+  .map(page => [page.page_number, page.default_decision || 'approve']));
 const attachments = new Map(REVIEW.pages.map(page => [page.page_number, []]));
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const list = value => Array.isArray(value) ? value.join('\\n') : String(value ?? '');
@@ -208,10 +218,15 @@ function render(){
     const primary = (page.sections || []).filter(item => !item.collapsed).map(item => '<section class="section"><h3>' + esc(item.label) + '</h3><div class="section-content '+(item.format==='markdown'?'rich-copy':'')+'">' + (item.format==='markdown'?markdown(item.value):esc(list(item.value))) + '</div>' + ((item.tags || []).length ? '<div class="tags">' + item.tags.map(tag => '<span class="tag ' + esc(tag.tone || '') + '">' + esc(tag.label) + '</span>').join('') + '</div>' : '') + '</section>').join('');
     const secondary = (page.sections || []).filter(item => item.collapsed).map(item => '<section class="section"><h3>' + esc(item.label) + '</h3><div class="section-content '+(item.format==='markdown'?'rich-copy':'')+'">' + (item.format==='markdown'?markdown(item.value):esc(list(item.value))) + '</div></section>').join('');
     const points = (page.points || []).length ? '<ul class="points">'+page.points.map(point=>'<li>'+esc(point)+'</li>').join('')+'</ul>' : '';
+    const priorBox = page.prior ? ('<div class="prior-round"><b>上一轮你要求修改（这一页已按它改过）</b>'
+      + (page.prior.feedback_zh ? '<p>「' + esc(page.prior.feedback_zh) + '」</p>' : '')
+      + (page.prior.attachments ? '<p>图片改动：' + page.prior.attachments + ' 处</p>' : '')
+      + '<p>只作参考，<strong>不算本轮意见</strong>；复核后点一下「通过」即可，不用先清空任何东西。</p></div>') : '';
     const upload = REVIEW.allowUploads ? '<div class="dropzone" data-dropzone="'+page.page_number+'">拖拽图片到这里，或点击选择<input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple data-file="'+page.page_number+'"></div><div class="asset-list" data-assets="'+page.page_number+'"></div>' : '';
     article.innerHTML =
       '<header class="page-head"><div class="page-no">' + String(page.page_number).padStart(2,'0') + '</div><h2>' + esc(page.title) + '</h2></header>' +
       '<div class="claim">' + esc(page.claim || '') + '</div>' +
+      priorBox +
       points +
       '<div class="sections">' + primary + '</div>' +
       ((meta||secondary)?'<details class="details"><summary>查看工作信息</summary><div class="details-body">'+(meta?'<div class="meta">'+meta+'</div>':'')+secondary+'</div></details>':'') +
@@ -253,10 +268,15 @@ async function uploadFiles(page,files){
   for(const file of files){
     if(!file.type.startsWith('image/'))continue;
     zone.textContent='正在上传 '+file.name+'…';
-    const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file)});
-    const response=await fetch('/upload-asset',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({page_number:page,filename:file.name,mime:file.type,data_base64:data})});
-    const result=await response.json();if(!response.ok||!result.ok){zone.textContent='上传失败：'+(result.error||file.name);continue}
-    attachments.get(page).push({path:result.markdown_path,url:result.url,alt:file.name.replace(/\\.[^.]+$/,''),caption:''});renderAssets(page);
+    const ext=(file.name.match(/\.[^.]+$/)||[''])[0].toLowerCase();
+    const stem=file.name.replace(/\.[^.]+$/,'').replace(/[^\p{L}\p{N}._-]+/gu,'-').slice(0,80)||'image';
+    const rel='uploads/page-'+String(page).padStart(2,'0')+'/'+stem+'-'+Math.random().toString(16).slice(2,10)+ext;
+    try{
+      if(!review) throw new Error('页面没连上审阅宿主：这一页必须由宿主打开');
+      if(caps().indexOf('asset-upload') < 0) throw new Error('这个宿主没有声明 asset-upload 能力（改用无插件宿主）');
+      await review.upload(file, rel);
+    }catch(error){ zone.textContent='上传失败：'+error.message; continue; }
+    attachments.get(page).push({path:rel,url:rel,alt:file.name.replace(/\.[^.]+$/,''),caption:''});renderAssets(page);
   }
   zone.innerHTML='拖拽图片到这里，或点击选择<input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple data-file="'+page+'">';
   const input=zone.querySelector('input');input.addEventListener('change',()=>uploadFiles(page,[...input.files]));
@@ -286,16 +306,50 @@ document.getElementById('copyCompleted').onclick=async()=>{
   try{await navigator.clipboard.writeText('已完成');document.getElementById('copyCompleted').textContent='已复制'}catch{window.prompt('复制下面的文字并发送给 Codex','已完成')}
 };
 document.getElementById('closeCompletion').onclick=()=>document.getElementById('completion').classList.remove('open');
+let review = null;
+const BRIDGE_TIMEOUT_MS = 1500;   // 握手要有上限：不返回就按"没有桥"降级继续画
+function connectWithTimeout(ms){
+  return new Promise(resolve => {
+    let done = false;
+    const finish = value => { if(!done){ done = true; resolve(value); } };
+    setTimeout(() => finish(null), ms);
+    try { ReviewBridge.connect().then(finish, () => finish(null)); } catch(error){ finish(null); }
+  });
+}
+function caps(){ return (review && Array.isArray(review.capabilities)) ? review.capabilities : []; }
+function sayReadOnly(why){
+  const status = document.getElementById('saveStatus');
+  if(status) status.textContent = why;
+}
+// 唤醒分档（R5）：宿主"接受了"不等于"通知到了"。
+function wakeTier(woke){
+  if(!woke || woke.error) return '；没能通知模型（' + ((woke && woke.error) || '宿主没回话') + '）—— 请回对话说一声「已完成」';
+  if(woke.verified) return '，宿主已核对：通知进了队列';
+  if(woke.woke === false) return '；这个宿主不能唤醒模型（没有插件），请回对话说一声「已完成」';
+  return '；宿主接受了这次唤醒，但没有核对是否送到 —— 模型没反应就回对话说一声';
+}
 async function save(){
   const button = document.getElementById('saveButton');
+  const status = document.getElementById('saveStatus');
+  // R7 兜底：任何一页没有决定就**不写文件**。宁可不提交，也不替人编一个决定出来。
+  const missing = REVIEW.pages.filter(page => !decisions.has(page.page_number)).map(page => page.page_number);
+  if (missing.length) {
+    status.textContent = '还有 ' + missing.length + ' 页必须明确选择后才能保存（'
+      + missing.join('、') + '）：这些是上一轮你要求修改的页，复核后点一下「通过」即可。';
+    button.disabled = false;
+    return;
+  }
   button.disabled = true;
   const pageDecisions = REVIEW.pages.map(page => ({
     page_number: page.page_number,
     decision: decisions.get(page.page_number),
     feedback_zh: document.querySelector('[data-feedback="' + page.page_number + '"]').value.trim(),
-    ...(REVIEW.allowUploads ? {attachments: attachments.get(page.page_number) || []} : {}),
+    ...(REVIEW.allowUploads && caps().indexOf('asset-upload') >= 0 ? {attachments: attachments.get(page.page_number) || []} : {}),
   }));
   const payload = {
+    // R5b：页面知道、机器看不见的前提要**进数据**（收件层摘进收据，不写进原生记录）。
+    pre_check: false,
+    pre_check_note: '页面未做版本核对（当前架构在审阅目录之外，页面读不到）；哈希由 Skill 侧 Validator 复核。',
     contract_version: REVIEW.reviewKind === 'by_page_copy' ? '1.1.0' : '1.0.0',
     review_kind: REVIEW.reviewKind,
     source_sha256: REVIEW.sourceSha256,
@@ -304,20 +358,36 @@ async function save(){
     overall_feedback_zh: document.getElementById('overallFeedback').value.trim(),
     decisions: pageDecisions,
   };
-  const status = document.getElementById('saveStatus');
   try {
-    const response = await fetch('/save-feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
-    const result = await response.json();
-    if(!response.ok || !result.ok) throw new Error(result.error || '保存失败');
-    status.textContent = '已保存：' + result.feedback_path;
-    showCompletion(result.feedback_path);
+    if(!review) throw new Error('页面没连上审阅宿主：这一页必须由宿主打开（DSH 侧栏，或本 Skill 的审阅入口起的本地宿主）');
+    await review.write(payload);
+    let woke = null;
+    try { woke = await review.wake({ unit: '整份结构' }); } catch(error){ woke = { error: error.message }; }
+    status.textContent = '已交给审阅宿主（' + (review.transport || '未知通道') + '）' + wakeTier(woke);
+    showCompletion('review-feedback.json');
   } catch(error) {
     status.textContent = '保存失败：' + error.message;
     button.disabled = false;
   }
 }
+
 render();
 updateProgress();
+document.getElementById('reload').addEventListener('click', () => location.reload());
+// 桥是**增强**，不是氧气：先用自己的数据把自己画出来，再去握手。
+(async function boot(){
+  try { if(window.ReviewBridge) review = await connectWithTimeout(BRIDGE_TIMEOUT_MS); } catch(error){ review = null; }
+  if(review){
+    if(REVIEW.allowUploads && caps().indexOf('asset-upload') < 0){
+      const status=document.getElementById('saveStatus');
+      if(status) status.textContent='这个宿主不支持上传替换图（没有声明 asset-upload）；其余审阅照常。';
+    }
+  } else {
+    sayReadOnly(window.ReviewBridge
+      ? '连不上审阅宿主（握手超时）：内容可以看，反馈存不进去。'
+      : '这一页没有连上审阅宿主：内容可以看，反馈存不进去（请让宿主打开它）。');
+  }
+})();
 </script>
 </body>
 </html>`;

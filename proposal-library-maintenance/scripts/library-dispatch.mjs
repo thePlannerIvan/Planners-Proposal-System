@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import {
-  closeSync, existsSync, mkdirSync, openSync, readFileSync, unlinkSync, writeFileSync,
-} from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { relative, resolve, join } from 'node:path';
-import { spawn, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { validateFile } from './lib/contract-validation.mjs';
 
 const args = {};
@@ -123,26 +121,14 @@ if (action === 'start-review-session') {
   if (!Number.isInteger(port) || (port !== 0 && (port < 1024 || port > 65535))) fail('端口必须为 0 或 1024–65535');
   const reviewDir = resolve(html, '..');
   const feedback = join(reviewDir, 'review-feedback.json');
-  const ready = join(reviewDir, 'review-session.json');
-  const log = join(reviewDir, 'review-session.log');
-  if (existsSync(feedback)) unlinkSync(feedback);
-  if (existsSync(ready)) unlinkSync(ready);
-  const logFd = openSync(log, 'a');
-  const child = spawn(
-    process.execPath,
-    [join(import.meta.dirname, 'review-session.mjs'), '--dir', reviewDir, '--feedback', feedback, '--port', String(port), '--ready-file', ready],
-    { detached: true, stdio: ['ignore', logFd, logFd] },
-  );
-  closeSync(logFd);
-  child.unref();
-  for (let i = 0; i < 80 && !existsSync(ready); i++) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
-  if (!existsSync(ready)) {
-    const details = existsSync(log) ? readFileSync(log, 'utf8').trim() : '';
-    fail(`review server 未就绪${details ? `：${details}` : ''}`);
-  }
-  const session = load(ready);
-  const opened = spawnSync('open', [session.url], { encoding: 'utf8' });
-  if (opened.status !== 0) fail(`无法直接打开 review 页面：${opened.stderr || opened.stdout}`);
+  const submissions = join(reviewDir, 'review-submissions.json');
+  // 起停宿主**只有一份**：公共模组的 Node CLI（`planners-review-core/scripts/review-host.mjs`）。
+  // 这里不再 spawn 自己的 server、不再 detached、不再强制 `open`：
+  //   · 默认开（`open` 的语义），`--no-open` 关；`REVIEW_TEST_NO_OPEN=1` 也关（CI / 无头）；
+  //   · **开不了浏览器不是致命错误** —— 宿主如实回 `opened:false` 就继续，内容与提交都不依赖那个窗口。
+  const { openSurface, surfacePath } = await import('./review-surface-support.mjs');
+  const wantOpen = !process.argv.includes('--no-open') && process.env.REVIEW_TEST_NO_OPEN !== '1';
+  const live = await openSurface(reviewDir, { port, open: wantOpen });
   state.status = 'waiting_for_human';
   state.review = {
     stage: 'B4',
@@ -150,17 +136,27 @@ if (action === 'start-review-session') {
     html_sha256: sha(html),
     bundle: relative(runDir, bundle),
     bundle_sha256: sha(bundle),
-    url: session.url,
+    url: live.url,
+    opened: !!live.opened,
+    surface: relative(runDir, surfacePath(reviewDir)),
     feedback_path: relative(runDir, feedback),
+    submissions_path: relative(runDir, submissions),
     opened_at: new Date().toISOString()
   };
   write(statePath, state);
   process.stdout.write(`${JSON.stringify({
     valid: true,
     status: 'waiting_for_human',
-    opened: session.url,
+    opened: !!live.opened,
+    url: live.url,
+    started: live.started,
+    reused: live.reused,
+    surface: live.surface,
     feedback_path: feedback,
-    next_action_zh: '请在网页保存审阅，然后回到 Codex 发送“已完成”。',
+    submissions_path: submissions,
+    next_action_zh: '请在网页保存审阅；然后先跑 scripts/review-inbox.mjs --surface <surface> 收件，'
+      + '**收件之后**再跑 scripts/validate-review-feedback.mjs --feedback <审阅目录>/review-feedback.json '
+      + '--bundle <运行目录>/B4/review-bundle.json。',
   })}\n`);
   process.exit(0);
 }
@@ -187,7 +183,7 @@ for (const validator of receipt.validators) {
   if (result.status !== 0) fail(`${validator.script} 失败：${(result.stdout || result.stderr).trim()}`);
 }
 if (stage === 'B4') {
-  if (!state.review) fail('B4 必须先 start-review-session 并直接打开页面');
+  if (!state.review) fail('B4 必须先 start-review-session 起过审阅面（并留下 review 绑定）');
   if (receipt.review_html_sha256 !== state.review.html_sha256 || receipt.review_bundle_sha256 !== state.review.bundle_sha256) fail('B4 回执未绑定实际打开的 HTML 与审阅包');
   const feedbackArtifact = artifacts.find(item => item.path === state.review.feedback_path);
   if (!feedbackArtifact) fail('B4 artifacts 必须包含本次 server 保存的 review-feedback.json');

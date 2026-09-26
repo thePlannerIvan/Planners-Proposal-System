@@ -49,7 +49,7 @@ node "<Planners-Proposal-System 目录>/proposal-co-creation/scripts/start-page-
 
 ## 交接
 
-只有反馈与当前文件 Hash 一致且 `overall_decision`为 `approve`，才读取 `../../proposal-by-page-copy/WORKFLOW.md`并进入逐页文案工作流。
+只有反馈与当前文件 Hash 一致且 `overall_decision` 为 `approve`，才提示用户使用 `$planners-bypage` 继续 —— 把 `project-memory.md` / `source-index.json` / `page-architecture.json` / 结构审阅反馈交给它，逐页文案、事实核查与终稿由它完成。
 
 交接时明确告诉下游：
 

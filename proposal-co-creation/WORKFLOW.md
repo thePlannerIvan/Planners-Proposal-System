@@ -23,13 +23,13 @@
 
 - 不清楚属于方法库、共创还是逐页文案时，返回根 `SKILL.md`重新路由。
 - 需要方法时，只通过 Library 的只读查询入口限量读取 active Wiki。
-- 本 Skill 只向 By-page Copy 交付：
+- 本 Skill 只向 `planners-bypage` 交付：
   - `.proposal-work/project-memory.md`
   - `.proposal-work/source-index.json`
   - `.proposal-work/page-architecture.json`
   - 结构审阅反馈
 - 本 Skill 不写最终 PPT 文案，也不提前替后续制作决定所有图表、图片和版式。
-- 结构审阅批准后，除非用户只要求共创，直接读取 `../proposal-by-page-copy/WORKFLOW.md`继续，不重新询问已经确认的背景。
+- 结构审阅批准后，除非用户只要求共创，直接提示用户调用 `$planners-bypage` 继续（把 `.proposal-work/` 下那四个文件交给它），不重新询问已经确认的背景。
 
 ## 项目目录
 
