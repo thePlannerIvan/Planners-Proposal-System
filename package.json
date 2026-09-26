@@ -8,7 +8,6 @@
     "test:router": "node evals/router/run.mjs",
     "test:library": "node evals/library/run.mjs",
     "test:co-creation": "node evals/co-creation/run.mjs",
-    "test:by-page-copy": "node evals/by-page-copy/run.mjs",
     "test": "node evals/run-all.mjs"
   },
   "repository": {

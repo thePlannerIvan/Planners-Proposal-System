@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-26 — 清理：退役 co-creation 的自带审阅宿主、删掉指向已删目录的 npm script
+
+**起因**：一次「本地 vs 公开仓库」逐字节对齐时暴露出两处**配置/文件与代码不一致**的遗留 —— 都不是本次改造新引入的，是之前那次迁移没走完的尾巴。
+
+- **退役 `proposal-co-creation/` 的自带审阅宿主**：`scripts/page-review-session.mjs`（167 行）与
+  `scripts/lib/review-launcher.mjs`（48 行）。C4 上缝之后 `start-page-review.mjs` 已经 import
+  `./review-surface-support.mjs`，这一对**没有任何调用者**（全 `02-skills-library` 范围 grep 只找到 launcher 引 session 这一条自引用）。
+  **先归档再删**：原件移到 `02-skills-library/_archive/proposal-co-creation-review-host-retired-2026-09-26/`（附 README 说明原职责、取代者与血统）。
+  注意：那次改造已归档过 `proposal-by-page-copy/` 里的**同名**两份，`proposal-co-creation/` 这一份当时漏了 —— 本轮补齐。
+- **删掉失效的 npm script**：`"test:by-page-copy": "node evals/by-page-copy/run.mjs"`。该目录（逐页文案 P1–P5 那套）已退役，
+  script 指向不存在的路径；`npm test`（`evals/run-all.mjs`）只跑 router / library / co-creation 三套，不受影响。
+  同一份 `package.json` 其余 script 的目标文件已逐条验证存在。
+
+> **`description` 仍是旧口径**：「从方法库维护、策略共创到逐页文案与事实审计的一体化提案 Skill」—— 逐页文案与事实审计已分别交给
+> `planners-bypage` 与 `planners-fact-check`。本轮**只清路径级死引用**，未改 description 文案；要改请单独发话。
+
 ## 2026-09-26 — B4「方法库全量审阅」面接到公共缝上
 
 **起因**：B4 是这套流程里**唯一**还自带审阅宿主的环节 —— 自己的 `review-session.mjs`、自己写原生反馈、
