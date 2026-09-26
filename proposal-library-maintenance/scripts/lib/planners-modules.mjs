@@ -8,12 +8,17 @@
  *   ① $PLANNERS_MODULES_HOME/<name>
  *   ② 本 Skill 目录的兄弟：<skills-root>/<name>          ← 发布后的主路径
  *   ③ monorepo：02-skills-library/<NN-分类>/<name>
- *   ④ 都没有 → 报错并给安装提示（**不许静默降级成"跳过校验"**）
+ *   ④ 用户级兜底：<安装根>/<name>（$PLANNERS_MODULES_INSTALL_DIR → $PLANNERS_MODULES_HOME
+ *      → 默认 ~/.planners-modules；库外，绝不写进 02-skills-library）
+ *   ⑤ 都没有 → **自动装**进安装根，装完复验再重解析；装不成才报错
+ *      （PLANNERS_NO_AUTO_INSTALL=1 → 只报不装；契约见 planners-modules-install.mjs）
  *
  * 自检：node scripts/lib/planners-modules.mjs --check
  */
 import { existsSync, readdirSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { LIBRARY_DIR_NAME, ensureModule, installRootFor, moduleNotFound }
+  from './planners-modules-install.mjs';
+import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));   // <...>/scripts/lib
@@ -31,6 +36,32 @@ function ancestors(start, maxDepth = 6) {
   return out;
 }
 
+/**
+ * 从 start 往上找 02-skills-library 工作树根（找不到返回 null）。
+ * 拿它做硬约束：自动安装的目标**不得位于库工作树内**（否则会再造一个嵌套仓库）。
+ */
+export function libraryRootFor(start) {
+  let current = resolve(start);
+  for (let depth = 0; depth < 12; depth += 1) {
+    // ① 名字就是库目录（目录被改名也不影响这条之外的判据）
+    // ② 这一层**装着**一个叫 02-skills-library 的子目录（不依赖本文件在库里的深度）
+    // ③ 这一层同时住着本 Skill 与已知公共模组分发目录（说明它就是 skills 根）
+    const subdirs = (() => {
+      try {
+        return new Set(readdirSync(current));
+      } catch {
+        return new Set();
+      }
+    })();
+    if (current.endsWith(sep + LIBRARY_DIR_NAME) || subdirs.has(LIBRARY_DIR_NAME)) return current;
+    if (subdirs.has('planners-review-core') && subdirs.has('planners-source-index')) return current;
+    const parent = dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  return null;
+}
+
 export function moduleCandidates(name) {
   const out = [];
   if (process.env.PLANNERS_MODULES_HOME) out.push(join(process.env.PLANNERS_MODULES_HOME, name));
@@ -43,15 +74,39 @@ export function moduleCandidates(name) {
       }
     } catch { /* 读不了就跳过这一级 */ }
   }
+  // ⑤ 兜底（最后一条，绝不遮蔽上面任何一条）：缺依赖时自动装到「库外用户级」安装根；
+  //    只报不装（PLANNERS_NO_AUTO_INSTALL=1）时这一条通常是空的。
+  out.push(join(installRootFor({ name }).root, name));
   return [...new Set(out)];
 }
 
 export function resolveModule(name) {
-  for (const candidate of moduleCandidates(name)) if (existsSync(candidate)) return candidate;
-  throw new Error(
-    `找不到公共模组 ${name}。找过：\n  ` + moduleCandidates(name).join('\n  ')
-    + `\n装法：把 ${name} 放进同一个 skills 根目录，或设 PLANNERS_MODULES_HOME 指向它所在目录。`,
-  );
+  for (const c of moduleCandidates(name)) if (existsSync(c)) return c;
+  return installModuleThenResolve(name);
+}
+
+/**
+ * 本地一条都没命中 → 自动装（契约见 planners-modules-install.mjs）。
+ * 装失败时错误信息里带着「缺哪个、找过哪些路径、手动怎么装（可复制）」。
+ */
+function installModuleThenResolve(name) {
+  const candidates = moduleCandidates(name);
+  const libraryRoot = libraryRootFor(HERE);
+  try {
+    ensureModule(name, {
+      candidates,
+      libraryRoot,
+      verifyPath: probeName => (existsSync(join(installRootFor({ name: probeName }).root, probeName))
+        ? join(installRootFor({ name: probeName }).root, probeName)
+        : null),
+    });
+  } catch (error) {
+    // 安装器的错误信息本身已经说清了「缺哪个、找过哪些路径、手动怎么装」，
+    // 再套一层只会把它埋掉 —— 原样抛出，另加一句上下文。
+    throw new Error(`公共模组 ${name} 不在本地，自动安装也没成功。\n${error.message}`);
+  }
+  for (const c of moduleCandidates(name)) if (existsSync(c)) return c;
+  throw moduleNotFound(name, candidates);
 }
 
 /** 公共模组里的一个脚本的绝对路径 */
