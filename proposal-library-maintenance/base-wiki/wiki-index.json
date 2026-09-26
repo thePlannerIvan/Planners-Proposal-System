@@ -7,7 +7,7 @@
       "module_id": "mod_brand-strategy",
       "title": "品牌策略开发",
       "wiki_version": "7.0.3",
-      "stable_decision": "模块「品牌策略开发」新增 2 个可复用方法，源自 3 个案例（斯凯奇健步文化策略、斯凯奇跑步户外策略、安奈儿童装品牌升级），经跨案例验证。",
+      "stable_decision": "模块「品牌策略开发」新增 2 个可复用方法，源自 3 个案例（某运动品牌健步文化策略、某运动品牌跑步户外策略、某童装品牌升级），经跨案例验证。",
       "lenses": [
         {
           "lens_id": "lens_mod_brand-strategy-07fb9aa8",
@@ -137,7 +137,7 @@
       "module_id": "mod_competitor-analysis",
       "title": "竞品分析",
       "wiki_version": "7.0.1",
-      "stable_decision": "模块「竞品分析」新增 1 个可复用方法，源自 2 个案例（斯凯奇跑步户外策略、斯凯奇健步文化策略）的跨案例验证。",
+      "stable_decision": "模块「竞品分析」新增 1 个可复用方法，源自 2 个案例（某运动品牌跑步户外策略、某运动品牌健步文化策略）的跨案例验证。",
       "lenses": [
         {
           "lens_id": "lens_mod_competitor-analysis-d8e026bf",
@@ -175,7 +175,7 @@
       "module_id": "mod_consumer-insight",
       "title": "消费者洞察",
       "wiki_version": "7.0.0",
-      "stable_decision": "模块「消费者洞察」新增 1 个可复用方法，源自安奈儿童装品牌升级案例。",
+      "stable_decision": "模块「消费者洞察」新增 1 个可复用方法，源自某童装品牌升级案例。",
       "lenses": [
         {
           "lens_id": "lens_mod_consumer-insight-5adf4bcb",
@@ -284,7 +284,7 @@
       "module_id": "mod_market-category",
       "title": "市场与品类分析",
       "wiki_version": "7.0.0",
-      "stable_decision": "模块「市场与品类分析」新增 1 个可复用方法，源自斯凯奇跑步户外策略案例。",
+      "stable_decision": "模块「市场与品类分析」新增 1 个可复用方法，源自某运动品牌跑步户外策略案例。",
       "lenses": [
         {
           "lens_id": "lens_mod_market-category-38133da8",

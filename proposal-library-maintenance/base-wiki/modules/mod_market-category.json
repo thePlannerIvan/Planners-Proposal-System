@@ -3,7 +3,7 @@
   "wiki_module_id": "wm_d43dc2436abf075e2fe6927e",
   "module_id": "mod_market-category",
   "title": "市场与品类分析",
-  "stable_decision": "模块「市场与品类分析」新增 1 个可复用方法，源自斯凯奇跑步户外策略案例。",
+  "stable_decision": "模块「市场与品类分析」新增 1 个可复用方法，源自某运动品牌跑步户外策略案例。",
   "unified_preconditions": [
     "项目需包含品类市场趋势数据和消费者行为变化数据",
     "需要从宏观趋势到品类机会的完整推导链路"
@@ -107,7 +107,7 @@
       "source_module_instance_ids": [
         "mi_4d7bcde94cba50d23f93cf59"
       ],
-      "evidence": "源自SKECHERS跑步户外策略：从'舒适解压成为社会新风潮'和'轻运动新经济'趋势出发，分析户外鞋服市场19.5%/15%增长率，得出斯凯奇应从'城市户外'方向切入户外品类的结论",
+      "evidence": "源自某运动品牌跑步户外策略：从'舒适解压成为社会新风潮'和'轻运动新经济'趋势出发，分析户外鞋服市场的两位数增长率，得出该品牌应从'城市户外'方向切入户外品类的结论",
       "abstraction_self_check": {
         "passed": true,
         "checks": {
