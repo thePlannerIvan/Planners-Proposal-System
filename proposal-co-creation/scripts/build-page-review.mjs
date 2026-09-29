@@ -78,7 +78,7 @@ const html = renderPageReviewHtml({
   sourceSha256,
   pages,
   priorRound: priorRound ? { saved_at: priorRound.saved_at, stale: !!priorRound.stale } : null,
-  notice: '所有页面默认通过。重点只看章节推进、标题、核心判断和分行内容块；图表、配图与版式通常留到 By-page Copy。输入任何反馈后，本页会自动切换为“需要修改”。',
+  notice: '所有页面默认通过。重点只看章节推进、标题、核心判断和分行内容块；图表、配图与版式通常留到逐页文案阶段（`planners-bypage`）。输入任何反馈后，本页会自动切换为“需要修改”。',
 });
 mkdirSync(dirname(outputPath), { recursive: true });
 writeFileSync(outputPath, html);

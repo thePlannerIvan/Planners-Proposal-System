@@ -17,7 +17,7 @@ B3c 只处理本轮新材料，且保持 Wiki-blind。它把 B3b 的候选从“
 
 - 说明重复模式为何构成可执行方法，而不只是相似版式；
 - 汇总全部来源 result、unit 和 page；
-- 不再把同一 result 留在 `terminal_results`。每个 B3b result 最终只能进入一个冻结 Lens，或进入一个诚实终态。
+- 不再把同一 result 留在 `terminal_results`。每个 B3b result 最终只能进入一个冻结 Lens，或进入一个落选终态（登记在 `terminal_results`；与 C1/C4 那个同名的「诚实终态」协议无关）。
 
 ## 冻结前自检
 

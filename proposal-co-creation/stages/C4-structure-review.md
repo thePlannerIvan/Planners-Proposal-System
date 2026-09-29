@@ -73,4 +73,4 @@ node "<Planners-Proposal-System 目录>/proposal-co-creation/scripts/start-page-
 - 用户只审阅最重要的结构信息；
 - 输入反馈自动切换修改状态；
 - 反馈可靠保存并绑定当前结构；
-- 整体批准后已直接交接 By-page Copy。
+- 整体批准后交 `planners-bypage` 继续逐页文案（本 Skill 到此为止，不再处理逐页内容）。

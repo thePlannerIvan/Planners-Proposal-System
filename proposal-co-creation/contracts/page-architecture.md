@@ -1,6 +1,6 @@
 # Storyline 与页面架构交接格式
 
-`page-architecture/2.0.0` 是 Co-creation 交给 By-page Copy 的唯一正式结构边界。它在方向成熟后生成，把 Storyline 的认知推进展开为可写作的页面判断，但不写最终文案。
+`page-architecture/2.0.0` 是 Co-creation 交给逐页产线（`planners-bypage`）的唯一正式结构边界。它在方向成熟后生成，把 Storyline 的认知推进展开为可写作的页面判断，但不写最终文案。
 
 ## 核心语义
 

@@ -27,7 +27,7 @@ node scripts/validate-b1-output.mjs \
 
 脚本只建立稳定 ID、页码、哈希和文件定位；不会做语义补全。超过 12000 字节却没有 `\f` 的 Markdown 会阻断，防止整份 Deck 被误当成一页。
 
-## 完成检查
+## 完成标准
 
 - 每个原始页面都对应一个 page ID、页码、来源文件、文本哈希。
 - Markdown 可以按 `text_path + page_number` 回到原文。

@@ -14,9 +14,9 @@ body:
         - Router / 安装
         - Library Maintenance
         - Co-creation
-        - By-page Copy
+        - 逐页文案（planners-bypage）
         - Review HTML
-        - Fact Audit
+        - 事实核查（公共件 planners-fact-check）
     validations:
       required: true
   - type: textarea

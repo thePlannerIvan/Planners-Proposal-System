@@ -78,7 +78,7 @@ node scripts/library-dispatch.mjs \
 - Recipe 页面必须把来源 Lens ID 解析为“新 Lens ID”或“既有目标 Lens ID”。任一依赖被拒绝、暂缓或尚未处置时，Recipe 不能计为已完成，也不能保存为批准。
 - 页眉和页脚使用开源来源标识：网站 `https://demyth.info`，小红书“阿祖不看 TVC”；该标识只用于过程审阅页，不进入最终客户交付物。
 
-## 完成检查
+## 完成标准
 
 `validate-review-feedback.mjs --feedback ... --bundle ...` 必须验证：
 

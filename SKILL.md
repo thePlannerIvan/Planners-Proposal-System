@@ -1,6 +1,6 @@
 ---
 name: planners-proposal-system
-description: 从中文历史方案中提炼和维护 Method Wiki，或从项目 Brief、研究和分析资料出发，与用户共创策略方向与 Storyline，展开 Page Architecture 并完成结构审阅，然后**调用 `planners-bypage`** 完成逐页文案、事实核查与终稿。适用于提案、方案、竞标、策略共创、Storyline、逐页提案文案、历史方案方法提炼及 Wiki 增补任务。
+description: 从中文历史方案中提炼和维护 Method Wiki，或从项目 Brief、研究和分析资料出发，与用户共创策略方向与 Storyline，展开 Page Architecture 并完成结构审阅，然后**提示用户改用 `planners-bypage`** 完成逐页文案、事实核查与终稿（本 Skill 不调用别的 Skill）。适用于提案、竞标类的策略共创、Storyline、逐页提案文案，以及历史方案方法提炼与 Wiki 增补任务。
 ---
 
 # Planners-Proposal-System
@@ -57,7 +57,9 @@ B4 的「方法库全量审阅」是一个**审阅面**：页面挂在公共缝�
    - `.proposal-work/page-architecture.json`
    - `.proposal-work/reviews/structure/review-feedback.json`
 2. 缺少批准时返回 Co-creation C4（结构审阅），**不自行补批准**。
-3. 批准后提示用户使用 `$planners-bypage`，把上面四个文件（外加 `project-memory.md` 与 `source-index.json`）交给它；bypage 会从头做完逐页文案、事实核查与终稿。
+3. 批准后提示用户使用 `$planners-bypage`：**实际交接的是 `project-memory.md` 与 `source-index.json`**；已批准的 `page-architecture.json` 与结构审阅反馈**一并交给它作参考**。
+
+**交接口径（当前实况，别读成"契约已打通"）**：bypage 用的是它自己的 `page-architecture/1.0.0`，并在 `.bypage-work/` **重建**一份结构（两侧字段、版本都不兼容，没有转换器）。所以本 Skill 的 `page-architecture/2.0.0`（含 `claim` / `evidence_needs` / `boundary`）目前是**给人和模型看的判断依据，不是被下游直接消费的机器契约**。要改成"bypage 直接读上游那一份"，需要一次跨 Skill 的契约统一 —— 那是一次独立改动，不在本 Skill 做。
 
 **分工的判据**：本 Skill 管「客户必须依次接受哪些判断、每页证哪一句」；bypage 管「每页写什么、来源对不对、图用哪张」。
 
@@ -90,11 +92,14 @@ node "<本 Skill 目录>/proposal-library-maintenance/scripts/query-wiki.mjs" \
 
 ### Co-creation → planners-bypage
 
-只交接项目 `.proposal-work/` 中的：
+**机器级交接**（下游真的读）：
 
 - `project-memory.md`
 - `source-index.json`（契约 `source-index/2.0.0`，公共件 `planners-source-index`）
-- `page-architecture.json`
+
+**随交接一起给的参考**（下游不直接消费，见上面「交接口径」）：
+
+- `page-architecture.json`（本 Skill 的 `2.0.0`；bypage 用自己的 `1.0.0` 重建）
 - 结构审阅反馈
 
 ### planners-bypage → PPT 制作

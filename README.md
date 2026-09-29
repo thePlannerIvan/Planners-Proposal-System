@@ -177,7 +177,7 @@ node --test proposal-co-creation/scripts/lib/planners-modules-install.test.mjs
 node --test proposal-library-maintenance/scripts/lib/planners-modules-install.test.mjs
 ```
 
-公开测试覆盖单一 Router、Library、Co-creation 和 By-page Copy 的活动接口与关键行为。
+公开测试覆盖单一 Router、Library 与 Co-creation 的活动接口与关键行为（逐页文案在 `planners-bypage` 自己的仓库里测）。
 
 ## 品牌、署名与最终交付
 

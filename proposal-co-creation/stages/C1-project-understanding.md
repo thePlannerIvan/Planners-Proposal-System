@@ -82,9 +82,11 @@ node "<公共件 planners-source-index>/scripts/validate-source-index.mjs" "<pro
 - 明确禁止的幕后称谓与高频 AI 句式；
 - 3 条去项目化的正面示例。
 
-这不是完整文案规范。它只保证方向讨论、Storyline 和页面架构从一开始就使用面向客户的提案语言；By-page P1 再根据参考方案细化。
+这不是完整文案规范。它只保证方向讨论、Storyline 和页面架构从一开始就使用面向客户的提案语言；逐页文案阶段（`planners-bypage`）再根据参考方案细化。
 
 ## Wiki 第一次介入
+
+> 命名互指：本文的「Wiki」**就是** `video-idea-system` 里的「Method Wiki」，同一个库、同一支 `query-wiki.mjs`。那边叫「Method Wiki 第一次介入」，指的是这一步。
 
 项目工作记忆形成后，通过 Library 的 `scripts/query-wiki.mjs`限量查询少量相关 Lens：
 

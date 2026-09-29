@@ -50,7 +50,7 @@ node "<Planners-Proposal-System 目录>/proposal-library-maintenance/scripts/lib
 
 ## 阶段文件
 
-每次进入阶段先读唯一对应的 `stages/B*.md`。阶段文件同时包含任务背景、判断方法、禁止事项、诚实终态、输出和自检；不再另设会与其重复的 instruction 文件。
+每次进入阶段先读唯一对应的 `stages/B*.md`。阶段文件包含该阶段的任务背景、判断方法、禁止事项与输出；**完成判据**视阶段不同：B1 / B2 / B4 有标题为「完成标准」的小节，其余阶段（B3a–B3d、B5、B6）由调度器内置 Validator 的回执承担。「自检」只出现在 B3b、B3c；B3c 里还有个同名的「落选登记」，与 C1/C4 的「诚实终态」不是一回事。不再另设会与其重复的 instruction 文件。
 
 所有语义字段、判断、任务指令和示例均使用中文。脚本只能准备原文、打包上下文、校验格式/来源/状态以及执行已批准安装；不得生成、补全、截断或替代模型的语义结果。脚本生成的占位 Lens、固定三页结构和从 rationale 猜 operations 都属于无效产物。
 
@@ -67,7 +67,9 @@ B4 必须用 `start-review-session` 起审阅宿主、打开 review URL，并把
 - `scripts/`：分页、打包、校验、B4 审阅面（surface / 页面 / 收件层）和 B5 安装；**宿主生命周期不在这里**（公共模组唯一一份）。
 - `base-wiki/`：随 Skill 提供的活动基础库；增补时只从 B3d 起读取。
 
-不再存在独立 `instructions/` 或活跃 `workflow/`；阶段目的、方法、禁止事项、命令和完成标准只在 `stages/B*.md` 维护一份。机械阶段映射、必需 Validator、状态推进与恢复条件只存在于 `library-dispatch.mjs`。
+不再存在独立 `instructions/` 或活跃 `workflow/`；阶段目的、方法、禁止事项、命令和完成判据只在 `stages/B*.md` 维护一份（判据落在名为「完成标准」的小节里，没有这一节的阶段由调度器内置 Validator 回执承担）。机械阶段映射、必需 Validator、状态推进与恢复条件只存在于 `library-dispatch.mjs`。
+
+**跳过任一 B 阶段时**，在本次 run-state 里留一行「跳过 &lt;阶段&gt;：&lt;原因&gt;」（复用 B4 的 blocker 记录位置），否则下一轮的读者分不出「跳过」与「漏了」。
 
 ## 运行后迭代
 

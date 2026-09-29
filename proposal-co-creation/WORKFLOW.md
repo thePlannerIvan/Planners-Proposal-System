@@ -14,7 +14,7 @@
 → 组织客户认知改变的 Storyline
 → 按证明需要展开为页面
 → 自动打开一次结构审阅
-→ 交给 By-page Copy
+→ 交给 planners-bypage
 ```
 
 资料提供事实和边界；Method Wiki 提供少量思考工具；模型负责理解、联想、提出判断和反例；人负责战略选择与最终承诺。不要用一堆 Contract 代替共创，也不要把聊天中的灵感当作已经确认的方向。
@@ -141,7 +141,13 @@ Validator 只检查交接结构，不证明方向或 Storyline 已经成熟。
 - 结构文件通过验证；
 - HTML 审阅由脚本自动打开；
 - 反馈绑定当前结构文件，整体决定为 `approve`；
-- 已明确交接给 By-page Copy。
+- 已明确交接给 `planners-bypage`（实际交的是 `project-memory.md` 与 `source-index.json`；`page-architecture.json` 是随交的参考，见 SKILL.md「交接口径」）。
+
+## 跳过要留痕
+
+C2 可以被跳过（例如资料已把方向论证清楚、用户直接认可），但**跳过必须留下一行**：在 `project-memory.md` 里写「跳过 &lt;阶段&gt;：&lt;原因&gt;」。没有这一行，下一轮的读者分不出「跳过」与「漏了」。
+
+**命名互指**：`video-idea-system` 里写进 `_idea/current.md` 的「跳过 &lt;步骤&gt;：&lt;为什么&gt;」是**同一件事**（同一作者，两处各写一行互指，无共享脚本）。library-maintenance 的 B 阶段同理，落在 run-state 里。
 
 ## 运行后迭代
 
