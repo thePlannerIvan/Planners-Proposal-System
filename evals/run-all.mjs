@@ -6,6 +6,7 @@ const suites = [
   'router/run.mjs',
   'library/run.mjs',
   'co-creation/run.mjs',
+  'co-creation/edits.mjs',
 ];
 for (const suite of suites) {
   process.stdout.write(`\n=== ${suite} ===\n`);

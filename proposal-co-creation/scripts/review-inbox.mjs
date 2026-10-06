@@ -12,9 +12,10 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { CONTEXT_REL, FEEDBACK_REL, contextPath, feedbackPath, resolveSurfacePaths } from './review-surface.mjs';
+import {contentHash,prepareEdits,commitEdits} from './lib/review-edits.mjs';
 
 /** 提交里属于"缝/页面"的东西：进收据，不进原生记录。 */
-const SUBMISSION_ONLY = ['pre_check', 'pre_check_note', 'reviewState'];
+const SUBMISSION_ONLY = ['pre_check', 'pre_check_note', 'reviewState', 'review_changes'];
 const MIME_EXT = new Map([['image/png', '.png'], ['image/jpeg', '.jpg'], ['image/webp', '.webp'], ['image/gif', '.gif']]);
 
 function readJson(path) { return JSON.parse(readFileSync(path, 'utf8')); }
@@ -98,6 +99,13 @@ export function importSubmission(surfaceFile) {
     return receipt;
   }
   const context = existsSync(contextPath(reviewDir)) ? readJson(contextPath(reviewDir)) : {};
+  const cursorPath = join(reviewDir,'.inbox-cursor.json');
+  const cursor = existsSync(cursorPath) ? readJson(cursorPath) : {imported:[]};
+  const digest = contentHash(submission);
+  if (cursor.imported.includes(digest)) { receipt.skipped = '这份提交已经收过'; return receipt; }
+  let prepared;
+  try { prepared = prepareEdits(submission,reviewDir); }
+  catch (error) { receipt.ok = false; receipt.rejected.push(error.message); receipt.next_action_zh = '提交和草稿仍在；先核对原文与用户修改，不得覆盖。'; return receipt; }
   // R5b：页面知道、但机器看不见的前提 —— 进收据，不进原生记录。
   if (submission.reviewState && typeof submission.reviewState === 'object') receipt.review_state = submission.reviewState;
   if (submission.pre_check === false) {
@@ -112,9 +120,18 @@ export function importSubmission(surfaceFile) {
   // 原生形状：原样落盘（旧 handler 就是原样写）+ 只摘掉"缝自己"的字段。
   const native = { ...submission };
   for (const key of SUBMISSION_ONLY) delete native[key];
+  if (prepared) {
+    native.source_sha256 = prepared.sourceHash;
+    native.decisions = native.decisions.map(d => ({...d,page_number:prepared.mapping.get(d.page_number)})).sort((a,b) => a.page_number-b.page_number);
+    commitEdits(prepared,reviewDir);
+    cursor.applied_draft = contentHash({edits:prepared.changes.edits,page_order:prepared.changes.page_order,section_order:prepared.changes.section_order});
+    receipt.content_changed = prepared.changed; receipt.page_mapping = Object.fromEntries(prepared.mapping);
+  }
   const target = feedbackPath(reviewDir);
   if (existsSync(target)) receipt.previous_latest = readJson(target) ? 'review-feedback.json 已被这一轮覆盖（本面原生只有"最新一轮"这一份，旧 launcher 的语义）' : null;
   writeFileSync(target, JSON.stringify(native, null, 2) + '\n', 'utf8');
+  cursor.imported = [...cursor.imported,digest].slice(-200);
+  writeFileSync(cursorPath,JSON.stringify(cursor,null,2)+'\n');
   receipt.units = { count: native.decisions.length, label: '页' };
   receipt.imported = {
     feedback: FEEDBACK_REL,

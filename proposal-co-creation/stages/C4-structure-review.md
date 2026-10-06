@@ -28,7 +28,7 @@ node "<Planners-Proposal-System 目录>/proposal-co-creation/scripts/start-page-
 用户发送“已完成”“已反馈”等明确信号后：
 
 1. 检查 `feedback_path`真实存在；
-2. 运行反馈 Validator，并绑定当前 Architecture Hash；
+2. 先运行 `scripts/review-inbox.mjs --review-dir <审阅目录>` 收件，再运行反馈 Validator，并绑定当前 Architecture Hash；
 3. 明确回复“已收到审阅反馈”；
 4. 有 `revise`页面时，根据逐页反馈修改结构；
 5. 反馈触及主方向时回到 C2，触及认知推进时回到 C3；
@@ -37,6 +37,8 @@ node "<Planners-Proposal-System 目录>/proposal-co-creation/scripts/start-page-
 不得根据用户口头确认自行生成反馈文件。
 
 ## 页面展示
+
+故事线连续阅读，页面用同一审阅壳切换查看。文字点击编辑，目录拖动排序；草稿自动落盘，确认才提交。inbox 保留原结构后把用户文字与顺序写回 `page-architecture.json`，反馈绑定修改后的文件。原文有外部改动时不覆盖；提交和草稿保留，先处理冲突。用户直接修改的判断与结构要同步到 `project-memory.md` 的当前方向记录，再交下游，不得被模型旧稿覆盖。
 
 主界面只突出：
 

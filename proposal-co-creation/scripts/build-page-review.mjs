@@ -6,6 +6,7 @@ import { dirname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { renderPageReviewHtml } from './lib/page-review-html.mjs';
+import {sha256,writeReviewContext} from './lib/review-edits.mjs';
 
 function argsOf(argv) {
   const out = {};
@@ -46,9 +47,10 @@ if (args['--previous'] && existsSync(resolve(args['--previous']))) {
 }
 const pages = architecture.pages.map(page => ({
   page_number: page.page_number,
+  section_id: page.section_id,
   title: page.title_intent,
   claim: page.claim,
-  points: page.content_blocks.map(block => `${block.block_title}：${block.content_requirement}`),
+  blocks: page.content_blocks.map(block => ({title:block.block_title,text:block.content_requirement})),
   meta: [
     { label: '页面任务', value: page.page_job },
     { label: '所属章节', value: page.section_id },
@@ -71,11 +73,16 @@ const pages = architecture.pages.map(page => ({
     };
   })(),
 }));
+mkdirSync(dirname(outputPath), {recursive:true});
+const sections = architecture.sections.map(s => ({section_id:s.section_id,title:s.title,lead:s.cognitive_job,transition:s.transition}));
+const context = writeReviewContext(dirname(outputPath),{type:'architecture',reviewKind:'co_creation_page_architecture',sourceSha256,pages,sections,
+  architecturePath,files:[{path:architecturePath,sha256:sha256(raw)}]});
 const html = renderPageReviewHtml({
   reviewKind: 'co_creation_page_architecture',
   title: 'Storyline 与页面结构审阅',
   subtitle: `请从整条说服路径判断 ${architecture.pages.length} 页是否完整、准确且有必要。一个 Storyline 节点可以展开为多页。`,
   sourceSha256,
+  sections,thesis:architecture.storyline_thesis,draftPath:context.draftPath,
   pages,
   priorRound: priorRound ? { saved_at: priorRound.saved_at, stale: !!priorRound.stale } : null,
   notice: '所有页面默认通过。重点只看章节推进、标题、核心判断和分行内容块；图表、配图与版式通常留到逐页文案阶段（`planners-bypage`）。输入任何反馈后，本页会自动切换为“需要修改”。',

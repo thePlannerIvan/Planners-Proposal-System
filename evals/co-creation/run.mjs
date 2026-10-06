@@ -4,7 +4,8 @@ import {
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { assert, jsonOutput, pass, runNode } from '../lib/assert.mjs';
-import { checkPageRendersOffline, checkReviewBehavior, checkSeamSurface } from '../lib/review-behavior-suite.mjs';
+import {spawnSync} from 'node:child_process';
+import {moduleScript} from '../../proposal-co-creation/scripts/lib/planners-modules.mjs';
 import { hostAlive, hostState, stopHost } from '../lib/review-host-bridge.mjs';
 
 const root = resolve(import.meta.dirname, '../..');
@@ -22,12 +23,13 @@ assert(!Object.hasOwn(pageProps.content_blocks, 'maxItems'), 'content_blocks 不
 const reviewDir = mkdtempSync(join(tmpdir(), 'proposal-co-review-'));
 const htmlPath = join(reviewDir, 'index.html');
 runNode(resolve(skillRoot, 'scripts/build-page-review.mjs'), ['--architecture', template, '--output', htmlPath]);
-const { html } = checkReviewBehavior(htmlPath);
-checkSeamSurface(htmlPath);
-const reviewData = JSON.parse(html.match(/const REVIEW = (\{.*\});/)?.[1] || '{}');
-await checkPageRendersOffline(htmlPath, { expectUnits: (reviewData.pages || []).length });
-assert(html.includes('Storyline 与页面结构审阅'), '结构审阅必须合并 Storyline 和页面');
-assert(html.includes('一个 Storyline 节点可以展开为多页'), '审阅页面必须解释页数边界');
+const html = readFileSync(htmlPath,'utf8');
+const reviewData = JSON.parse(html.match(/<script id="reviewData" type="application\/json">([\s\S]*?)<\/script>/)[1]);
+assert(reviewData.sections.length > 0 && reviewData.pages.length > 0,'结构审阅需要章节与页面');
+assert(reviewData.feedbackContractVersion === '1.0.0','原生反馈版本保持 1.0.0');
+assert(html.split('\n').filter(l => l.trim() === '{{REVIEW_BRIDGE}}').length === 1,'一个裸桥注入点');
+const rendered = spawnSync(process.env.PLAYWRIGHT_PYTHON || 'python3',[moduleScript('planners-review-core','evals/check-content-render.py'),'--html',htmlPath],{encoding:'utf8'});
+assert(rendered.status === 0,'真实浏览器离线及握手超时渲染',rendered.stdout+rendered.stderr);
 
 const liveDir = join(reviewDir, 'live');
 const live = jsonOutput(runNode(resolve(skillRoot, 'scripts/start-page-review.mjs'), [

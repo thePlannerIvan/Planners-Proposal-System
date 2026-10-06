@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -29,6 +29,7 @@ const buildReport = JSON.parse(built.stdout.slice(built.stdout.indexOf('{')));
 const sourceSha256 = buildReport.source_sha256;
 // 收件层要知道的身份（哪份架构、哪个指纹、上传落到哪）：落在 surface 旁边，不进反馈文件。
 writeFileSync(contextPath(reviewDir), JSON.stringify({
+  ...JSON.parse(readFileSync(contextPath(reviewDir),'utf8')),
   sourceSha256,
   architecturePath: architecture,
   assetsDir: assetsDir || null,

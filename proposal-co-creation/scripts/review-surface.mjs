@@ -33,7 +33,7 @@ export const contextPath = (reviewDir) => join(resolve(reviewDir), CONTEXT_REL);
 export function surfaceDocument(reviewDir, options = {}) {
   // 上传只有在**真的有落盘目标**时才声明：老入口从不传 assets 目录，那时旧 handler 直接 404，
   // 所以"不声明"才是现状的忠实翻译（不摆一个按下去会失败的控件）。
-  const capabilities = options.uploads ? ['asset-upload'] : [];
+  const capabilities = options.uploads ? ['asset-upload','draft'] : ['draft'];
   return {
     contract_version: 'review-surface/2.0.0',
     id: ID,
@@ -43,6 +43,8 @@ export function surfaceDocument(reviewDir, options = {}) {
     dir: '.',
     entry: 'index.html',
     feedback: SUBMISSIONS_REL,
+    draft: existsSync(contextPath(reviewDir)) ? JSON.parse(readFileSync(contextPath(reviewDir),'utf8')).draftPath || 'draft.json' : 'draft.json',
+    watch: ['review-snapshot.json'],
     wake: {
       mode: 'queue',
       text: '结构审阅有新的提交（{unit}）：先跑 scripts/review-inbox.mjs 收件'

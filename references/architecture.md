@@ -24,6 +24,8 @@ Proposal hands `planners-bypage` the project memory, source index, approved Stor
 
 ## Truth sources
 
+Co-creation uses the optional content shell from `planners-review-core`; it does not copy UI or tokens. Its `scripts/lib/review-edits.mjs` and inbox own mapping human edits/order back to native architecture, preserving the original, detecting external changes, and binding approval to the resulting hash. Library-maintenance retains its dedicated review surface.
+
 - `project-memory.md` is the durable record of user-confirmed direction, boundaries and decisions.
 - `page-architecture.json` is the machine-bound structure reference for the Proposal handoff.
 - The conversation is not the only place where an approved decision may live; important decisions must be written to project memory.
