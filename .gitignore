@@ -1,5 +1,7 @@
 # Internal engineering surfaces: never publish
 _internal/
+workflow-map.md
+development-plan.md
 
 # Project and customer artifacts
 .proposal-work/

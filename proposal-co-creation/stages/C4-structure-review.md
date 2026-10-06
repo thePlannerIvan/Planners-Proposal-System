@@ -2,7 +2,7 @@
 
 ## 本阶段目的
 
-让用户一次性审阅 Storyline 的整体推进和展开后的全部页面，不再分别确认 Storyline 与页面列表。
+让用户一次性审阅 Storyline 的整体推进和结构参考，不把这次审阅误认为完整逐页内容审阅。
 
 ## 自动启动
 
@@ -45,7 +45,7 @@ node "<Planners-Proposal-System 目录>/proposal-co-creation/scripts/start-page-
 - 核心判断；
 - 分行内容块。
 
-页面任务、后续取材和转场折叠为工作信息。图表、配图、版式通常不在此阶段要求用户判断。
+页面任务、后续取材和转场折叠为工作信息。详细文案、具体取材和最终图片由 By-page 继续展开；本阶段只确认结构方向没有排除必要的内容。
 
 ## 交接
 
@@ -70,7 +70,7 @@ node "<Planners-Proposal-System 目录>/proposal-co-creation/scripts/start-page-
 ## 完成标准
 
 - HTML 已自动打开；
-- 用户只审阅最重要的结构信息；
+- 用户只审阅最重要的 Storyline 和结构信息；
 - 输入反馈自动切换修改状态；
 - 反馈可靠保存并绑定当前结构；
 - 整体批准后交 `planners-bypage` 继续逐页文案（本 Skill 到此为止，不再处理逐页内容）。

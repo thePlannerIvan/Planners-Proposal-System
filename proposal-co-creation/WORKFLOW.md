@@ -12,7 +12,7 @@
 → 人与模型循环发散、追问、反驳和选择
 → 锁定一个主方向
 → 组织客户认知改变的 Storyline
-→ 按证明需要展开为页面
+→ 形成结构参考，说明后续需要怎样展开
 → 自动打开一次结构审阅
 → 交给 planners-bypage
 ```
@@ -106,7 +106,7 @@ node "<Planners-Proposal-System 目录>/proposal-co-creation/scripts/validate-pa
   "<project>/.proposal-work/page-architecture.json"
 ```
 
-Validator 只检查交接结构，不证明方向或 Storyline 已经成熟。
+Validator 只检查交接结构，不证明方向、Storyline 或后续内容已经成熟。
 
 ## 人机交互
 
@@ -136,12 +136,12 @@ Validator 只检查交接结构，不证明方向或 Storyline 已经成熟。
 - 主方向经过发散、反例和取舍，且用户明确认可；
 - Storyline 每个节点是一句有信息量的陈述句，节点之间递进，不是惯常目录；
 - 方法与口径、数据边界、样本说明没有占据节点；
-- 每页只证明一个判断，内容块足以支撑判断；
+- 每页能说明自己服务于哪一个判断，并为下游内容展开保留清楚的结构意图；
 - 每一页都能说出自己在证哪一句判断；
 - 结构文件通过验证；
 - HTML 审阅由脚本自动打开；
 - 反馈绑定当前结构文件，整体决定为 `approve`；
-- 已明确交接给 `planners-bypage`（实际交的是 `project-memory.md` 与 `source-index.json`；`page-architecture.json` 是随交的参考，见 SKILL.md「交接口径」）。
+- 已明确交接给 `planners-bypage`，并完整保留 `project-memory.md`、`source-index.json`、`page-architecture.json` 与结构反馈；逐页内容由下游展开。
 
 ## 跳过要留痕
 

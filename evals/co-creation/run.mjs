@@ -113,7 +113,8 @@ assert(c2.includes('奥美三圈') && c2.includes('Brand Best Self') && c2.inclu
 assert(c2.includes('只有两圈成立不够') && c2.includes('不得进入 C3'), '三圈任一不成立时不得锁定方向');
 assert(c3.includes('Wiki 必须再次介入') && c3.includes('不是一一对应'), 'C3 必须用 Wiki 组织论述并允许节点展开多页');
 assert(c3.includes('进入前检查') && c3.includes('回到 C2'), 'C3 必须拒绝接收未冻结方向');
-assert(c3.includes('证明负担') && c3.includes('独立证明单元') && c3.includes('页面容量与冗余审计'), 'C3 必须完成 Storyline 到页面的四遍展开');
+assert(c3.includes('证明负担') && c3.includes('独立证明单元') && c3.includes('结构范围与冗余审计'), 'C3 必须完成 Storyline 的论证范围与结构审计');
+assert(c3.includes('不是完整逐页文案') && c3.includes('结构参考'), 'C3 必须把完整内容展开交给 By-page，只交出 Storyline 与结构参考');
 assert(c3.includes('真实问答证据'), 'C3 入口必须检查 C2 真实人机往返');
 assert(c3.indexOf('## 先建立 Storyline') < c3.indexOf('## Storyline 完成后，Wiki 必须再次介入')
   && c3.indexOf('## Storyline 完成后，Wiki 必须再次介入') < c3.indexOf('## 从 Storyline 展开为 Page Architecture'), 'Wiki 必须在 Storyline 完成后、Page Architecture 开始前介入');

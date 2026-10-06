@@ -1,6 +1,6 @@
 ---
 name: planners-proposal-system
-description: 从中文历史方案中提炼和维护 Method Wiki，或从项目 Brief、研究和分析资料出发，与用户共创策略方向与 Storyline，展开 Page Architecture 并完成结构审阅，然后**提示用户改用 `planners-bypage`** 完成逐页文案、事实核查与终稿（本 Skill 不调用别的 Skill）。适用于提案、竞标类的策略共创、Storyline、逐页提案文案，以及历史方案方法提炼与 Wiki 增补任务。
+description: 从中文历史方案中提炼和维护 Method Wiki，或从项目 Brief、研究和分析资料出发，与用户共创关键判断与 Storyline，形成结构参考并完成结构审阅，然后**提示用户改用 `planners-bypage`** 完成逐页内容、事实核查与终稿（本 Skill 不调用别的 Skill）。适用于提案、竞标类的策略共创、Storyline，以及历史方案方法提炼与 Wiki 增补任务。
 ---
 
 # Planners-Proposal-System
@@ -17,12 +17,12 @@ Mode B：历史方案
 → Method Wiki
 
 Mode A：项目资料
-→ Co-creation：资料理解、方向循环、Storyline、Page Architecture、结构审阅
-→ 交给 planners-bypage：逐页取材、语言、完整文案、事实核查、终稿审阅
+→ Co-creation：资料理解、方向循环、Storyline、结构参考、结构审阅
+→ 交给 planners-bypage：内容展开、逐页文案、必要取材、事实核查、终稿审阅
 → deliverable/by-page.md + assets/（由 bypage 产出）
 ```
 
-模型负责理解、语义判断、创意和写作；脚本负责搜索、转换、状态、确定性校验和审阅保存；人只介入方向选择与完整内容审阅。
+模型负责理解、语义判断、创意和结构表达；脚本负责搜索、转换、状态、确定性校验和审阅保存；人只介入方向选择与完整内容审阅。
 
 ## 第一步：判断路线与最早缺失前提
 
@@ -49,9 +49,9 @@ B4 的「方法库全量审阅」是一个**审阅面**：页面挂在公共缝�
 2. 根据项目状态只读取当前 C Stage。
 3. 已有资料就直接开始阅读；Brief 已经回答的问题不得再次要求用户录入。
 
-### 交给 planners-bypage（本 Skill 不再自己写逐页文案）
+### 交给 planners-bypage（本 Skill 不负责内容落地）
 
-**逐页文案、语言、事实核查与终稿交付归 `planners-bypage`** —— 它是「逐页内容稿」的唯一所有者。用户要写完整逐页内容、回查资料、校准语言与页面容量、审计数字并交付 Markdown 时：
+**Storyline 形成之前的讨论归本 Skill；Storyline 之后的内容落地归 `planners-bypage`**。它是「逐页内容稿」的唯一所有者。用户要把已确认的 Storyline 展开成完整内容、回查资料、必要时补充研究、校准页面表达并交付 Markdown 时：
 
 1. 先确认本 Skill 已经产出**已批准且绑定当前内容 Hash**的：
    - `.proposal-work/page-architecture.json`
@@ -59,9 +59,9 @@ B4 的「方法库全量审阅」是一个**审阅面**：页面挂在公共缝�
 2. 缺少批准时返回 Co-creation C4（结构审阅），**不自行补批准**。
 3. 批准后提示用户使用 `$planners-bypage`：**实际交接的是 `project-memory.md` 与 `source-index.json`**；已批准的 `page-architecture.json` 与结构审阅反馈**一并交给它作参考**。
 
-**交接口径（当前实况，别读成"契约已打通"）**：bypage 用的是它自己的 `page-architecture/1.0.0`，并在 `.bypage-work/` **重建**一份结构（两侧字段、版本都不兼容，没有转换器）。所以本 Skill 的 `page-architecture/2.0.0`（含 `claim` / `evidence_needs` / `boundary`）目前是**给人和模型看的判断依据，不是被下游直接消费的机器契约**。要改成"bypage 直接读上游那一份"，需要一次跨 Skill 的契约统一 —— 那是一次独立改动，不在本 Skill 做。
+**交接口径**：`.proposal-work/` 中的工作记忆、来源索引、批准后的 Storyline、`page-architecture.json` 与结构反馈必须原样保留并交给下游。Bypage 可以在自己的独立入口建立结构，也可以使用这份已批准的结构参考；但在 Proposal 交接路径中不得静默重建、删减或改写上游已确认的判断。两套契约若因独立运行需要并存，必须在交接说明中明确谁是上游真相、谁是独立运行时的内部接口。
 
-**分工的判据**：本 Skill 管「客户必须依次接受哪些判断、每页证哪一句」；bypage 管「每页写什么、来源对不对、图用哪张」。
+**分工的判据**：本 Skill 管「资料如何被理解、哪些判断需要用户接受、Storyline 如何递进」；bypage 管「这些判断如何被展开成完整页面内容、必要素材和可制作稿件」。
 
 ## Mode A 状态路由
 
@@ -69,8 +69,8 @@ B4 的「方法库全量审阅」是一个**审阅面**：页面挂在公共缝�
 |---|---|
 | 只有 Brief、资料或用户描述 | Co-creation C1：完整阅读并建立项目工作记忆 |
 | 已有项目工作记忆，仍在讨论问题或方向 | Co-creation C2：继续共创循环 |
-| 主方向已经明确锁定 | Co-creation C3：形成 Storyline 与页面架构 |
-| 页面架构通过结构验证但没有批准反馈 | Co-creation C4：自动打开结构审阅 |
+| 主方向已经明确锁定 | Co-creation C3：形成 Storyline 与结构参考 |
+| Storyline 与结构参考通过结构验证但没有批准反馈 | Co-creation C4：自动打开结构审阅 |
 | 结构审阅有修改项 | Co-creation：按反馈退回 C2 或 C3 |
 | 结构审阅整体批准 | **交给 `planners-bypage`**：逐页取材 → 文案 → 事实核查 → 终稿审阅 |
 | bypage 侧事实核查或终稿未通过 | 回到 bypage 对应阶段（本 Skill 不代管） |
@@ -92,14 +92,14 @@ node "<本 Skill 目录>/proposal-library-maintenance/scripts/query-wiki.mjs" \
 
 ### Co-creation → planners-bypage
 
-**机器级交接**（下游真的读）：
+**机器级交接**（下游必须保留并读取）：
 
 - `project-memory.md`
 - `source-index.json`（契约 `source-index/2.0.0`，公共件 `planners-source-index`）
 
-**随交接一起给的参考**（下游不直接消费，见上面「交接口径」）：
+**随交接一起给的正式判断依据**：
 
-- `page-architecture.json`（本 Skill 的 `2.0.0`；bypage 用自己的 `1.0.0` 重建）
+- `page-architecture.json`（本 Skill 的 `2.0.0`；不得在交接时静默丢失）
 - 结构审阅反馈
 
 ### planners-bypage → PPT 制作

@@ -1,0 +1,21 @@
+{
+  "skill": "planners-proposal-system",
+  "cases": [
+    {
+      "id": "research-to-storyline",
+      "prompt": "给定一批研究资料，请先和我讨论关键问题，形成一条经过确认的 Storyline。不要直接写完整逐页文案。",
+      "route_expected": "system",
+      "expected_behavior_change": "停在共创和 Storyline，不抢做 By-page。",
+      "must_do": ["保存用户确认的判断和边界", "形成递进的 Storyline"],
+      "must_not_do": ["把 Storyline 写成完整 PPT 文案"]
+    },
+    {
+      "id": "handoff-preserves-memory",
+      "prompt": "Storyline 已经确认，请准备交给 planners-bypage。保留讨论中确认的方向、边界和结构判断。",
+      "route_expected": "system",
+      "expected_behavior_change": "交接时保留上游记忆和契约，不重新猜测或压缩已确认内容。",
+      "must_do": ["明确交接文件", "保留用户确认内容"],
+      "must_not_do": ["静默改写 Storyline", "代写完整 By-page"]
+    }
+  ]
+}
