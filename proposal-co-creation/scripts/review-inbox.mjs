@@ -12,7 +12,7 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import { CONTEXT_REL, FEEDBACK_REL, contextPath, feedbackPath, resolveSurfacePaths } from './review-surface.mjs';
-import {contentHash,prepareEdits,commitEdits} from './lib/review-edits.mjs';
+import {contentHash,contentProjection,prepareEdits,commitEdits} from './lib/review-edits.mjs';
 
 /** 提交里属于"缝/页面"的东西：进收据，不进原生记录。 */
 const SUBMISSION_ONLY = ['pre_check', 'pre_check_note', 'reviewState', 'review_changes'];
@@ -124,7 +124,7 @@ export function importSubmission(surfaceFile) {
     native.source_sha256 = prepared.sourceHash;
     native.decisions = native.decisions.map(d => ({...d,page_number:prepared.mapping.get(d.page_number)})).sort((a,b) => a.page_number-b.page_number);
     commitEdits(prepared,reviewDir);
-    cursor.applied_draft = contentHash({edits:prepared.changes.edits,page_order:prepared.changes.page_order,section_order:prepared.changes.section_order});
+    cursor.applied_draft = contentHash(contentProjection({edits:prepared.changes.edits,page_order:prepared.changes.page_order,section_order:prepared.changes.section_order}));
     receipt.content_changed = prepared.changed; receipt.page_mapping = Object.fromEntries(prepared.mapping);
   }
   const target = feedbackPath(reviewDir);

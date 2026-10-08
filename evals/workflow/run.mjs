@@ -66,13 +66,13 @@ function canHandoff(reviewDir) {
 async function startReview(name) {
   const reviewDir = join(work, 'reviews', name);
   const surface = run(join(c, 'start-page-review.mjs'), [
-    '--architecture', architecturePath, '--review-dir', reviewDir, '--surface-only',
+    '--architecture', architecturePath, '--review-dir', reviewDir, '--surface-only', '--legacy-review', 'true',
   ]);
   check(surface.status === 'surface_ready' && surface.host_started === false,
     `${name}: surface-only delegates hosting without opening a browser`);
   hosts.add(surface.surface);
   const live = run(join(c, 'start-page-review.mjs'), [
-    '--architecture', architecturePath, '--review-dir', reviewDir, '--port', '0', '--no-open',
+    '--architecture', architecturePath, '--review-dir', reviewDir, '--port', '0', '--no-open', '--legacy-review', 'true',
   ]);
   check(live.status === 'waiting_for_human' && live.opened === false,
     `${name}: real host waits for a submission`);

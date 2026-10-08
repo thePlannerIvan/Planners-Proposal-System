@@ -22,7 +22,7 @@ assert(!Object.hasOwn(pageProps.content_blocks, 'maxItems'), 'content_blocks 不
 
 const reviewDir = mkdtempSync(join(tmpdir(), 'proposal-co-review-'));
 const htmlPath = join(reviewDir, 'index.html');
-runNode(resolve(skillRoot, 'scripts/build-page-review.mjs'), ['--architecture', template, '--output', htmlPath]);
+runNode(resolve(skillRoot, 'scripts/build-page-review.mjs'), ['--architecture', template, '--output', htmlPath, '--legacy-review', 'true']);
 const html = readFileSync(htmlPath,'utf8');
 const reviewData = JSON.parse(html.match(/<script id="reviewData" type="application\/json">([\s\S]*?)<\/script>/)[1]);
 assert(reviewData.sections.length > 0 && reviewData.pages.length > 0,'结构审阅需要章节与页面');
@@ -33,7 +33,7 @@ assert(rendered.status === 0,'真实浏览器离线及握手超时渲染',render
 
 const liveDir = join(reviewDir, 'live');
 const live = jsonOutput(runNode(resolve(skillRoot, 'scripts/start-page-review.mjs'), [
-  '--architecture', template, '--review-dir', liveDir, '--port', '0',
+  '--architecture', template, '--review-dir', liveDir, '--port', '0', '--legacy-review', 'true',
 ], { env: { ...process.env, REVIEW_TEST_NO_OPEN: '1' } }));
 // 宿主一旦起来，就注册退出清理：**失败路径也不许留进程**（"摔掉套件"不该顺手留个服务器）。
 process.once('exit', () => {
@@ -99,6 +99,8 @@ assert((await hostAlive(live.surface)) === null, '停完之后宿主判死');
 
 const skill = readFileSync(resolve(root, 'SKILL.md'), 'utf8');
 assert(skill.includes('先收件，再校验反馈'), '主流程必须说明真实提交的收件顺序');
-assert(skill.includes('`valid` 只表示反馈有效') && skill.includes('`overall_decision`'), '有效反馈不能替代用户批准');
+assert(skill.includes('校验通过后使用回写后的正式结构继续')
+  && skill.includes('不把 `overall_decision` 当作继续工作的前置批准门'),
+  '默认 Workbench 不把 legacy 反馈或 overall_decision 当作前置批准门');
 assert(skill.includes('使用回写后的正式结构继续'), '人工编辑后的正式产物必须成为后续输入');
 pass('Co-creation 结构与真实 Review；主文件交接约定');

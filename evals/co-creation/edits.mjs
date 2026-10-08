@@ -11,7 +11,7 @@ for (const opaque of [false,true]) {
   const fixture = JSON.parse(readFileSync(join(root,'templates/page-architecture.json'),'utf8'));
   fixture.pages.push({...structuredClone(fixture.pages[0]),page_number:2,section_id:fixture.sections[1].section_id,title_intent:'Second page'});
   writeFileSync(architecture,JSON.stringify(fixture,null,2));
-  const surface = run('start-page-review.mjs',['--architecture',architecture,'--review-dir',reviewDir,'--surface-only']).surface;
+  const surface = run('start-page-review.mjs',['--architecture',architecture,'--review-dir',reviewDir,'--surface-only','--legacy-review','true']).surface;
   const browser = spawnSync(process.env.PLAYWRIGHT_PYTHON || 'python3',[moduleScript('planners-review-core','evals/exercise-content-review.py'),'--surface',surface,...(opaque ? ['--opaque'] : [])],{encoding:'utf8'});
   assert(browser.status === 0,'browser behavior: '+browser.stdout+browser.stderr);
   const result = run('review-inbox.mjs',['--surface',surface]);
@@ -22,6 +22,6 @@ for (const opaque of [false,true]) {
   assert(run('validate-page-architectures.mjs',[architecture]).valid,'Edited architecture contract remains valid');
   assert(run('validate-page-review-feedback.mjs',['--feedback',join(reviewDir,'review-feedback.json'),'--architecture',architecture]).valid,'Approval binds to human-edited source');
   assert(run('review-inbox.mjs',['--surface',surface]).skipped,'Duplicate intake is idempotent');
-  run('start-page-review.mjs',['--architecture',architecture,'--review-dir',reviewDir,'--surface-only']);
+  run('start-page-review.mjs',['--architecture',architecture,'--review-dir',reviewDir,'--surface-only','--legacy-review','true']);
 }
 pass('正式 Proposal 编辑/拖动 → 原生结构 → 批准绑定；HTTP 与不透明 iframe');

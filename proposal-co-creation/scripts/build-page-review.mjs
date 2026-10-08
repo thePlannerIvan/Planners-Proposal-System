@@ -19,6 +19,7 @@ if (!args['--architecture'] || !args['--output']) {
 }
 const architecturePath = resolve(args['--architecture']);
 const outputPath = resolve(args['--output']);
+const workbench = args['--legacy-review'] !== 'true';
 const raw = readFileSync(architecturePath, 'utf8');
 const validation = spawnSync(process.execPath, [
   resolve(dirname(fileURLToPath(import.meta.url)), 'validate-page-architectures.mjs'),
@@ -75,13 +76,13 @@ const pages = architecture.pages.map(page => ({
 }));
 mkdirSync(dirname(outputPath), {recursive:true});
 const sections = architecture.sections.map(s => ({section_id:s.section_id,title:s.title,lead:s.cognitive_job,transition:s.transition}));
-const context = writeReviewContext(dirname(outputPath),{type:'architecture',reviewKind:'co_creation_page_architecture',sourceSha256,pages,sections,
+const context = writeReviewContext(dirname(outputPath),{type:'architecture',reviewKind:'co_creation_page_architecture',workbench,allowStructureChanges:true,sourceSha256,pages,sections,
   architecturePath,files:[{path:architecturePath,sha256:sha256(raw)}]});
 const html = renderPageReviewHtml({
   reviewKind: 'co_creation_page_architecture',
   title: 'Storyline 与页面结构审阅',
   subtitle: `请从整条说服路径判断 ${architecture.pages.length} 页是否完整、准确且有必要。一个 Storyline 节点可以展开为多页。`,
-  sourceSha256,
+  sourceSha256, workbench, allowStructureChanges: true,
   sections,thesis:architecture.storyline_thesis,draftPath:context.draftPath,
   pages,
   priorRound: priorRound ? { saved_at: priorRound.saved_at, stale: !!priorRound.stale } : null,

@@ -7,8 +7,27 @@ import { contextPath, openSurface, surfaceOnly, surfacePath } from './review-sur
 
 function argsOf(argv) {
   const out = {};
-  for (let index = 0; index < argv.length; index += 2) out[argv[index]] = argv[index + 1];
+  for (let index = 0; index < argv.length; index += 1) {
+    const key = argv[index];
+    if (!key?.startsWith('--')) continue;
+    const next = argv[index + 1];
+    if (next === undefined || next.startsWith('--')) out[key] = true;
+    else { out[key] = next; index += 1; }
+  }
   return out;
+}
+function workbenchReport(reviewDir, sourceHash) {
+  const context = JSON.parse(readFileSync(contextPath(reviewDir), 'utf8'));
+  const canonical = context.files?.[0]?.path || context.architecturePath || null;
+  return {
+    workbench: true,
+    review_context: contextPath(reviewDir),
+    workbench_dir: resolve(reviewDir, 'workbench'),
+    workbench_head: resolve(reviewDir, 'workbench/head.json'),
+    canonical_path: canonical,
+    source_hash: sourceHash,
+    pending_tasks: resolve(reviewDir, 'workbench/head.json'),
+  };
 }
 const args = argsOf(process.argv.slice(2));
 if (!args['--architecture'] || !args['--review-dir']) {
@@ -22,6 +41,7 @@ mkdirSync(reviewDir, { recursive: true });
 const builder = resolve(dirname(fileURLToPath(import.meta.url)), 'build-page-review.mjs');
 const previousRound = join(reviewDir, 'review-feedback.json');
 const buildArgs = [builder, '--architecture', architecture, '--output', join(reviewDir, 'index.html')];
+if (args['--legacy-review'] === 'true') buildArgs.push('--legacy-review', 'true');
 if (existsSync(previousRound)) buildArgs.push('--previous', previousRound);
 const built = spawnSync(process.execPath, buildArgs, { encoding: 'utf8' });
 if (built.status !== 0) throw new Error(built.stderr || built.stdout);
@@ -42,25 +62,24 @@ const shouldOpen = !process.argv.includes('--no-open') && process.env.REVIEW_TES
 
 if (process.argv.includes('--surface-only') || process.argv.includes('--no-host')) {
   const surface = surfaceOnly(reviewDir, { uploads: !!assetsDir });
-  process.stdout.write(JSON.stringify({
-    valid: true, status: 'surface_ready', ...surface,
-    source_hash: sourceSha256, review_dir: reviewDir, feedback_path: join(reviewDir, 'review-feedback.json'),
-    asset_roots: assetsDir ? [assetsDir] : [],
-  }) + '\n');
+  const payload = { valid: true, status: 'surface_ready', ...surface, review_dir: reviewDir,
+    asset_roots: assetsDir ? [assetsDir] : [] };
+  if (args['--legacy-review'] === 'true') {
+    payload.source_hash = sourceSha256;
+    payload.feedback_path = join(reviewDir, 'review-feedback.json');
+  } else Object.assign(payload, workbenchReport(reviewDir, sourceSha256));
+  process.stdout.write(JSON.stringify(payload) + '\n');
   process.exit(0);
 }
 const state = await openSurface(reviewDir, { port, open: shouldOpen, uploads: !!assetsDir });
-process.stdout.write(JSON.stringify({
-  valid: true,
-  status: 'waiting_for_human',
-  opened: state.opened,
-  url: state.url,
-  started: state.started,
-  reused: state.reused,
-  surface: state.surface,
-  source_hash: sourceSha256,
-  feedback_path: join(reviewDir, 'review-feedback.json'),
-  submissions_path: join(reviewDir, 'review-submissions.json'),
-  review_dir: reviewDir,
-  next_action_zh: '请在网页保存审阅；然后跑 scripts/review-inbox.mjs 收件（**收件之后**才跑 validate-page-review-feedback.mjs）。',
-}) + '\n');
+const payload = { valid: true, status: args['--legacy-review'] === 'true' ? 'waiting_for_human' : 'workbench_ready',
+  opened: state.opened, url: state.url, started: state.started, reused: state.reused,
+  surface: state.surface, review_dir: reviewDir };
+if (args['--legacy-review'] === 'true') {
+  Object.assign(payload, { source_hash: sourceSha256, feedback_path: join(reviewDir, 'review-feedback.json'),
+    submissions_path: join(reviewDir, 'review-submissions.json'),
+    next_action_zh: '请在网页提交；然后跑 scripts/review-inbox.mjs 收件，再跑 validate-page-review-feedback.mjs。' });
+} else Object.assign(payload, workbenchReport(reviewDir, sourceSha256), {
+  next_action_zh: '打开工作台后，先读取 review-context.json 与 canonical_path；保存主稿由工作台回写同一份 canonical 文件。需要处理用户反馈时读取 workbench/head.json 的 pending tasks，并按 task 的 revision/source_hash 修改；保存不是批准。'
+});
+process.stdout.write(JSON.stringify(payload) + '\n');

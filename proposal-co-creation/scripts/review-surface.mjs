@@ -4,7 +4,7 @@
  *
  * 这一家的原生记录叫 `review-feedback.json`，形状是
  * `{contract_version, review_kind:'co_creation_page_architecture', source_sha256, overall_decision, decisions[]}`。
- * 页面提交落在 `review-submissions.json`（**提交文件**），由收件层翻译回原生形状 —— 形状一层不动。
+ * legacy 页面提交落在 `review-submissions.json`（**提交文件**），由收件层翻译回原生形状 —— 形状一层不动。
  */
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -33,7 +33,9 @@ export const contextPath = (reviewDir) => join(resolve(reviewDir), CONTEXT_REL);
 export function surfaceDocument(reviewDir, options = {}) {
   // 上传只有在**真的有落盘目标**时才声明：老入口从不传 assets 目录，那时旧 handler 直接 404，
   // 所以"不声明"才是现状的忠实翻译（不摆一个按下去会失败的控件）。
+  const context = existsSync(contextPath(reviewDir)) ? JSON.parse(readFileSync(contextPath(reviewDir),'utf8')) : {};
   const capabilities = options.uploads ? ['asset-upload','draft'] : ['draft'];
+  if (context.workbench) capabilities.push('command');
   return {
     contract_version: 'review-surface/2.0.0',
     id: ID,
@@ -42,19 +44,20 @@ export function surfaceDocument(reviewDir, options = {}) {
     project_root: projectRootRel(reviewDir),
     dir: '.',
     entry: 'index.html',
-    feedback: SUBMISSIONS_REL,
+    ...(!context.workbench ? { feedback: SUBMISSIONS_REL } : {}),
     draft: existsSync(contextPath(reviewDir)) ? JSON.parse(readFileSync(contextPath(reviewDir),'utf8')).draftPath || 'draft.json' : 'draft.json',
     watch: ['review-snapshot.json'],
     wake: {
       // 插话（steer → next-step），不进持久队列：提交的语义是"现在就收件"。声明 queue 会排到
       // 当前回合之后 —— 模型正忙时它躺在队列里，界面上同时出现「已送达」与「排队中」两份。
       mode: 'steer',
-      text: '结构审阅有新的提交（{unit}）：先跑 scripts/review-inbox.mjs 收件'
+      text: context.workbench ? 'Storyline 工作台有修改任务（{unit}）。读取 workbench/head.json 的 pending tasks 与已保存架构主稿；仅在 task 的 revision/source_hash 匹配时处理指定页面。先保护未收下的草稿，修改后重建工作台。保存不是批准，下游读取同一份主稿。' : '结构审阅有新的提交（{unit}）：先跑 scripts/review-inbox.mjs 收件'
         + '（它把提交翻译成 review-feedback.json，并把页面报上来的前提带进收据），'
         + '**收件之后**再跑 scripts/validate-page-review-feedback.mjs（门在收件之后，顺序被钉住），'
         + '然后按根 SKILL.md 的「审阅与修改」处理。',
     },
     capabilities,
+    ...(context.workbench ? {command_backend:'content-workbench/1'} : {}),
   };
 }
 
@@ -78,11 +81,13 @@ export function validateSurface(reviewDir) {
 export function surfaceOnly(reviewDir, options) {
   const target = writeSurface(reviewDir, options);
   const report = validateSurface(reviewDir);
+  const context = existsSync(contextPath(reviewDir))
+    ? JSON.parse(readFileSync(contextPath(reviewDir), 'utf8')) : {};
   return {
     status: 'surface_ready',
     surface: resolve(target),
     entry: resolve(reviewDir, 'index.html'),
-    submissions: submissionsPath(reviewDir),
+    ...(context.workbench ? {} : { submissions: submissionsPath(reviewDir) }),
     host_started: false,
     validator: report.output.split('\n').at(-1),
     next_action_zh: '把 surface 的绝对路径交给宿主的 review_open 工具（有插件时）；没有那个工具时用模组的无插件宿主起本地服务。',
