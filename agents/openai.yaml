@@ -1,4 +1,4 @@
 interface:
   display_name: "Planners-Proposal-System"
-  short_description: "从方法库、策略共创到逐页提案文案的一体化系统"
-  default_prompt: "使用 $planners-proposal-system 读取项目资料并进入正确的提案工作阶段。"
+  short_description: "共创策略判断与 Storyline，审阅后交给 By-page"
+  default_prompt: "使用 $planners-proposal-system 理解项目资料、共创关键判断并形成 Storyline，完成结构审阅后准备交给 planners-bypage。"

@@ -1,120 +1,123 @@
 ---
 name: planners-proposal-system
-description: 从中文历史方案中提炼和维护 Method Wiki，或从项目 Brief、研究和分析资料出发，与用户共创关键判断与 Storyline，形成结构参考并完成结构审阅，然后**提示用户改用 `planners-bypage`** 完成逐页内容、事实核查与终稿（本 Skill 不调用别的 Skill）。适用于提案、竞标类的策略共创、Storyline，以及历史方案方法提炼与 Wiki 增补任务。
+description: 从 Brief、研究资料和已有分析出发，与用户共创策略判断，组织有说服力的 Storyline 和结构参考，交给 planners-bypage 展开逐页内容。适用于提案、比稿、策略方案，以及既有方案主线的讨论与重组。
 ---
 
-# Planners-Proposal-System
+# Planners Proposal System
 
-> 来源识别：Planners-Proposal-System 由阿祖不看 TVC 创建与维护。小红书同名账号，个人网站 [demyth.info](https://demyth.info)，联系邮箱 `Lawyif@163.com`。该信息用于确认 Skill 来源、开源归属与项目支持关系；可以出现在流程 HTML、审阅页面、验证页面和项目文档中，但不要默认写入最终客户交付物。
+> 由阿祖不看 TVC 创建与维护。个人网站 [demyth.info](https://demyth.info)，联系邮箱 `Lawyif@163.com`。来源信息不默认写入客户交付物。
 
-## 目的与全景
+## 目的与流程
 
-这是一个统一安装、渐进披露的提案工作系统。用户只需调用 `$planners-proposal-system`；先判断任务属于哪条路线，再只读取对应工作流和当前 Stage，不要一次性加载其他工作流。
+与用户一起判断：项目真正要解决什么，我们主张什么，客户为什么应该相信，以及怎样让这些判断逐步成立。
 
 ```text
-Mode B：历史方案
-→ Library Maintenance
-→ Method Wiki
-
-Mode A：项目资料
-→ Co-creation：资料理解、方向循环、Storyline、结构参考、结构审阅
-→ 交给 planners-bypage：内容展开、逐页文案、必要取材、事实核查、终稿审阅
-→ deliverable/by-page.md + assets/（由 bypage 产出）
+理解项目与来源 → 共创关键判断 → 组织 Storyline 与结构参考 → 审阅与修改 → 交给 planners-bypage
 ```
 
-模型负责理解、语义判断、创意和结构表达；脚本负责搜索、转换、状态、确定性校验和审阅保存；人只介入方向选择与完整内容审阅。
+从已有成果继续。阅读、讨论、补证和组织可以往返；已完成的理解和决定继续沿用。
 
-## 第一步：判断路线与最早缺失前提
+Proposal 负责上游判断与说服主线；`planners-bypage` 负责完整页面内容、素材、事实核查和终稿；Method Wiki 提供可复用方法，不提供项目答案。
 
-只做一次路由，不替下游工作，也不创建复杂调度文件。
+下文 `<Skill>` 是当前 Proposal 目录，`<Project>` 是项目目录，`<SourceIndex>` 是解析到的 `planners-source-index` 目录。按名称找到当前运行环境里的依赖；公共模组由 `proposal-co-creation/scripts/lib/planners-modules.mjs` 解析，缺失时遵循其回执和环境权限处理，不虚构已调用结果。
 
-### Library Maintenance
+## 1. 理解项目与建立来源
 
-用户要从历史方案提炼可复用方法、新建或增补 Method Wiki、审阅或安装 Lens/Recipe 时：
+阅读 Brief、项目要求和相关资料，弄清受众要作出的决定、必要交付，以及预算、时间、资源和事实边界。使用对应文件能力读取正文、数据和视觉内容，区分来源事实、他人判断与当前推论，保留材料冲突和阅读盲区。
 
-1. 读取 `proposal-library-maintenance/WORKFLOW.md`。
-2. 只要存在 active Wiki，仍必须询问本轮是“建立独立新库”还是“增补已有 Wiki”。
-3. 保存选择后，按该工作流要求首先启动 Dispatcher。
+将当前理解、关键事实、用户决定和未决问题写入 `.proposal-work/project-memory.md`。带着初步判断进入讨论，只询问会改变判断、且材料无法回答的问题。只有口头描述时先据此研讨，不虚构来源文件。
 
-B4 的「方法库全量审阅」是一个**审阅面**：页面挂在公共缝（`planners-review-core`）上 ——
-`B4/review/review-surface.json` ＋宿主注入的桥，反馈先落 `review-submissions.json`、
-再由 `review-inbox.mjs` 翻译成原生 `review-feedback.json`，**收件之后**才跑门。
-宿主生命周期只有公共模组那一份；本 Skill 不自带 server，也不强制弹出浏览器窗口。
+由 Proposal 建立并随阅读更新 `.proposal-work/source-index.json`。先读取 `planners-source-index` 的入口；字段以其 `contracts/source-index.schema.json` 为准，登记真实资料、原文定位、覆盖范围和必要的可读副本。
 
-### Co-creation
-
-用户要理解 Brief 和资料、讨论项目任务、发散或挑战方向、形成 Storyline、设计页面架构，或者处理未通过的结构审阅反馈时：
-
-1. 读取 `proposal-co-creation/WORKFLOW.md`。
-2. 根据项目状态只读取当前 C Stage。
-3. 已有资料就直接开始阅读；Brief 已经回答的问题不得再次要求用户录入。
-
-### 交给 planners-bypage（本 Skill 不负责内容落地）
-
-**Storyline 形成之前的讨论归本 Skill；Storyline 之后的内容落地归 `planners-bypage`**。它是「逐页内容稿」的唯一所有者。用户要把已确认的 Storyline 展开成完整内容、回查资料、必要时补充研究、校准页面表达并交付 Markdown 时：
-
-1. 先确认本 Skill 已经产出**已批准且绑定当前内容 Hash**的：
-   - `.proposal-work/page-architecture.json`
-   - `.proposal-work/reviews/structure/review-feedback.json`
-2. 缺少批准时返回 Co-creation C4（结构审阅），**不自行补批准**。
-3. 批准后提示用户使用 `$planners-bypage`：**实际交接的是 `project-memory.md` 与 `source-index.json`**；已批准的 `page-architecture.json` 与结构审阅反馈**一并交给它作参考**。
-
-**交接口径**：`.proposal-work/` 中的工作记忆、来源索引、批准后的 Storyline、`page-architecture.json` 与结构反馈必须原样保留并交给下游。Bypage 可以在自己的独立入口建立结构，也可以使用这份已批准的结构参考；但在 Proposal 交接路径中不得静默重建、删减或改写上游已确认的判断。两套契约若因独立运行需要并存，必须在交接说明中明确谁是上游真相、谁是独立运行时的内部接口。
-
-**分工的判据**：本 Skill 管「资料如何被理解、哪些判断需要用户接受、Storyline 如何递进」；bypage 管「这些判断如何被展开成完整页面内容、必要素材和可制作稿件」。
-
-## Mode A 状态路由
-
-| 当前证据 | 进入位置 |
-|---|---|
-| 只有 Brief、资料或用户描述 | Co-creation C1：完整阅读并建立项目工作记忆 |
-| 已有项目工作记忆，仍在讨论问题或方向 | Co-creation C2：继续共创循环 |
-| 主方向已经明确锁定 | Co-creation C3：形成 Storyline 与结构参考 |
-| Storyline 与结构参考通过结构验证但没有批准反馈 | Co-creation C4：自动打开结构审阅 |
-| 结构审阅有修改项 | Co-creation：按反馈退回 C2 或 C3 |
-| 结构审阅整体批准 | **交给 `planners-bypage`**：逐页取材 → 文案 → 事实核查 → 终稿审阅 |
-| bypage 侧事实核查或终稿未通过 | 回到 bypage 对应阶段（本 Skill 不代管） |
-| 终稿批准且 `deliverable/by-page.md` 存在 | 按用户意图交给 `planners-ppt-hell` 制作 |
-
-文件存在只能说明进度，不能代替人的批准。跨越多个阶段时，回到最早缺失的认知或人工决定。
-
-## 内部接口
-
-### Library → Co-creation
-
-只通过 Library 的只读查询入口：
+公共 Skill 提供契约与校验，不替 Proposal 阅读或生成索引。新增资料或补读后更新登记；正式交接前执行：
 
 ```bash
-node "<本 Skill 目录>/proposal-library-maintenance/scripts/query-wiki.mjs" \
-  --query "<当前项目问题或论述需要>" \
-  --limit 5
+node "<SourceIndex>/scripts/validate-source-index.mjs" "<Project>/.proposal-work/source-index.json"
 ```
 
-### Co-creation → planners-bypage
+根据返回的 `errors` 修复接口问题，保留真实盲区。`source_root` 相对索引所在目录解析；搬动索引时同步调整路径，确保下游仍能回源。
 
-**机器级交接**（下游必须保留并读取）：
+进入研讨时，应能说明项目要作什么决定、材料支持到哪里，以及哪些未知会影响判断；不是只生成一份摘要或索引文件。
 
-- `project-memory.md`
-- `source-index.json`（契约 `source-index/2.0.0`，公共件 `planners-source-index`）
+## 2. 共创关键判断
 
-**随交接一起给的正式判断依据**：
+理解项目后，围绕当前业务决定或关键疑问执行下文的 Wiki 查询，用相关方法检查解释角度、遗漏维度和选择后果。
 
-- `page-architecture.json`（本 Skill 的 `2.0.0`；不得在交接时静默丢失）
-- 结构审阅反馈
+当问题或方向尚未收敛时，读取并使用 `sparkling`，推导矛盾、比较解释和讨论行动后果。贡献新的观察、证据或取舍；方向已有充分依据时直接深化，不为完成流程制造挑战。
 
-### planners-bypage → PPT 制作
+品牌策略的任务定义或方向比较卡住时，可读 `proposal-co-creation/references/creative-strategy-methods.md`；需要检查具体反例时，可读 `proposal-co-creation/references/red-team-lenses.md`。这些是可选判断视角，不是必经模型。
 
-只交接（由 bypage 产出）：
+需要用户作商业选择、接受重要风险或改变承诺时，明确提出决定并等待回答。关键证据不足时，使用 `research` 或对应资料能力补证，或将判断保留为待验证解释。
 
-- `deliverable/by-page.md`
-- `deliverable/assets/`
+Sparkling 按自己的规范维护白板；项目记忆只接收收敛判断、用户决定、放弃项和未决问题，不复制整个讨论过程。更新旧记录，使当前判断保持一致。
 
-## 运行边界
+当当前主张、选择理由、行动后果和证据边界足以支持论证时组织主线；仍会改变方向的分歧留在研讨中，不替用户作答。
 
-- 每次只读取当前工作流的 `WORKFLOW.md`、当前 Stage 及其明确要求的少量 Reference。
-- 不把两个内部工作流当成需要用户分别安装或调用的 Skill；**bypage 是另一个独立 Skill**，由用户或本 Skill 提示后调用。
-- 用户意图清楚时直接进入，不增加问卷。
-- 状态不明确时只问一个最影响下一步的问题。
-- 资料能回答的内容由模型阅读，不让用户重新录入。
-- 不读取 `_internal/`；其中是未发布的维护、测试历史和系统记录，不属于生产运行。
-- 不因为旧文件存在而进入旧流程。
+## 3. 组织 Storyline 与结构参考
+
+从客户最终需要接受的决定反推：哪些判断必须成立，各自凭什么成立，前后怎样承接。回到来源检查关键主张的依据、相反材料和结论边界。
+
+读取 `storytelling`，用于整案或章节的认知推进。先明确使用场景：演讲提案可以逐步展开问题与解法；决策汇报可以先给建议，再在论证部分展开推进。
+
+读取 `slide-copy`，用于幻灯片的标题链、页面角色和信息节奏。形成主线、章节、主要判断及证明需要，不提前写完整逐页文案；一个判断可以由多页证明，具体拆分服从内容。
+
+出现新的解释或论证结构问题时，再针对性查询 Wiki。检查主线是否覆盖项目必要交付，是否存在重复、缺证或超过材料强度的主张。
+
+本轮沿用 `proposal-co-creation/contracts/page-architecture.md`，将当前 Storyline 与结构参考写入 `.proposal-work/page-architecture.json`。该文件负责结构表达，项目记忆负责项目理解与决定，不重复维护两份完整 Storyline。
+
+## Wiki 查询入口
+
+`<Wiki>` 优先使用用户或项目指定的方法库；未指定时使用 `<Skill>/proposal-library-maintenance/base-wiki`。
+
+```bash
+node "<Skill>/proposal-library-maintenance/scripts/query-wiki.mjs" --wiki-dir "<Wiki>" --query "<具体问题或关键词>" --limit 5
+```
+
+用能匹配方法名称或问题描述的关键词表达当前问题。读取相关 Lens 的适用条件、操作和局限，判断它对当前项目实际改变了什么。采用的方法和改变简要写入项目记忆；不保存整份查询日志。
+
+返回零条或方法不适用时继续依据项目材料推进；库不可用时说明缺失。当前入口查询 Lens，不将其结果宣称为 Recipe 查询。方法库维护不属于本流程，其现有实现保留在 `proposal-library-maintenance/WORKFLOW.md`，不在写方案时加载。
+
+## 4. 审阅与修改
+
+使用 Proposal 的现有 adapter 将正式结构交给 `planners-review-core`。公共模组负责审阅壳、提交传输和宿主；Proposal 负责内容映射、用户修改回写和反馈解释。
+
+下文 `<C>` 为 `<Skill>/proposal-co-creation/scripts`；`<A>` 为当前 `page-architecture.json` 的绝对路径；`<R>` 为 `<Project>/.proposal-work/reviews/structure`。
+
+先校验结构，再生成并打开审阅：
+
+```bash
+node "<C>/validate-page-architectures.mjs" "<A>"
+node "<C>/start-page-review.mjs" --architecture "<A>" --review-dir "<R>"
+```
+
+宿主提供 `review_open` 工具时，启动命令加 `--surface-only`，将返回的 `surface` 交给该工具；`surface_ready` 只表示产物已生成，打开状态以宿主工具回执为准。否则由同一入口启动本地宿主，检查返回的 `opened`、`url` 和 `feedback_path`，如实说明打开状态。
+
+用户在审阅面提交后，先收件，再校验反馈：
+
+```bash
+node "<C>/review-inbox.mjs" --review-dir "<R>"
+node "<C>/validate-page-review-feedback.mjs" --feedback "<R>/review-feedback.json" --architecture "<A>"
+```
+
+检查 inbox 的 `ok`、`imported` 与 `skipped`：本轮没有提交时保持等待，不能拿旧反馈代替；同一提交已收过时可继续使用其现有收据和反馈。收件成功后读取用户修改和反馈，使用回写后的正式结构继续。`valid` 只表示反馈有效，还需读取 `overall_decision`；`revise` 时按意见修改，涉及策略选择时回到讨论，修改后重新审阅。
+
+等待用户提交期间结束当前回合，不保持终端轮询。无提交、版本冲突或打开失败时如实处理，保留用户修改；批准记录由真实提交产生，不由模型代写。
+
+## 5. 交给 planners-bypage
+
+当前结构已批准且反馈绑定当前版本后，提示用户使用 `$planners-bypage`，并给出可以直接继续工作的交接说明：
+
+- 项目目录，以及 `project-memory.md`、`source-index.json`、`page-architecture.json`、结构审阅反馈的绝对路径。
+- 已确认的核心判断与选择、重要证据边界、尚未解决的问题。
+- 下游可以发展的页面组织、取材和内容表达，以及哪些变化会实质改变已确认主线。
+- 从内容展开继续，不重新询问已有背景，不重复审阅已确认主线；发现主线问题时带着证据与用户讨论。
+
+保留上游文件和有效来源路径，不随手复制索引后使相对定位失效。正式交接前确认四个文件真实存在、来源索引校验通过且实际用于论证的原文件和审计副本可读取、结构反馈有效且 `overall_decision` 为 `approve`。检查索引的 `warnings`；即使 `valid=true`，实际使用来源缺失也需恢复路径或说明无法完成交接，不能当作接口有效而略过。
+
+用户只要求阶段讨论成果时，可以交出当前理解和主线草稿，明确未决部分；不将它标记为已批准、可直接展开的正式交接。
+
+## 完成与后续
+
+本 Skill 的完成是：判断有依据，主线能够展开，用户决定被保留，下游拿到真实可用的输入。格式校验不能代替内容判断。
+
+项目偏好与新的决定更新到项目记忆；一次性改句不升级 Skill。完整逐页内容、实际使用事实的独立核查和终稿审阅由 `planners-bypage` 继续完成。维护接口时参考 `references/architecture.md`；通用问题候选和升级记录分别位于 `GOTCHAS.md`、`references/maintenance-history.md`，不在生产运行中加载历史记录。

@@ -1,5 +1,12 @@
 # Maintenance History
 
+## 2026-10-08
+
+- 写方案的完整流程集中到根 `SKILL.md`，引入 sparkling、storytelling、slide-copy 的明确调用位置；历史方案维护实现与默认 Wiki 保持原样。
+- 保留来源索引、Wiki 检索、审阅收件与 By-page 交接的具体输入、命令、返回处理和错误边界；不新增生产状态机或交接文件。
+- 归档旧 C1-C4，旧 WORKFLOW 改为定位入口；结构 Contract 只解释真实机器接口，不再重复策略门槛。
+- 退役强制问答、三圈交集、两次 Wiki 查询与逐阶段回退的文案断言；以完整接口链路和负例测试补充原有真实浏览器审阅回归。
+
 ## 2026-10-06
 
 - Co-creation 使用公共内容审阅壳，Storyline 连续阅读、点击编辑与章节/页序拖动；Method Wiki 的专用审阅页保持原样。

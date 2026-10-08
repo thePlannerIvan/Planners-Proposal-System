@@ -142,7 +142,7 @@ export function importSubmission(surfaceFile) {
     dropped_submission_fields: SUBMISSION_ONLY.filter((key) => key in submission),
   };
   receipt.next_action_zh = '收件完成（原生 review-feedback.json 已写出）：**接着**跑 scripts/validate-page-review-feedback.mjs —— 它才是"算不算门"的判据；'
-    + '**收件之前跑它一定失败**（它读的就是这份文件）。然后按 stages/C4-structure-review.md 处理。';
+    + '**收件之前跑它一定失败**（它读的就是这份文件）。然后按根 SKILL.md 的「审阅与修改」处理。';
   return receipt;
 }
 

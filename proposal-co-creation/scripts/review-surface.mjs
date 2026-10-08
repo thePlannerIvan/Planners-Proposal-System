@@ -46,11 +46,13 @@ export function surfaceDocument(reviewDir, options = {}) {
     draft: existsSync(contextPath(reviewDir)) ? JSON.parse(readFileSync(contextPath(reviewDir),'utf8')).draftPath || 'draft.json' : 'draft.json',
     watch: ['review-snapshot.json'],
     wake: {
-      mode: 'queue',
+      // 插话（steer → next-step），不进持久队列：提交的语义是"现在就收件"。声明 queue 会排到
+      // 当前回合之后 —— 模型正忙时它躺在队列里，界面上同时出现「已送达」与「排队中」两份。
+      mode: 'steer',
       text: '结构审阅有新的提交（{unit}）：先跑 scripts/review-inbox.mjs 收件'
         + '（它把提交翻译成 review-feedback.json，并把页面报上来的前提带进收据），'
         + '**收件之后**再跑 scripts/validate-page-review-feedback.mjs（门在收件之后，顺序被钉住），'
-        + '然后按 stages/C4-structure-review.md 处理。',
+        + '然后按根 SKILL.md 的「审阅与修改」处理。',
     },
     capabilities,
   };

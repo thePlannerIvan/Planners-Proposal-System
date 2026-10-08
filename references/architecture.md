@@ -1,37 +1,33 @@
-# Architecture
+# Proposal 的职责与交接
 
-## Purpose and overview
+Proposal 负责项目理解、共创判断、Storyline 与结构参考。主流程的唯一说明在根 `SKILL.md`；本文件供维护接口时使用，不增加生产步骤。
 
-Planners Proposal System owns the upstream sensemaking work for proposal and research-led cases: it reads the available material, discusses the problem with the user, identifies the important judgments, and forms an approved Storyline. It hands that understanding to `planners-bypage`, which owns the later content realization.
-
-## Modules
-
-| Module | Unique owner | Interface | Does not do |
+| Module | 唯一主人 | Interface | 不承担 |
 |---|---|---|---|
-| Co-creation | This Skill | Project materials, user discussion, `project-memory.md` | Does not write the final By-page |
-| Storyline | This Skill | Approved judgment chain and boundaries | Does not replace page-level argument development |
-| Structure reference | This Skill | `page-architecture.json` and structure feedback | Does not contain complete page copy |
-| Handoff | This Skill | Memory, source index, Storyline, structure contract and feedback | Does not rebuild or compress confirmed decisions |
-| Library maintenance | This Skill | Method Wiki workflow | Does not supply project-specific answers |
+| 项目理解与决定 | Proposal | `project-memory.md` | 不复制聊天或完整 Storyline |
+| 来源登记 | Proposal 写入；planners-source-index 定义与校验 | `source-index.json` | 公共模组不阅读材料、不生成项目结论 |
+| 策略研讨 | sparkling 提供方法；Proposal 保持项目推进 | 白板与收敛判断 | 不以问答次数证明方向成熟 |
+| 叙事与甲板组织 | storytelling / slide-copy 提供方法；Proposal 使用 | Storyline、章节与证明需要 | 不提前完成逐页稿 |
+| Wiki 查询 | 现有只读查询脚本 | 项目问题、Wiki 路径 → Lens | 不提供项目答案，不修改 Wiki |
+| 结构表达与回写 | Proposal | `page-architecture.json`、builder、inbox | 不决定 PPT 模板或完整内容 |
+| 审阅传输与宿主 | planners-review-core | surface、提交、草稿 | 不替生产方解释批准、不回写业务正文 |
+| 内容展开与最终核查 | planners-bypage | 项目记忆、来源、结构、当前反馈 | 不静默改变上游已确认判断 |
 
-## Seams
+## 真相与路径
 
-Proposal hands `planners-bypage` the project memory, source index, approved Storyline, structure contract and structure feedback. By-page consumes them as preserved upstream decisions. If later research changes the core Storyline, the work returns to this Skill.
+- `project-memory.md` 保存项目理解、用户决定和未决问题；Sparkling 白板保存研讨状态，收敛后只转接必要结论。
+- `source-index.json` 保存资料路径、原文定位、阅读覆盖和派生副本；字段只跟公共模组的当前契约走。相对路径以索引目录为基准，移动时需重定位。
+- `page-architecture.json` 保存当前 Storyline 与结构参考；不再另维护一个完整 Storyline 文件。
+- 审阅提交由公共宿主保存；Proposal 的 `review-inbox.mjs` 保护原文、回写编辑、映射新页号。`validate-page-review-feedback.mjs` 检查反馈是否有效并绑定当前结构；调用者另读 `overall_decision`，有效的 revise 不是批准。
 
-## Adjacent Skill relationship
+## 工具入口
 
-`planners-bypage` owns content expansion, necessary research, full page copy and final content review. `$planners-ppt-hell` owns layout and PPTX production. This Skill does not silently take either responsibility back.
+公共模组由 `proposal-co-creation/scripts/lib/planners-modules.mjs` 解析；现有 adapter 调用公共实现，不复制审阅壳、桥或生命周期。安装缺失模组仍遵循环境权限。
 
-## Truth sources
+Wiki 查询当前由 `proposal-library-maintenance/scripts/query-wiki.mjs` 提供，默认库在同目录体系的 `base-wiki/`，项目可显式指定 `--wiki-dir`。此入口只返回 Lens；维护流程保持原样，未来拆成独立 Skill 时一起调整 Proposal 与 By-page 的入口，不复制方法库。
 
-Co-creation uses the optional content shell from `planners-review-core`; it does not copy UI or tokens. Its `scripts/lib/review-edits.mjs` and inbox own mapping human edits/order back to native architecture, preserving the original, detecting external changes, and binding approval to the resulting hash. Library-maintenance retains its dedicated review surface.
+Proposal 向 By-page 交出四个原文件的绝对路径、确认判断、证据边界、未决问题和发展空间。当前机器格式保持兼容；如果要缩减结构契约，需与 By-page 及审阅 adapter 一起改，而不是只删上游字段。
 
-- `project-memory.md` is the durable record of user-confirmed direction, boundaries and decisions.
-- `page-architecture.json` is the machine-bound structure reference for the Proposal handoff.
-- The conversation is not the only place where an approved decision may live; important decisions must be written to project memory.
+## 退役
 
-Independent By-page runs may use their own structure contract. That does not replace or erase the Proposal handoff contract.
-
-## Retired behavior
-
-The Proposal path no longer claims ownership of complete page copy, and it no longer treats the downstream By-page as a place to rediscover or rewrite the approved Storyline.
+原 C1-C4 与详细 WORKFLOW 的重复规则已归档到源库 `_archive/proposal-co-creation-pre-simplification-2026-10-08/`，不随 Skill 发布。固定问答往返、奥美三圈必经、Wiki 固定两次查询和逐阶段回退不再是写方案的运行条件。原 Workflow 入口只指向根 Skill，策略知识参考保留为按需资料，不形成第二套流程。

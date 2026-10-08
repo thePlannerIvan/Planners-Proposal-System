@@ -1,47 +1,30 @@
-# Storyline 与页面架构交接格式
+# Storyline 与结构参考的交接格式
 
-`page-architecture/2.0.0` 是 Co-creation 交给逐页产线（`planners-bypage`）的唯一正式结构边界。它在方向成熟后生成，把 Storyline 的认知推进展开为可写作的页面判断，但不写最终文案。
+这是 Proposal 的审阅 builder、inbox、反馈校验器和 planners-bypage 实际消费的接口，不是另一份策略推导流程。模型形成的主线和结构写入 `.proposal-work/page-architecture.json`；当前格式保留兼容，不预写完整逐页内容。
 
-## 核心语义
+## 格式
 
-- Storyline 是客户依次接受的判断链，不是最终页数。
-- 每个节点是一句有信息量的陈述句，让人看出因为什么、所以什么；动作句、流程句和修辞反转都不是节点。
-- **节点是一句话，不是一个段落。** 分子分母、样本量、置信度这类支撑数字放在页面上，不塞进节点句——把"必须带分母"写进节点，会让节点膨胀成摘要（实测：那样写出来平均 114 字、最长 154 字，读起来已经不像判断句）。
-- **同一个判断的多个证明面，合并为一个节点、由多页分别证明。** 拆成几个并列节点会让前几个节点退化成并列取证，整条链失去递进；这是"有信息量"与"递进"两条要求之间唯一可用的取舍规则。
-- 方法与口径、数据边界、样本说明属于页内边界条或附录，不占节点。
-- 一个判断节点可以用一页完成，也可以因为证明负担较重而展开为数页。
-- 每页只证明一个主要判断。
-- `content_blocks`描述为了证明这个判断，页面上需要出现哪些完整内容；它不是几个短句的字数配额。
-- 内容块可以要求段落、数据表、图表、图片、比较、矩阵、模型、路线图、案例或其他合适形式。
-- `chart_brief`和`layout_direction`不是必填任务。只有结构本身依赖某种不可替代关系时才填写。
-- 不存在 `asset_resolution`。
+接口名为 `page-architecture/2.0.0`，文件中 `contract_version` 的值为 `2.0.0`。完整字段与机器约束见 `page-architecture.schema.json`，实际执行检查的入口是 `../scripts/validate-page-architectures.mjs`。
 
-## 结构
+| 字段 | 用途 |
+|---|---|
+| `project_id` | 项目的稳定身份 |
+| `storyline_thesis` | 整案要建立的核心判断 |
+| `sections[]` | 章节身份、标题、认知任务 `cognitive_job` 与转场 |
+| `pages[]` | 连续页号、章节归属、页面任务、标题意图、主要判断 |
+| `pages[].content_blocks[]` | 需要展示什么、承担什么证明任务；可建议内容形式 |
+| `pages[].evidence_needs[]` | 下游展开时需要回查或补充的证据 |
+| `pages[].transition` | 前后内容如何承接，可为空 |
+| `pages[].boundary` | 需要保留的口径或限定，可省略 |
+| `pages[].chart_brief` / `layout_direction` | 只有论证依赖特定关系时才给建议，可省略或为 null |
+| `appendix[]` | 不进入主要说服链但需要保留的材料，可省略 |
 
-- `storyline_thesis`：整份方案要建立的核心说服主线。
-- `sections[]`：认知阶段，不是惯常目录。
-- `pages[].section_id`：页面属于哪个认知阶段。
-- `pages[].page_job`：本页为什么必须存在。
-- `pages[].title_intent`：要表达的观点式标题。
-- `pages[].claim`：本页唯一主要判断。
-- `pages[].content_blocks`：证明判断所需的完整内容构成。
-- `pages[].evidence_needs`：By-page 回到原始资料时需要寻找什么。
-- `pages[].transition`：本页完成后自然产生的下一个问题。
-- `pages[].boundary`：本页必须交代的口径、边界或样本限定，作为**页内边界条**呈现，不占 Storyline 节点。
-- `appendix[]`：不进入认知链、但必须随案交付的材料（口径敏感性、数据补齐清单、方法参数、来源索引）。它们**不占主张页**，也不该被塞进某一页的正文里凑数。没有这个出口，"方法与口径不占节点"这条规则会把边界硬压进 13 页里的 9 页。
+`content_blocks` 写内容任务，不写最终文案；素材、详细数据与表达由 By-page 展开。批准保留的是当前判断与结构，不等于最终页数、版式或完整内容已经验收。Proposal 的交接说明要明确下游可以发展的空间。
 
-## 完成标准
-
-1. 页码从 1 连续递增，Section 引用有效。
-2. 每页只有一个主要判断，但内容足以完成该判断。
-3. 每一页都能说出自己在证 Storyline 的哪一句判断；说不清归属的页已移除。
-4. 页面主张没有超过已经锁定的方向和材料强度。
-5. Brief 的必要交付均有落点，重复、填充和越界页已移除。
-6. 用户已在自动打开的结构审阅页面看过整条 Storyline 与全部页面。
-
-验证：
+## 消费与检查
 
 ```bash
-node proposal-co-creation/scripts/validate-page-architectures.mjs \
-  .proposal-work/page-architecture.json
+node "<Skill>/proposal-co-creation/scripts/validate-page-architectures.mjs" "<Project>/.proposal-work/page-architecture.json"
 ```
+
+Validator 检查字段、页号和引用等机器有效性，不证明主线有说服力或证据充分。用户编辑由 inbox 回写本文件，并由反馈校验器绑定回写后的版本。策略方法、审阅顺序与交接责任只在根 `SKILL.md` 维护。

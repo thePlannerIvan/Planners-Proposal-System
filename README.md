@@ -4,7 +4,7 @@
 [![Skill](https://img.shields.io/badge/Codex%20%2F%20Claude-Skill-111827)](SKILL.md)
 [![Tests](https://github.com/thePlannerIvan/Planners-Proposal-System/actions/workflows/validate.yml/badge.svg)](https://github.com/thePlannerIvan/Planners-Proposal-System/actions/workflows/validate.yml)
 
-一套面向中文商业提案的 AI 工作系统：从历史方案方法库、项目策略共创和 Storyline，到逐页文案、数字事实审计、HTML 审阅及可编辑 Markdown 交付。
+面向中文商业提案的策略共创 Skill：理解项目资料，与用户形成关键判断、Storyline 和结构参考，完成结构审阅后交给 `planners-bypage` 展开内容。
 
 作者：**阿祖不看 TVC**
 
@@ -14,37 +14,34 @@
 
 ## 它解决什么问题
 
-很多提案 Skill 不是缺少步骤，而是模型看不清全景、每阶段只拿到文件索引、脚本增加负担、人被迫审阅低价值工程字段。本项目把工作重新分成：
+本 Skill 将策略判断、机械工具和人工决定分开：
 
-- 模型理解资料、提出判断、共创方向并完成写作；
-- 脚本处理转换、状态、确定性校验、事实定位和审阅保存；
-- 人只参与方向选择与完整内容审阅；
-- Contract 只保护真正的机器交接。
+- Proposal 理解资料、共创判断、组织说服路径并交接；
+- sparkling、storytelling、slide-copy 分别提供研讨、叙事和甲板组织方法；
+- 脚本处理只读查询、接口校验、审阅保存和编辑回写；
+- 用户作商业选择、确认结构；By-page 继续逐页内容、素材、核查和终稿。
 
 ## 核心工作流
 
 ```text
-历史方案
-→ Library Maintenance
-→ Method Wiki
-
 项目 Brief / 研究 / 分析资料
-→ Co-creation
-→ 主方向与 Storyline
-→ Page Architecture
-→ 结构审阅
-→ 交给 planners-bypage：逐页文案 · 语言 · 事实核查 · 终稿审阅
-→ by-page.md + assets/（由 bypage 产出）
+→ 理解项目与建立来源
+→ 共创关键判断（按问题查询 Method Wiki）
+→ Storyline 与结构参考
+→ 审阅与修改
+→ 交给 planners-bypage
 ```
 
-整个系统只有一个公开入口：`$planners-proposal-system`。Router 会根据用户意图和项目状态渐进读取对应内部工作流，不需要分别安装或记忆多个 Skill 名称。
+写方案的完整流程只在 [SKILL.md](SKILL.md) 维护，从已有成果继续，不再按 C1-C4 门槛逐项路由。来源索引、Wiki 查询、审阅收件和下游交接都有具体入口。
+
+Method Wiki 的维护实现暂时保留在 [proposal-library-maintenance/WORKFLOW.md](proposal-library-maintenance/WORKFLOW.md)，与写方案主线分开；只读查询允许 Proposal 与 By-page 共用，未来可独立拆分。
 
 ## 适合
 
 - 中文商业提案、年度营销方案、品牌策略和竞标方案；
-- 从复杂资料中形成方向、Storyline 和逐页内容；
-- 从历史方案提取可复用 Lens、Recipe 与 Method Wiki；
-- 需要人机共创、结构审阅、文案审阅和数字追溯的项目。
+- 从复杂资料中形成方向、Storyline 和可展开的结构参考；
+- 重新讨论或组织既有方案主线；
+- 需要可靠来源、可编辑结构审阅和完整下游交接的项目。
 
 ## 不适合
 
@@ -67,8 +64,8 @@ npx skills add https://github.com/thePlannerIvan/Planners-Proposal-System --skil
 
 - [`planners-review-core`](https://github.com/thePlannerIvan/planners-review-core) —— 审阅面契约、桥与本地宿主
 - [`planners-source-index`](https://github.com/thePlannerIvan/planners-source-index) —— 来源索引契约与唯一校验器
-- [`planners-fact-check`](https://github.com/thePlannerIvan/planners-fact-check) —— 事实核查契约与校验器
-- [`planners-report-kit`](https://github.com/thePlannerIvan/planners-report-kit) —— 报告装配与校验（仅带报告出口的 Skill 需要）
+
+方法层按任务读取当前环境中的 `sparkling`、`storytelling`、`slide-copy`，取证时可使用 `research`。这些原子 Skill 不在本仓库中；缺少时应说明可用能力，不能声称已经调用。完整内容的独立事实核查由 By-page 继续负责。
 
 某个模组不在本地时，本 Skill 的适配器会**自动从 GitHub 装它**，不需要手动准备。适配器找的地方按顺序：
 
@@ -140,16 +137,16 @@ git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git \
 
 ```text
 使用 $planners-proposal-system，先完整阅读这个项目文件夹的 Brief 和研究资料，
-和我一起确定策略方向，再形成 Storyline 和逐页方案。
+和我一起确定策略方向，再形成 Storyline 和结构参考，审阅后交给 planners-bypage。
 ```
 
 ```text
-使用 $planners-proposal-system，把这套历史方案提炼成一个新的 Method Wiki。
+使用 $planners-proposal-system，把这份已明确方向的汇报组织成结论先行的 Storyline。
 ```
 
 ```text
-使用 $planners-proposal-system，继续这个已经批准 Page Architecture 的项目，
-完成逐页文案、数字核对和最终审阅。
+使用 $planners-proposal-system，检查这个已批准结构项目的来源与反馈，
+给出可以直接交给 planners-bypage 的四文件路径、已确认判断和发展空间。
 ```
 
 ## 目录
@@ -177,7 +174,7 @@ node --test proposal-co-creation/scripts/lib/planners-modules-install.test.mjs
 node --test proposal-library-maintenance/scripts/lib/planners-modules-install.test.mjs
 ```
 
-公开测试覆盖单一 Router、Library 与 Co-creation 的活动接口与关键行为（逐页文案在 `planners-bypage` 自己的仓库里测）。
+公开测试覆盖主入口、保留的 Wiki 维护、结构审阅与真实浏览器编辑回写，以及来源 → Wiki → 审阅 → 四文件交接的完整接口链路和负例。逐页内容在 `planners-bypage` 自己的仓库中测试；工程通过不等于真实客户稿的说服力已经验收。
 
 ## 品牌、署名与最终交付
 

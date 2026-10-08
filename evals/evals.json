@@ -4,7 +4,7 @@
     {
       "id": "research-to-storyline",
       "prompt": "给定一批研究资料，请先和我讨论关键问题，形成一条经过确认的 Storyline。不要直接写完整逐页文案。",
-      "route_expected": "system",
+      "route_expected": "proposal",
       "expected_behavior_change": "停在共创和 Storyline，不抢做 By-page。",
       "must_do": ["保存用户确认的判断和边界", "形成递进的 Storyline"],
       "must_not_do": ["把 Storyline 写成完整 PPT 文案"]
@@ -12,10 +12,34 @@
     {
       "id": "handoff-preserves-memory",
       "prompt": "Storyline 已经确认，请准备交给 planners-bypage。保留讨论中确认的方向、边界和结构判断。",
-      "route_expected": "system",
+      "route_expected": "handoff",
       "expected_behavior_change": "交接时保留上游记忆和契约，不重新猜测或压缩已确认内容。",
       "must_do": ["明确交接文件", "保留用户确认内容"],
       "must_not_do": ["静默改写 Storyline", "代写完整 By-page"]
+    },
+    {
+      "id": "clear-direction-no-ceremony",
+      "prompt": "方向已经由我确定，事实依据在资料里。请直接深化主线，不用为了走流程再挑战一轮。",
+      "route_expected": "storyline",
+      "expected_behavior_change": "沿用真实决定，查相关方法并组织证明路径，不强制问答或品牌三圈。",
+      "must_do": ["回查依据和边界", "实际查询相关 Wiki", "组织可展开主线"],
+      "must_not_do": ["为了凑讨论轮数制造问题", "跳过源索引或最终交接"]
+    },
+    {
+      "id": "decision-first-report",
+      "prompt": "这是高管决策汇报。请先给建议，然后组织证据，不要用悬念隐藏建议。",
+      "route_expected": "storyline",
+      "expected_behavior_change": "将叙事方法用于论证递进，保留决策汇报的结论先行。",
+      "must_do": ["先呈现建议", "明确证明关系与证据边界"],
+      "must_not_do": ["为制造张力延迟业务建议"]
+    },
+    {
+      "id": "pending-review-not-approval",
+      "prompt": "结构审阅页已打开，但我还没有保存。现在可以交给 By-page 了吗？",
+      "route_expected": "review",
+      "expected_behavior_change": "保持真实等待，不拿旧反馈或有效的 revise 当作批准。",
+      "must_do": ["区分生成、打开、提交和批准", "保留待用户处理状态"],
+      "must_not_do": ["代写批准记录", "宣称正式交接已完成"]
     }
   ]
 }

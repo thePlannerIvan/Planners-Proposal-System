@@ -1,7 +1,7 @@
 {
   "name": "planners-proposal-system",
   "version": "0.2.0",
-  "description": "从方法库维护、策略共创到逐页文案与事实审计的一体化提案 Skill",
+  "description": "项目策略共创、Storyline 与结构审阅，交接 planners-bypage 展开内容",
   "license": "AGPL-3.0-only",
   "type": "module",
   "scripts": {
