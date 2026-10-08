@@ -103,6 +103,8 @@ node "<C>/validate-page-review-feedback.mjs" --feedback "<R>/review-feedback.jso
 
 ## 5. 交给 planners-bypage
 
+交接或从下游返回修订时，读取 `planners-bypage/references/content-handoff.md`（按名称找到该 Skill）。按其文件归属续接：项目记忆和来源索引沿用原路径，结构原件留给下游作批准依据；返回修改时继续同一项目文件，不新建一套来源。下游完整稿的事实核查不能由本阶段结构批准替代。
+
 当前结构已批准且反馈绑定当前版本后，提示用户使用 `$planners-bypage`，并给出可以直接继续工作的交接说明：
 
 - 项目目录，以及 `project-memory.md`、`source-index.json`、`page-architecture.json`、结构审阅反馈的绝对路径。
