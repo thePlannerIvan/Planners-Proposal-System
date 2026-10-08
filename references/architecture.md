@@ -24,7 +24,7 @@ Proposal 负责项目理解、共创判断、Storyline 与结构参考。主流�
 
 公共模组由 `proposal-co-creation/scripts/lib/planners-modules.mjs` 解析；现有 adapter 调用公共实现，不复制审阅壳、桥或生命周期。安装缺失模组仍遵循环境权限。
 
-Wiki 查询当前由 `proposal-library-maintenance/scripts/query-wiki.mjs` 提供，默认库在同目录体系的 `base-wiki/`，项目可显式指定 `--wiki-dir`。此入口只返回 Lens；维护流程保持原样，未来拆成独立 Skill 时一起调整 Proposal 与 By-page 的入口，不复制方法库。
+Wiki 由独立的 `planners-method-wiki` 提供。Proposal 和 By-page 按名称调用它，查询、采用记录和库选择只由该 Skill 定义；生产交接沿用同一项目记忆和方法库，Lens / Recipe 与维护测试不再留在 Proposal 中。
 
 Proposal 向 By-page 交出四个原文件的绝对路径、确认判断、证据边界、未决问题和发展空间。当前机器格式保持兼容；如果要缩减结构契约，需与 By-page 及审阅 adapter 一起改，而不是只删上游字段。
 

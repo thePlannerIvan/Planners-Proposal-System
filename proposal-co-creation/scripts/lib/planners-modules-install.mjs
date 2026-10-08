@@ -42,6 +42,9 @@ export const LIBRARY_DIR_NAME = '02-skills-library';
  * **这是分发契约，不是本 Skill 的依赖清单** —— 本 Skill 到底依赖谁，看 `planners-modules.mjs` 的 --check 名单。
  */
 export const MODULE_SPECS = {
+  'planners-method-wiki': {
+    anchors: ['SKILL.md', 'base-wiki/wiki-index.json', 'scripts/query-wiki.mjs', 'scripts/build-wiki-snapshot.mjs'],
+  },
   'planners-review-core': {
     anchors: [
       'SKILL.md',

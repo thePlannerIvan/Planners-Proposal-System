@@ -10,7 +10,7 @@ import { moduleScript } from '../../proposal-co-creation/scripts/lib/planners-mo
 
 const skill = resolve(import.meta.dirname, '../..');
 const c = join(skill, 'proposal-co-creation/scripts');
-const wikiQuery = join(skill, 'proposal-library-maintenance/scripts/query-wiki.mjs');
+const wikiQuery = moduleScript('planners-method-wiki', 'scripts/query-wiki.mjs');
 const sourceValidator = moduleScript('planners-source-index', 'scripts/validate-source-index.mjs');
 const project = mkdtempSync(join(tmpdir(), 'proposal-workflow-fixture-'));
 const work = join(project, '.proposal-work');
@@ -141,21 +141,27 @@ try {
     'Default Wiki query returns actionable Lens operations');
   const customWiki = join(project, 'specified-wiki');
   mkdirSync(join(customWiki, 'modules'), { recursive: true });
-  writeJson(join(customWiki, 'wiki-index.json'), { modules: [{ path: 'modules/pilot.json' }] });
+  writeJson(join(customWiki, 'wiki-index.json'), { modules: [{ module_id: 'mod_fixture-pilot', path: 'modules/pilot.json', lenses: [{ lens_id: 'lens_fixture-pilot' }] }] });
   writeJson(join(customWiki, 'modules/pilot.json'), {
-    module_id: 'mod-fixture-pilot', title: 'Test pilot decision', lens_catalog: [{
-      lens_id: 'lens-fixture-pilot', name: 'Commuter discomfort hypothesis', question: 'Which pilot is worth testing?',
+    contract_version: '1.0.0', wiki_module_id: `wm_${hash('pilot').slice(0, 24)}`,
+    module_id: 'mod_fixture-pilot', title: 'Test pilot decision', stable_decision: 'Choose a pilot', unified_preconditions: ['Feedback available'],
+    wiki_version: '1.0.0', status: 'active', approval: { human_approved: false, reviewer_note: 'Test fixture only', approved_at: null },
+    deletion: { deleted: false, reason: null, replaced_by: null }, created_from_hash: hash('fixture'),
+    source_module_instance_ids: [`mi_${hash('pilot-source').slice(0, 24)}`], recipes: [], page_expression_options: [], lens_catalog: [{
+      lens_id: 'lens_fixture-pilot', name: 'Commuter discomfort hypothesis', aliases: [], question: 'Which pilot is worth testing?',
       use_conditions: ['Commuter feedback is available'], analysis_operations: ['Compare design assumptions with reported discomfort'],
+      skip_conditions: ['No feedback'], required_inputs: ['Feedback'], failure_modes: ['Overgeneralization'], variants: [],
+      source_module_instance_ids: [`mi_${hash('pilot-source').slice(0, 24)}`],
       output_types: ['Pilot hypothesis'], boundaries: ['Interview counts do not estimate market prevalence'],
     }],
   });
   const specified = run(wikiQuery, ['--wiki-dir', customWiki, '--query', 'commuter', '--limit', '5']);
-  check(specified.returned === 1 && specified.results[0].lens_id === 'lens-fixture-pilot'
+  check(specified.returned === 1 && specified.results[0].lens_id === 'lens_fixture-pilot'
     && specified.results[0].boundaries.length === 1, 'Specified Wiki query reads only the selected library');
   const zero = run(wikiQuery, ['--wiki-dir', customWiki, '--query', 'unsupported-fixture-term', '--limit', '5']);
   check(zero.returned === 0 && zero.results.length === 0, 'Zero-result Wiki query remains empty, not invented evidence');
   const missing = spawnSync(process.execPath, [wikiQuery, '--wiki-dir', join(project, 'missing-wiki'), '--query', 'commuter'], { encoding: 'utf8' });
-  check(missing.status === 2 && /Wiki/.test(missing.stderr), 'Unavailable Wiki reports a real failure');
+  check(missing.status === 2 && JSON.parse(missing.stdout || missing.stderr).ok === false, 'Unavailable Wiki reports a real failure');
 
   writeFileSync(memoryPath, `# TEST FIXTURE: project memory\n\nDecision: select one pilot, not a production rollout.\nEvidence: brief.md#Decision; consumer-feedback.md#Observations.\nWiki application: ${specified.results[0].analysis_operations[0]}; ${specified.results[0].boundaries[0]}.\nSimulated question: prioritize strap testing or pocket testing?\nSimulated input: prioritize strap testing; retain a no-market-prevalence caveat.\nOpen issue: effectiveness and costs need a pilot; no market-wide claim.\n`);
   const page = (number, title, claim, requirement, transition) => ({

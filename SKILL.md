@@ -41,7 +41,7 @@ node "<SourceIndex>/scripts/validate-source-index.mjs" "<Project>/.proposal-work
 
 ## 2. 共创关键判断
 
-理解项目后，围绕当前业务决定或关键疑问执行下文的 Wiki 查询，用相关方法检查解释角度、遗漏维度和选择后果。
+理解项目后，读取并调用 `planners-method-wiki`，围绕当前业务决定或关键疑问查找并应用方法，检查解释角度、遗漏维度和选择后果。传入当前问题、可用材料和同一份项目记忆；方法库选择与采用记录遵循该 Skill。
 
 当问题或方向尚未收敛时，读取并使用 `sparkling`，推导矛盾、比较解释和讨论行动后果。贡献新的观察、证据或取舍；方向已有充分依据时直接深化，不为完成流程制造挑战。
 
@@ -59,21 +59,9 @@ Sparkling 按自己的规范维护白板；项目记忆只接收收敛判断、�
 
 读取 `slide-copy`，用于幻灯片的标题链、页面角色和信息节奏。形成主线、章节、主要判断及证明需要，不提前写完整逐页文案；一个判断可以由多页证明，具体拆分服从内容。
 
-出现新的解释或论证结构问题时，再针对性查询 Wiki。检查主线是否覆盖项目必要交付，是否存在重复、缺证或超过材料强度的主张。
+出现新的解释或论证结构问题时，再针对性调用 `planners-method-wiki`，需要连续推导时查 Recipe。检查主线是否覆盖项目必要交付，是否存在重复、缺证或超过材料强度的主张。
 
 本轮沿用 `proposal-co-creation/contracts/page-architecture.md`，将当前 Storyline 与结构参考写入 `.proposal-work/page-architecture.json`。该文件负责结构表达，项目记忆负责项目理解与决定，不重复维护两份完整 Storyline。
-
-## Wiki 查询入口
-
-`<Wiki>` 优先使用用户或项目指定的方法库；未指定时使用 `<Skill>/proposal-library-maintenance/base-wiki`。
-
-```bash
-node "<Skill>/proposal-library-maintenance/scripts/query-wiki.mjs" --wiki-dir "<Wiki>" --query "<具体问题或关键词>" --limit 5
-```
-
-用能匹配方法名称或问题描述的关键词表达当前问题。读取相关 Lens 的适用条件、操作和局限，判断它对当前项目实际改变了什么。采用的方法和改变简要写入项目记忆；不保存整份查询日志。
-
-返回零条或方法不适用时继续依据项目材料推进；库不可用时说明缺失。当前入口查询 Lens，不将其结果宣称为 Recipe 查询。方法库维护不属于本流程，其现有实现保留在 `proposal-library-maintenance/WORKFLOW.md`，不在写方案时加载。
 
 ## 4. 审阅与修改
 
@@ -108,7 +96,7 @@ node "<C>/validate-page-review-feedback.mjs" --feedback "<R>/review-feedback.jso
 当前结构已批准且反馈绑定当前版本后，提示用户使用 `$planners-bypage`，并给出可以直接继续工作的交接说明：
 
 - 项目目录，以及 `project-memory.md`、`source-index.json`、`page-architecture.json`、结构审阅反馈的绝对路径。
-- 已确认的核心判断与选择、重要证据边界、尚未解决的问题。
+- 已确认的核心判断与选择、重要证据边界、尚未解决的问题；已采用的方法及其库与版本记录保留在同一项目记忆中供下游接续。
 - 下游可以发展的页面组织、取材和内容表达，以及哪些变化会实质改变已确认主线。
 - 从内容展开继续，不重新询问已有背景，不重复审阅已确认主线；发现主线问题时带着证据与用户讨论。
 

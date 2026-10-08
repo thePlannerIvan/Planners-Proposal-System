@@ -34,7 +34,9 @@
 
 写方案的完整流程只在 [SKILL.md](SKILL.md) 维护，从已有成果继续，不再按 C1-C4 门槛逐项路由。来源索引、Wiki 查询、审阅收件和下游交接都有具体入口。
 
-Method Wiki 的维护实现暂时保留在 [proposal-library-maintenance/WORKFLOW.md](proposal-library-maintenance/WORKFLOW.md)，与写方案主线分开；只读查询允许 Proposal 与 By-page 共用，未来可独立拆分。
+Method Wiki 已独立为 `planners-method-wiki`，统一拥有 Lens / Recipe 查询、方法审阅与维护。Proposal 与 By-page 调用同一 Skill 和项目方法库，已采用方法保留在原项目记忆中。
+
+旧 `proposal-library-maintenance/scripts/query-wiki.mjs` 仅作为转发入口保留，供既有调用兼容；它不包含方法库或维护流程。
 
 ## 适合
 
@@ -64,6 +66,7 @@ npx skills add https://github.com/thePlannerIvan/Planners-Proposal-System --skil
 
 - [`planners-review-core`](https://github.com/thePlannerIvan/planners-review-core) —— 审阅面契约、桥与本地宿主
 - [`planners-source-index`](https://github.com/thePlannerIvan/planners-source-index) —— 来源索引契约与唯一校验器
+- `planners-method-wiki` —— 方法库查询、应用与维护；生产时调用只读查询分支
 
 方法层按任务读取当前环境中的 `sparkling`、`storytelling`、`slide-copy`，取证时可使用 `research`。这些原子 Skill 不在本仓库中；缺少时应说明可用能力，不能声称已经调用。完整内容的独立事实核查由 By-page 继续负责。
 
@@ -155,7 +158,6 @@ git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git \
 planners-proposal-system/
 ├── SKILL.md
 ├── agents/
-├── proposal-library-maintenance/
 ├── proposal-co-creation/
 ├── evals/
 └── package.json
@@ -169,12 +171,11 @@ planners-proposal-system/
 npm ci
 npm test
 
-# 公共模组自动安装器自己的测试（两个入口各一份）
+# 公共模组自动安装器自己的测试
 node --test proposal-co-creation/scripts/lib/planners-modules-install.test.mjs
-node --test proposal-library-maintenance/scripts/lib/planners-modules-install.test.mjs
 ```
 
-公开测试覆盖主入口、保留的 Wiki 维护、结构审阅与真实浏览器编辑回写，以及来源 → Wiki → 审阅 → 四文件交接的完整接口链路和负例。逐页内容在 `planners-bypage` 自己的仓库中测试；工程通过不等于真实客户稿的说服力已经验收。
+公开测试覆盖主入口、独立 Wiki 调用、结构审阅与真实浏览器编辑回写，以及来源 → Wiki → 审阅 → 四文件交接的完整接口链路和负例。方法维护在 `planners-method-wiki` 测试，逐页内容在 `planners-bypage` 测试；工程通过不等于真实客户稿的说服力已经验收。
 
 ## 品牌、署名与最终交付
 

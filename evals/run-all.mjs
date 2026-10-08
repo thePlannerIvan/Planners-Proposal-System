@@ -4,7 +4,6 @@ import { runNode } from './lib/assert.mjs';
 
 const suites = [
   'router/run.mjs',
-  'library/run.mjs',
   'co-creation/run.mjs',
   'co-creation/edits.mjs',
   'workflow/run.mjs',
