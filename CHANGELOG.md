@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-08 - 删除冗余辅助文件
+
+- 删除共创 WORKFLOW 定位页、creative-strategy-methods 和 red-team-lenses；主流程直接使用原子 Skill 与 Wiki，不保留第二套方法入口。
+- 将 GOTCHAS 中已升级的两条经验归入维护历史，删除空余候选入口。
+- 清理活跃引用与旧入口测试；结构契约、来源、Wiki 和审阅工具保持不变。
+
 ## 2026-10-08 - 简化写方案主线
 
 - 将资料理解、策略共创、Storyline、结构审阅和交接集中到根 Skill，按任务使用 sparkling、storytelling、slide-copy。

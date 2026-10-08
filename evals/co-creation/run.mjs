@@ -98,8 +98,6 @@ if (state) await stopHost(state);
 assert((await hostAlive(live.surface)) === null, '停完之后宿主判死');
 
 const skill = readFileSync(resolve(root, 'SKILL.md'), 'utf8');
-const compatibilityEntry = readFileSync(resolve(skillRoot, 'WORKFLOW.md'), 'utf8');
-assert(compatibilityEntry.includes('../SKILL.md'), '旧 Workflow 只定位主文件，不再维护第二套运行步骤');
 assert(skill.includes('先收件，再校验反馈'), '主流程必须说明真实提交的收件顺序');
 assert(skill.includes('`valid` 只表示反馈有效') && skill.includes('`overall_decision`'), '有效反馈不能替代用户批准');
 assert(skill.includes('使用回写后的正式结构继续'), '人工编辑后的正式产物必须成为后续输入');

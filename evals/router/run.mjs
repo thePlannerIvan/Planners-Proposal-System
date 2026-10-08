@@ -18,11 +18,6 @@ for (const name of ['sparkling', 'storytelling', 'slide-copy']) {
 for (const script of ['validate-page-architectures.mjs', 'start-page-review.mjs', 'review-inbox.mjs', 'validate-page-review-feedback.mjs']) {
   assert(existsSync(resolve(root, 'proposal-co-creation/scripts', script)), `审阅调用 ${script} 必须真实存在`);
 }
-for (const workflow of [
-  'proposal-library-maintenance/WORKFLOW.md',
-  'proposal-co-creation/WORKFLOW.md',
-]) {
-  const content = readFileSync(resolve(root, workflow), 'utf8');
-  assert(!content.includes('<本 Skill 目录>/scripts/'), `${workflow} 不得把根 Skill 误作组件脚本目录`);
-}
+const libraryWorkflow = readFileSync(resolve(root, 'proposal-library-maintenance/WORKFLOW.md'), 'utf8');
+assert(!libraryWorkflow.includes('<本 Skill 目录>/scripts/'), 'Library 工作流不得把根 Skill 误作组件脚本目录');
 pass('单一写方案主入口与真实工具指针');

@@ -30,4 +30,4 @@ Proposal 向 By-page 交出四个原文件的绝对路径、确认判断、证�
 
 ## 退役
 
-原 C1-C4 与详细 WORKFLOW 的重复规则已归档到源库 `_archive/proposal-co-creation-pre-simplification-2026-10-08/`，不随 Skill 发布。固定问答往返、奥美三圈必经、Wiki 固定两次查询和逐阶段回退不再是写方案的运行条件。原 Workflow 入口只指向根 Skill，策略知识参考保留为按需资料，不形成第二套流程。
+原 C1-C4 与详细 WORKFLOW 的重复规则已归档到源库 `_archive/proposal-co-creation-pre-simplification-2026-10-08/`，不随 Skill 发布。固定问答往返、奥美三圈必经、Wiki 固定两次查询和逐阶段回退不再是写方案的运行条件。旧 Workflow 定位页和两个辅助镜头已删除；研讨方法由 sparkling 提供，特定方法通过 Wiki 查询。

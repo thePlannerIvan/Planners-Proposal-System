@@ -45,8 +45,6 @@ node "<SourceIndex>/scripts/validate-source-index.mjs" "<Project>/.proposal-work
 
 当问题或方向尚未收敛时，读取并使用 `sparkling`，推导矛盾、比较解释和讨论行动后果。贡献新的观察、证据或取舍；方向已有充分依据时直接深化，不为完成流程制造挑战。
 
-品牌策略的任务定义或方向比较卡住时，可读 `proposal-co-creation/references/creative-strategy-methods.md`；需要检查具体反例时，可读 `proposal-co-creation/references/red-team-lenses.md`。这些是可选判断视角，不是必经模型。
-
 需要用户作商业选择、接受重要风险或改变承诺时，明确提出决定并等待回答。关键证据不足时，使用 `research` 或对应资料能力补证，或将判断保留为待验证解释。
 
 Sparkling 按自己的规范维护白板；项目记忆只接收收敛判断、用户决定、放弃项和未决问题，不复制整个讨论过程。更新旧记录，使当前判断保持一致。
@@ -120,4 +118,4 @@ node "<C>/validate-page-review-feedback.mjs" --feedback "<R>/review-feedback.jso
 
 本 Skill 的完成是：判断有依据，主线能够展开，用户决定被保留，下游拿到真实可用的输入。格式校验不能代替内容判断。
 
-项目偏好与新的决定更新到项目记忆；一次性改句不升级 Skill。完整逐页内容、实际使用事实的独立核查和终稿审阅由 `planners-bypage` 继续完成。维护接口时参考 `references/architecture.md`；通用问题候选和升级记录分别位于 `GOTCHAS.md`、`references/maintenance-history.md`，不在生产运行中加载历史记录。
+项目偏好与新的决定更新到项目记忆；一次性改句不升级 Skill。完整逐页内容、实际使用事实的独立核查和终稿审阅由 `planners-bypage` 继续完成。维护接口时参考 `references/architecture.md`；升级记录位于 `references/maintenance-history.md`，不在生产运行中加载历史记录。
