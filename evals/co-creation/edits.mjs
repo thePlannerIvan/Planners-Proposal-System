@@ -8,7 +8,7 @@ const root = resolve(import.meta.dirname,'../../proposal-co-creation');
 const run = (script,args) => jsonOutput(runNode(join(root,'scripts',script),args));
 for (const opaque of [false,true]) {
   const dir = mkdtempSync(join(tmpdir(),'proposal-edit-')), architecture = join(dir,'architecture.json'), reviewDir = join(dir,'review');
-  const fixture = JSON.parse(readFileSync(join(root,'templates/page-architecture.json'),'utf8'));
+  const fixture = JSON.parse(readFileSync(resolve(root,'../evals/fixtures/page-architecture-v2.json'),'utf8'));
   fixture.pages.push({...structuredClone(fixture.pages[0]),page_number:2,section_id:fixture.sections[1].section_id,title_intent:'Second page'});
   writeFileSync(architecture,JSON.stringify(fixture,null,2));
   const surface = run('start-page-review.mjs',['--architecture',architecture,'--review-dir',reviewDir,'--surface-only','--legacy-review','true']).surface;

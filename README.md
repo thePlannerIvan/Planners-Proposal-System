@@ -18,7 +18,7 @@
 
 - Proposal 理解资料、共创判断、组织说服路径并交接；
 - sparkling、storytelling、slide-copy 分别提供研讨、叙事和甲板组织方法；
-- 脚本处理只读查询、接口校验、审阅保存和编辑回写；
+- 脚本处理接口校验、自动保存、版本管理和编辑回写；
 - 用户作商业选择、确认结构；By-page 继续逐页内容、素材、核查和终稿。
 
 ## 核心工作流
@@ -32,7 +32,7 @@
 → 交给 planners-bypage
 ```
 
-写方案的完整流程只在 [SKILL.md](SKILL.md) 维护，从已有成果继续，不再按 C1-C4 门槛逐项路由。来源索引、Wiki 查询、审阅收件和下游交接都有具体入口。
+写方案的完整流程只在 [SKILL.md](SKILL.md) 维护，从已有成果继续，不再按 C1-C4 门槛逐项路由。来源索引、专业知识查询、工作台协作和下游交接都有具体入口。
 
 Method Wiki 已独立为 `planners-method-wiki`，统一拥有 Lens / Recipe 查询、方法审阅与维护。Proposal 与 By-page 调用同一 Skill 和项目方法库，已采用方法保留在原项目记忆中。
 
@@ -148,8 +148,8 @@ git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git \
 ```
 
 ```text
-使用 $planners-proposal-system，检查这个已批准结构项目的来源与反馈，
-给出可以直接交给 planners-bypage 的四文件路径、已确认判断和发展空间。
+使用 $planners-proposal-system，检查当前主线、工作台版本与来源，
+给出可以直接交给 planners-bypage 的活动文件路径、已确认判断和发展空间。
 ```
 
 ## 目录
@@ -175,7 +175,7 @@ npm test
 node --test proposal-co-creation/scripts/lib/planners-modules-install.test.mjs
 ```
 
-公开测试覆盖主入口、独立 Wiki 调用、结构审阅与真实浏览器编辑回写，以及来源 → Wiki → 审阅 → 四文件交接的完整接口链路和负例。方法维护在 `planners-method-wiki` 测试，逐页内容在 `planners-bypage` 测试；工程通过不等于真实客户稿的说服力已经验收。
+当前格式为 3.0：每页一句主张、支撑判断和必要备注；工作台自动保存，并提供历史版本与恢复。`evals/co-creation/storyline.mjs` 覆盖当前主线编辑、任务与 By-page 接收接口。旧 inbox、approve/revise 相关用例仅用于 legacy 兼容，不定义当前生产流程。完整浏览器与跨 Skill 联合验证按维护计划执行，未运行不能视为通过。方法维护在 `planners-method-wiki` 测试，逐页内容在 `planners-bypage` 测试；工程通过不等于真实客户稿的说服力已经验收。
 
 ## 品牌、署名与最终交付
 
@@ -186,3 +186,7 @@ node --test proposal-co-creation/scripts/lib/planners-modules-install.test.mjs
 ## 开源与商业合作
 
 本项目采用 [GNU Affero General Public License v3.0](LICENSE)。私有部署、企业流程适配、闭源授权、培训与咨询见 [COMMERCIAL.md](COMMERCIAL.md)。
+
+## 自动验证环境
+
+公开 CI 安装 Chromium，并检出公开的跨 Skill 依赖运行完整验收。

@@ -12,12 +12,49 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    env:
+      REVIEW_TEST_NO_OPEN: '1'
+    defaults:
+      run:
+        working-directory: 02-skills-library/02-content-assembly/planners-proposal-system
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: 02-skills-library/02-content-assembly/planners-proposal-system
+      - uses: actions/checkout@v4
+        with:
+          repository: thePlannerIvan/planners-review-core
+          path: 02-skills-library/00-system/planners-review-core
+      - uses: actions/checkout@v4
+        with:
+          repository: thePlannerIvan/planners-source-index
+          path: 02-skills-library/00-system/planners-source-index
+      - uses: actions/checkout@v4
+        with:
+          repository: thePlannerIvan/planners-fact-check
+          path: 02-skills-library/01-data-analysis/planners-fact-check
+      - uses: actions/checkout@v4
+        with:
+          repository: thePlannerIvan/planners-ppt-hell
+          path: 02-skills-library/03-design-delivery/planners-ppt-hell
+      - uses: actions/checkout@v4
+        with:
+          repository: thePlannerIvan/planners-method-wiki
+          path: 02-skills-library/02-content-assembly/planners-method-wiki
+      - uses: actions/checkout@v4
+        with:
+          repository: thePlannerIvan/planners-bypage
+          path: 02-skills-library/02-content-assembly/planners-bypage
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '22'
           cache: npm
+          cache-dependency-path: 02-skills-library/02-content-assembly/planners-proposal-system/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install playwright
+      - run: python -m playwright install --with-deps chromium
       - run: npm ci
       - run: npm test

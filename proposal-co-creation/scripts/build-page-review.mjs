@@ -27,6 +27,8 @@ const validation = spawnSync(process.execPath, [
 ], { encoding: 'utf8' });
 if (validation.status !== 0) throw new Error(`Page Architecture 验证失败：${validation.stdout || validation.stderr}`);
 const architecture = JSON.parse(raw);
+const simple = architecture.contract_version === '3.0.0';
+if (simple && !workbench) throw Error('3.0 主线使用 Workbench；legacy 只用于旧项目');
 const sourceSha256 = createHash('sha256').update(raw).digest('hex');
 // 上一轮（同面才算）：指纹相同才认；被标过 revise 的页**本轮没有默认值**（R7：不许把人的决定重置成默认通过）
 let priorRound = null;
@@ -49,10 +51,11 @@ if (args['--previous'] && existsSync(resolve(args['--previous']))) {
 const pages = architecture.pages.map(page => ({
   page_number: page.page_number,
   section_id: page.section_id,
-  title: page.title_intent,
+  title: simple ? page.claim : page.title_intent,
   claim: page.claim,
-  blocks: page.content_blocks.map(block => ({title:block.block_title,text:block.content_requirement})),
-  meta: [
+  blocks: simple ? page.supports.map(text => ({title:'',text})) : page.content_blocks.map(block => ({title:block.block_title,text:block.content_requirement})),
+  notes: page.notes ?? '',
+  meta: simple ? [] : [
     { label: '页面任务', value: page.page_job },
     { label: '所属章节', value: page.section_id },
     { label: '后续取材', value: page.evidence_needs.length ? page.evidence_needs : ['本页暂未指定外部证据'] },
@@ -75,18 +78,18 @@ const pages = architecture.pages.map(page => ({
   })(),
 }));
 mkdirSync(dirname(outputPath), {recursive:true});
-const sections = architecture.sections.map(s => ({section_id:s.section_id,title:s.title,lead:s.cognitive_job,transition:s.transition}));
+const sections = architecture.sections.map(s => ({section_id:s.section_id,title:s.title,...(simple ? {} : {lead:s.cognitive_job,transition:s.transition})}));
 const context = writeReviewContext(dirname(outputPath),{type:'architecture',reviewKind:'co_creation_page_architecture',workbench,allowStructureChanges:true,sourceSha256,pages,sections,
-  architecturePath,files:[{path:architecturePath,sha256:sha256(raw)}]});
+  simpleStoryline:simple,architecturePath,files:[{path:architecturePath,sha256:sha256(raw)}]});
 const html = renderPageReviewHtml({
   reviewKind: 'co_creation_page_architecture',
   title: 'Storyline 与页面结构审阅',
-  subtitle: `请从整条说服路径判断 ${architecture.pages.length} 页是否完整、准确且有必要。一个 Storyline 节点可以展开为多页。`,
-  sourceSha256, workbench, allowStructureChanges: true,
+  subtitle: `每页一句主张，展开查看支撑判断；直接修改文字，或写批注一起完善。`,
+  sourceSha256, workbench, simpleStoryline:simple, allowStructureChanges: true,
   sections,thesis:architecture.storyline_thesis,draftPath:context.draftPath,
   pages,
   priorRound: priorRound ? { saved_at: priorRound.saved_at, stale: !!priorRound.stale } : null,
-  notice: '所有页面默认通过。重点只看章节推进、标题、核心判断和分行内容块；图表、配图与版式通常留到逐页文案阶段（`planners-bypage`）。输入任何反馈后，本页会自动切换为“需要修改”。',
+  notice: workbench ? '' : '旧项目审阅：检查主张、支撑与反馈。',
 });
 mkdirSync(dirname(outputPath), { recursive: true });
 writeFileSync(outputPath, html);

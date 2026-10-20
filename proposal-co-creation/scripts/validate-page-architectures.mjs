@@ -2,7 +2,8 @@
 import { readFileSync } from 'node:fs';
 import { isPlainObject, sortErrors, writeSummary } from './lib/validation-utils.mjs';
 
-const CONTRACT = 'page-architecture/2.0.0';
+import { validateStoryline } from './lib/storyline.mjs';
+const CONTRACT = 'page-architecture/3.0.0';
 const PJ_ID_RE = /^pj_[a-f0-9]{24}$/;
 const SECTION_ID_RE = /^sec-[a-z0-9][a-z0-9-]{1,47}$/;
 const FORMS = new Set([
@@ -101,7 +102,7 @@ function validate(document) {
 
 function main() {
   const [filePath, ...rest] = process.argv.slice(2);
-  if (!filePath || rest.length) {
+  if (!filePath || rest.some(arg => arg !== '--ready')) {
     writeSummary({ contract: CONTRACT, valid: false, records: 0, errors: [{ line: 0, record_id: null, code: 'arg_error', field: null, message: '用法：validate-page-architectures.mjs <page-architecture.json>' }] });
     process.exit(2);
   }
@@ -112,7 +113,7 @@ function main() {
     writeSummary({ contract: CONTRACT, valid: false, records: 0, errors: [{ line: 0, record_id: null, code: 'file_error', field: null, message: readError.message }] });
     process.exit(2);
   }
-  const errors = validate(document);
+  const errors = document?.contract_version === '3.0.0' ? validateStoryline(document, {ready:rest.includes('--ready')}) : validate(document);
   writeSummary({ contract: CONTRACT, valid: errors.length === 0, records: 1, errors });
   process.exit(errors.length ? 1 : 0);
 }

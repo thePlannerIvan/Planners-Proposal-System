@@ -39,8 +39,8 @@ export function surfaceDocument(reviewDir, options = {}) {
   return {
     contract_version: 'review-surface/2.0.0',
     id: ID,
-    title: options.title || 'Page Architecture 共创审阅',
-    description: '逐页确认结构：页序、每页任务、上屏主张与配图；可上传替换图，最后给一个整体意见。',
+    title: options.title || 'Storyline 工作台',
+    description: '每页一句主张，展开编辑支撑判断；可排序、增删、保存或提交批注共同修改。',
     project_root: projectRootRel(reviewDir),
     dir: '.',
     entry: 'index.html',

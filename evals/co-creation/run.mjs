@@ -10,11 +10,11 @@ import { hostAlive, hostState, stopHost } from '../lib/review-host-bridge.mjs';
 
 const root = resolve(import.meta.dirname, '../..');
 const skillRoot = resolve(root, 'proposal-co-creation');
-const template = resolve(skillRoot, 'templates/page-architecture.json');
+const template = resolve(root, 'evals/fixtures/page-architecture-v2.json');
 const validation = jsonOutput(runNode(resolve(skillRoot, 'scripts/validate-page-architectures.mjs'), [template]));
 assert(validation.valid, 'Page Architecture 2.0 模板必须通过');
 
-const schema = JSON.parse(readFileSync(resolve(skillRoot, 'contracts/page-architecture.schema.json'), 'utf8'));
+const schema = JSON.parse(readFileSync(resolve(skillRoot, 'contracts/legacy/page-architecture-v2.schema.json'), 'utf8'));
 const pageProps = schema.properties.pages.items.properties;
 assert(!Object.hasOwn(pageProps, 'asset_resolution'), 'Schema 不得含 asset_resolution');
 assert(Object.hasOwn(pageProps, 'content_blocks'), 'Schema 必须使用 content_blocks');
@@ -98,9 +98,8 @@ if (state) await stopHost(state);
 assert((await hostAlive(live.surface)) === null, '停完之后宿主判死');
 
 const skill = readFileSync(resolve(root, 'SKILL.md'), 'utf8');
-assert(skill.includes('先收件，再校验反馈'), '主流程必须说明真实提交的收件顺序');
-assert(skill.includes('校验通过后使用回写后的正式结构继续')
-  && skill.includes('不把 `overall_decision` 当作继续工作的前置批准门'),
-  '默认 Workbench 不把 legacy 反馈或 overall_decision 当作前置批准门');
-assert(skill.includes('使用回写后的正式结构继续'), '人工编辑后的正式产物必须成为后续输入');
+const workbenchGuide = readFileSync(resolve(root, 'references/workbench.md'), 'utf8');
+assert(workbenchGuide.indexOf('review-inbox.mjs') < workbenchGuide.indexOf('validate-page-review-feedback.mjs'), 'legacy 路径先收件再校验');
+assert(workbenchGuide.includes('新项目不用 inbox、legacy feedback 或 overall_decision'), '当前主流程不用旧审批门');
+assert(workbenchGuide.includes('读新 head 与主稿继续'), '后续工作消费当前主稿');
 pass('Co-creation 结构与真实 Review；主文件交接约定');
