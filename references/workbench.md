@@ -18,17 +18,19 @@ DSH 有 `review_open` 时加 `--surface-only`，把返回的 surface 绝对路�
 
 ## 处理修改任务
 
-1. 读取 `<R>/workbench/head.json` 的 pending tasks，以及 canonical 主稿。任务的 revision/source_hash 必须与 head 一致，主稿字节也须匹配 source_hash。保存这组处理前的值。版本已变时核对用户新修改，不按旧页号直接动稿。
+1. 读取 `<R>/workbench/head.json` 的 pending tasks，以及 canonical 主稿。任务按页绑定：`pages` 是提交时的显示页号，`page_keys` 是本轮页身份，`page_hashes` 是那几页提交时的内容指纹。处理前对照当前主稿内容；`page_drift` 表示提交时磁盘上已变化的页，`stale_pages`（resolve 回执）表示提交后用户又改过那几页，都先重新读再动手。批注提交只校验页集合，模型改一页不妨碍用户提交另一页的批注。
 2. 根据 task 的 pages/entries 和意见处理指定页面，必要时检查前后论证；其他待处理任务不一并标记完成。遇到策略选择回到用户讨论。
 3. 修改主稿并完成必要的内容检查后，在重新生成工作台之前标记已处理任务：
 
 ```bash
-node "<C>/finish-review-task.mjs" --review-dir "<R>" --task-id "<id>" --revision "<处理前 revision>" --source-hash "<处理前 source_hash>"
+node "<C>/finish-review-task.mjs" --review-dir "<R>" --task-id "<id>"
 ```
 
-此命令只更新任务状态；绑定不一致会拒绝操作，不表示用户批准。多条任务逐条处理并标记；模型编辑期间仍须保护新到达的用户修改。
+任务不再要求整份 revision/source_hash 相等；`--revision` / `--source-hash` 仍被接受，只作记录。此命令只更新任务状态，不表示用户批准。多条任务逐条处理并标记；模型编辑期间仍须保护新到达的用户修改。
 
 4. 用同一启动命令重建工作台；以实际回执确认成功。读新 head 与主稿继续，不从旧反馈猜测当前内容。
+
+保存与反馈按页生效：模型改了 A 页，用户对 B 页的编辑仍会保存并保留 A 页的模型改动；同一页被双方改过时该页进入回执 `deferred_pages`，页面标“待核对”等人选择，不要绕过它覆盖用户草稿。模型重建工作台后，页面会提示刷新；旧页面内嵌数据不用于继续保存。
 
 ## 历史版本
 

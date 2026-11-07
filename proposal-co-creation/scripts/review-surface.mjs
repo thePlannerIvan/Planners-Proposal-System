@@ -51,7 +51,7 @@ export function surfaceDocument(reviewDir, options = {}) {
       // 插话（steer → next-step），不进持久队列：提交的语义是"现在就收件"。声明 queue 会排到
       // 当前回合之后 —— 模型正忙时它躺在队列里，界面上同时出现「已送达」与「排队中」两份。
       mode: 'steer',
-      text: context.workbench ? 'Storyline 工作台有修改任务（{unit}）。读取 workbench/head.json 的 pending tasks 与已保存架构主稿；仅在 task 的 revision/source_hash 匹配时处理指定页面。先保护未收下的草稿，修改后重建工作台。保存不是批准，下游读取同一份主稿。' : '结构审阅有新的提交（{unit}）：先跑 scripts/review-inbox.mjs 收件'
+      text: context.workbench ? 'Storyline 工作台有修改任务（{unit}）。读取 workbench/head.json 的 pending tasks 与已保存架构主稿；按 task.pages/page_hashes 处理指定页面，先保护未收下的草稿，修改后重建工作台。保存不是批准，下游读取同一份主稿。' : '结构审阅有新的提交（{unit}）：先跑 scripts/review-inbox.mjs 收件'
         + '（它把提交翻译成 review-feedback.json，并把页面报上来的前提带进收据），'
         + '**收件之后**再跑 scripts/validate-page-review-feedback.mjs（门在收件之后，顺序被钉住），'
         + '然后按根 SKILL.md 的「审阅与修改」处理。',

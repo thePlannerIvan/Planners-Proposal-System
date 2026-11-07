@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {mkdtempSync,readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {mkdtempSync,readFileSync,writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {resolve,join} from 'node:path';
 import {spawnSync} from 'node:child_process';
@@ -18,10 +18,27 @@ const start=()=>JSON.parse(run(join(c,'start-page-review.mjs'),['--architecture'
 start();const surface={projectRoot:project,dir:review};
 let head=await runContentCommand(surface,{op:'state'});assert.equal(head.ok,true,JSON.stringify(head));
 let state=structuredClone(head.state);
-const save=async(id)=>{const result=await runContentCommand(surface,{op:'save',operation_id:id,base_revision:head.revision,state});assert.equal(result.ok,true,JSON.stringify(result));head=await runContentCommand(surface,{op:'state'});state=structuredClone(head.state);return result;};
+const save=async(id,extra={})=>{const result=await runContentCommand(surface,{op:'save',operation_id:id,base_revision:head.revision,state,...extra});assert.equal(result.ok,true,JSON.stringify(result));head=await runContentCommand(surface,{op:'state'});state=structuredClone(head.state);return result;};
+// 按页指纹是新协议的基础：head 必须带上每页 unit 与页版本；页面内嵌基线不再靠整份 hash 判断。
+assert.ok(head.units?.pages?.['1']&&head.units.pages['2'],'head 必须带按页指纹');
+assert.deepEqual(head.page_versions,{'1':0,'2':0},'初始页版本为 0');
+// 模型先改了第 2 页（磁盘页号），用户再改第 1 页：两个人都只动自己那页时，页面不该锁死。
+const modelDoc=read(source),modelPage=structuredClone(modelDoc.pages[1]);
+modelPage.supports=[...(modelPage.supports??[]),'模型补充的验证要求'];
+modelDoc.pages[1]=modelPage;writeFileSync(source,JSON.stringify(modelDoc));
 state.edits.pages['1']={title:'新主张只维护一份',blocks:['第一条支撑','第二条支撑'],notes:'六次访谈不能推断市场比例；src-interviews#结论'};
-await save('save_new_claim');
-assert.equal(read(source).pages[0].claim,'新主张只维护一份');assert.equal('title_intent' in read(source).pages[0],false);
+const partial=await runContentCommand(surface,{op:'state',state});
+assert.deepEqual(partial.external_pages,[2],'模型改过、用户没编辑的页应出现在 external_pages');
+const merged=await runContentCommand(surface,{op:'save',operation_id:'save_new_claim',base_revision:head.revision,state});
+assert.equal(merged.ok,true,'模型改第 2 页后用户仍能保存第 1 页：'+JSON.stringify(merged));
+assert.deepEqual(merged.deferred_pages,[],'用户改的页没有被模型动过，不该 deferred');
+assert.equal(merged.content_changed,true);
+assert.equal(read(source).pages[0].claim,'新主张只维护一份');
+assert.equal('title_intent' in read(source).pages[0],false);
+assert.ok(read(source).pages[1].supports.includes('模型补充的验证要求'),'模型对第 2 页的修改必须保留');
+head=await runContentCommand(surface,{op:'state'});state=structuredClone(head.state);
+assert.deepEqual(head.external_pages,[],'合并保存之后磁盘页与 head.units 应已一致');
+assert.deepEqual(head.page_versions,{'1':1,'2':0},'人的文字修改只让该页版本 +1');
 state.edits.pages['1'].blocks=['第二条支撑'];await save('save_remove_support');
 assert.deepEqual(read(source).pages[0].supports,['第二条支撑']);
 state.edits.pages['1'].blocks=[];await save('save_empty_support');
@@ -32,14 +49,70 @@ state.added_pages['-1']={section_id:doc.sections[0].section_id,title:'新增主�
 state.edits.pages['-1']={blocks:['新增页支撑']};await save('save_add_and_order');
 assert.deepEqual(read(source).pages.map(p=>p.claim),['第二页主张','新增主张','新主张只维护一份']);
 assert.deepEqual(read(source).pages[1].supports,['新增页支撑']);
-const stale=await runContentCommand(surface,{op:'save',operation_id:'save_stale_version',base_revision:'old',state});assert.equal(stale.code,'revision_conflict');
+// 旧语义「整份文件一个指纹」会在 base_revision 过期时直接 revision_conflict。
+// 新语义：纯文字保存按页合并——没有冲突页时成功，回执 merged=true、deferred_pages 为空。
+const stale=await runContentCommand(surface,{op:'save',operation_id:'save_stale_version',base_revision:'old',state});
+assert.equal(stale.ok,true,JSON.stringify(stale));
+assert.equal(stale.merged,true,'base_revision 过期但按页合并成功时应回执 merged');
+assert.deepEqual(stale.deferred_pages,[],'内容没有变化时不应把任何页列为待核对');
+assert.equal(stale.content_changed,false,'重复提交同一份状态不改变主稿');
+head=await runContentCommand(surface,{op:'state'});state=structuredClone(head.state);
+// 冲突页：模型与用户都改了同一页 → 该页不落盘、列进 deferred_pages，别的页照常保存。
+const conflictDoc=read(source),conflictPage=structuredClone(conflictDoc.pages[0]);
+const beforeConflict=structuredClone(conflictPage.supports??[]);
+conflictPage.supports=[...beforeConflict,'模型又改了第 1 页'];
+conflictDoc.pages[0]=conflictPage;writeFileSync(source,JSON.stringify(conflictDoc));
+state.edits.pages['2']={blocks:['用户也改了第 1 页']};
+state.edits.pages['-1']={blocks:['用户改了新增页']};
+const conflicted=await runContentCommand(surface,{op:'save',operation_id:'save_page_conflict',base_revision:head.revision,state});
+assert.equal(conflicted.ok,true,JSON.stringify(conflicted));
+assert.deepEqual(conflicted.deferred_pages,[1],'模型与用户都改过的页必须 deferred 等人工核对');
+assert.deepEqual(read(source).pages[0].supports,[...beforeConflict,'模型又改了第 1 页'],'冲突页保留模型版本');
+assert.deepEqual(read(source).pages[1].supports,['用户改了新增页'],'不冲突的页仍然落盘');
+head=await runContentCommand(surface,{op:'state'});state=structuredClone(head.state);
+// force_pages：人确认「保留我的」时，同一页可以覆盖模型版本（即使模型在 deferred 之后又改了一次）。
+const again=read(source),againPage=structuredClone(again.pages[0]);
+againPage.supports=[...(againPage.supports??[]),'模型第二次改第 1 页'];
+again.pages[0]=againPage;writeFileSync(source,JSON.stringify(again));
+state.edits.pages['2']={blocks:['人确认保留我的第 1 页']};
+const forced=await runContentCommand(surface,{op:'save',operation_id:'save_page_forced',base_revision:head.revision,state,force_pages:['2']});
+assert.equal(forced.ok,true,JSON.stringify(forced));
+assert.deepEqual(forced.deferred_pages,[],'force_pages 里的页不参与冲突判定');
+assert.deepEqual(read(source).pages[0].supports,['人确认保留我的第 1 页'],'force 后用户的版本覆盖该页');
+head=await runContentCommand(surface,{op:'state'});state=structuredClone(head.state);
+// feedback task 按页绑定：显示页号、内部页身份、提交时的页指纹与页版本都要带上。
 const task=await runContentCommand(surface,{op:'feedback',operation_id:'task_annotations',base_revision:head.revision,scope:'annotations',entries:[{page:1,text:'补充限制'},{page:-1,text:'补充验证'}]});
-assert.equal(task.ok,true);assert.deepEqual(task.task.pages,[3,2]);
-assert.equal((await runContentCommand(surface,{op:'resolve',task_ids:['task_annotations'],base_revision:'old',source_hash:head.source_hash})).ok,false);
-const modelDoc=read(source);modelDoc.pages[2].supports.push('该判断需要进一步验证');writeFileSync(source,JSON.stringify(modelDoc));
-run(join(c,'finish-review-task.mjs'),['--review-dir',review,'--task-id','task_annotations','--revision',head.revision,'--source-hash',head.source_hash]);
+assert.equal(task.ok,true,JSON.stringify(task));
+assert.deepEqual(task.task.pages,[3,2]);
+assert.deepEqual(task.task.page_keys,[1,-1]);
+assert.deepEqual(Object.keys(task.task.page_hashes).sort(),['-1','1']);
+assert.equal(task.task.page_hashes['1'],head.units.pages[String(head.page_mapping['1'])]);
+assert.equal(task.task.page_hashes['-1'],head.units.pages[String(head.page_mapping['-1'])]);
+assert.deepEqual(task.task.page_versions,{'1':head.page_versions['1'],'-1':head.page_versions['-1']});
+assert.equal(typeof task.task.created_at,'string');
+// resolve 不再要求 task 的 revision/source_hash 与 head 相等：整份文件锁已经解开。
+// 模型对第 3 页再补一条支撑后，拿旧 revision/source_hash 仍应完成。
+const finishDoc=read(source),finishPage=structuredClone(finishDoc.pages[2]);
+finishPage.supports=[...(finishPage.supports??[]),'该判断需要进一步验证'];
+finishDoc.pages[2]=finishPage;writeFileSync(source,JSON.stringify(finishDoc));
+const finished=JSON.parse(run(join(c,'finish-review-task.mjs'),['--review-dir',review,'--task-id','task_annotations','--revision','old-revision','--source-hash','0'.repeat(64)]));
+assert.equal(finished.ok,true,JSON.stringify(finished));
+assert.equal(finished.resolved,1);
+assert.deepEqual(finished.stale_pages,[],'提交后用户没再改过该页，stale_pages 为空');
 assert.equal(read(join(review,'workbench/head.json')).tasks[0].status,'resolved');
-start();head=await runContentCommand(surface,{op:'state'});assert.equal(head.ok,true);assert.equal(read(source).pages[2].supports.length,2);
+// 提交之后用户又改了这一页：resolve 仍成功，但 stale_pages 点名提示需要人工核对。
+head=await runContentCommand(surface,{op:'state'});state=structuredClone(head.state);
+const later=await runContentCommand(surface,{op:'feedback',operation_id:'task_after_note',base_revision:head.revision,scope:'page',page:2,text:'第 2 页要补一条验证'});
+assert.equal(later.ok,true,JSON.stringify(later));
+assert.deepEqual(later.task.page_keys,[2]);
+state.edits.pages['2'].blocks=['用户在提交任务之后又改了这页'];
+const afterNote=await runContentCommand(surface,{op:'save',operation_id:'save_after_note',base_revision:head.revision,state});
+assert.equal(afterNote.ok,true,JSON.stringify(afterNote));
+const lateResolve=await runContentCommand(surface,{op:'resolve',task_ids:['task_after_note'],base_revision:'old-revision',source_hash:'0'.repeat(64)});
+assert.equal(lateResolve.ok,true,'resolve 不再要求 revision/source_hash 一致：'+JSON.stringify(lateResolve));
+assert.equal(lateResolve.resolved,1);
+assert.deepEqual(lateResolve.stale_pages,[1],'任务提交后用户又改过的页应点名 stale_pages');
+start();head=await runContentCommand(surface,{op:'state'});assert.equal(head.ok,true);assert.ok(read(source).pages[2].supports.includes('该判断需要进一步验证'));
 run(join(c,'validate-page-architectures.mjs'),[source,'--ready']);
 const bypage=resolve(root,'../planners-bypage/scripts/adapt-proposal-architecture.mjs'),output=join(project,'bypage.json');
 run(bypage,['--input',source,'--output',output]);const downstream=read(output);
@@ -48,4 +121,4 @@ assert.equal(downstream.pages[2].content_blocks[0].content_requirement,'第二�
 assert.ok(downstream.pages[2].content_blocks.some(b=>b.content_requirement.includes('不能推断市场比例')));
 run(bypage,['--input',source,'--output',output],1);
 for (const mutate of [d=>d.pages[0].supports.push(3),d=>d.pages[0].section_id='missing',d=>d.pages[0].claim='',d=>d.pages[0].role='extra']) {const bad=structuredClone(modelDoc);mutate(bad);assert.ok(validateStoryline(bad).length);}
-console.log('PASS: 主张、支撑增删/清空、新页与排序、版本冲突、批注映射、任务完成、重建、By-page 与边界保留；'+project);
+console.log('PASS: 主张、支撑增删/清空、新页与排序、按页保存与 deferred/force、页级任务绑定与 stale resolve、重建、By-page 与边界保留；'+project);

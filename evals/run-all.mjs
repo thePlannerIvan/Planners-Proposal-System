@@ -7,6 +7,7 @@ const suites = [
   'co-creation/storyline.mjs',
   'co-creation/run.mjs', // legacy 2.0 compatibility
   'co-creation/edits.mjs',
+  'co-creation/workbench-ui.mjs',
   'workflow/run.mjs',
 ];
 for (const suite of suites) {

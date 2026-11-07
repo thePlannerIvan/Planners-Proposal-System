@@ -80,6 +80,6 @@ if (args['--legacy-review'] === 'true') {
     submissions_path: join(reviewDir, 'review-submissions.json'),
     next_action_zh: '请在网页提交；然后跑 scripts/review-inbox.mjs 收件，再跑 validate-page-review-feedback.mjs。' });
 } else Object.assign(payload, workbenchReport(reviewDir, sourceSha256), {
-  next_action_zh: '打开工作台后，先读取 review-context.json 与 canonical_path；保存主稿由工作台回写同一份 canonical 文件。需要处理用户反馈时读取 workbench/head.json 的 pending tasks，并按 task 的 revision/source_hash 修改；保存不是批准。'
+  next_action_zh: '打开工作台后，先读取 review-context.json 与 canonical_path；保存主稿由工作台回写同一份 canonical 文件。需要处理用户反馈时读取 workbench/head.json 的 pending tasks，按 task.pages/page_hashes 处理指定页；标完成不再要求整份 revision/source_hash 一致，回执 stale_pages 提示用户又改过的页。保存不是批准。'
 });
 process.stdout.write(JSON.stringify(payload) + '\n');

@@ -3,8 +3,22 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { moduleScript } from './planners-modules.mjs';
 import { validateStoryline } from './storyline.mjs';
-const {sha256,contentHash,contentProjection,validateChanges,writeReviewContext} = await import(pathToFileURL(moduleScript('planners-review-core','scripts/content-review-contract.mjs')));
-export {sha256,contentHash,contentProjection,writeReviewContext};
+const {sha256,canonical,contentHash,contentProjection,validateChanges,writeReviewContext} = await import(pathToFileURL(moduleScript('planners-review-core','scripts/content-review-contract.mjs')));
+export {sha256,canonical,contentHash,contentProjection,writeReviewContext};
+
+// 按页指纹：整份页面对象（sections 同）canonical JSON 的 sha256。审阅工作台用它做页级合并；
+// 解析不了就返回 null，工作台会安全退回整文件行为。
+const unitHash = value => sha256(JSON.stringify(canonical(value)));
+export function unitHashes(raw) {
+  let doc;
+  try { doc = JSON.parse(String(raw)); } catch { return null; }
+  if (!doc || !Array.isArray(doc.pages)) return null;
+  const pages = {};
+  for (const page of doc.pages) if (page && page.page_number !== undefined && page.page_number !== null) pages[String(page.page_number)] = unitHash(page);
+  const sections = {};
+  for (const section of Array.isArray(doc.sections) ? doc.sections : []) if (section?.section_id) sections[String(section.section_id)] = unitHash(section);
+  return {pages, sections};
+}
 
 export function prepareEdits(submission,reviewDir) {
   if (!submission.review_changes) return null;
