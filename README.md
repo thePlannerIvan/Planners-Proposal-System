@@ -1,192 +1,145 @@
-# Planners-Proposal-System
+# Planners Proposal System
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
-[![Skill](https://img.shields.io/badge/Codex%20%2F%20Claude-Skill-111827)](SKILL.md)
 [![Tests](https://github.com/thePlannerIvan/Planners-Proposal-System/actions/workflows/validate.yml/badge.svg)](https://github.com/thePlannerIvan/Planners-Proposal-System/actions/workflows/validate.yml)
 
-面向中文商业提案的策略共创 Skill：理解项目资料，与用户形成关键判断、Storyline 和结构参考，完成结构审阅后交给 `planners-bypage` 展开内容。
+**拿着零散 Brief 和调研材料，和 AI 一起磨出靠谱的策略判断，并生成一张在线可拖拽、可直接改字批注的 Storyline 提案工作台。**
 
-作者：**阿祖不看 TVC**
+> 作者：阿祖不看 TVC（小红书同名）· [demyth.info](https://demyth.info) · [Lawyif@163.com](mailto:Lawyif@163.com)
 
-- 小红书：阿祖不看 TVC
-- 网站：[demyth.info](https://demyth.info)
-- 邮箱：[Lawyif@163.com](mailto:Lawyif@163.com)
+---
 
-## 它解决什么问题
+## 一句话看懂：它卡在整条链的哪一步
 
-本 Skill 将策略判断、机械工具和人工决定分开：
+写商业提案最怕“资料还没消化明白、策略方向还没和人达成共识，AI 就迫不及待开始写长篇正文和画 PPT”。
 
-- Proposal 理解资料、共创判断、组织说服路径并交接；
-- sparkling、storytelling、slide-copy 分别提供研讨、叙事和甲板组织方法；
-- 脚本处理接口校验、自动保存、版本管理和编辑回写；
-- 用户作商业选择、确认结构；By-page 继续逐页内容、素材、核查和终稿。
-
-## 核心工作流
+**Planners Proposal System** 专门负责**动笔之前“想清楚、排顺逻辑”这一半**——不急着堆字数，而是帮你产出一张**“每页一句完整主张 + 两三条支撑判断”的可编辑 Storyline 主线**，确认后再交给下游展开：
 
 ```text
-项目 Brief / 研究 / 分析资料
-→ 理解项目与建立来源
-→ 共创关键判断（按问题查询 Method Wiki）
-→ Storyline 与结构参考
-→ 审阅与修改
-→ 交给 planners-bypage
+零散 Brief / 研究资料 / 访谈或数据结论
+  → 1. 读懂材料、登记来源（哪部分没读到老实标注）
+  → 2. 高摩擦讨论（挑刺、比取舍、按需查 Method Wiki 方法库）
+  → 3. 组织有推进感的 Storyline（一页一句主张 + 支撑判断）
+  → 4. 打开 Storyline 工作台：在线改字 / 拖曳调页序 / 局部批注修改
+  → 交付给上游接力：交给 planners-bypage 扩写成完整逐页稿
 ```
 
-写方案的完整流程只在 [SKILL.md](SKILL.md) 维护，从已有成果继续，不再按 C1-C4 门槛逐项路由。来源索引、专业知识查询、工作台协作和下游交接都有具体入口。
+*(需要继续生成逐页 PPT 正文与配图时交给 [`planners-bypage`](https://github.com/thePlannerIvan/planners-bypage)，需要直接出可编辑 PPTX 交给 [`planners-ppt-hell`](https://github.com/thePlannerIvan/planners-ppt-hell)。)*
 
-Method Wiki 已独立为 `planners-method-wiki`，统一拥有 Lens / Recipe 查询、方法审阅与维护。Proposal 与 By-page 调用同一 Skill 和项目方法库，已采用方法保留在原项目记忆中。
+---
 
-旧 `proposal-library-maintenance/scripts/query-wiki.mjs` 仅作为转发入口保留，供既有调用兼容；它不包含方法库或维护流程。
+## 你具体会拿到什么工作台体验？
 
-## 适合
+完成讨论后，它不会只丢给你一串 Markdown 大纲，而是直接打开一个**实时交互的 Storyline 工作台**（支持 DSH 侧栏，没有 DSH 也能在本地浏览器打开）：
 
-- 中文商业提案、年度营销方案、品牌策略和竞标方案；
-- 从复杂资料中形成方向、Storyline 和可展开的结构参考；
-- 重新讨论或组织既有方案主线；
-- 需要可靠来源、可编辑结构审阅和完整下游交接的项目。
+- **直接改字 & 拖曳排序**：每行就是一页 PPT 的核心主张，点开即可直接改标题、用回车增删下方支撑要点、鼠标拖曳或按 `Alt + ↑/↓` 调换页序，**编辑全程自动保存，带历史版本可随时恢复**；
+- **行内精准唤改**：只想让 AI 重写某一页？点那一行右侧批注，单独提交那一页意见；双方同时改到同一页时会标出冲突提示，绝不静默覆盖你的手稿；
+- **拒绝“目录占位符”**：每一页产出的是真判断而不是废话栏目名——
 
-## 不适合
+| 常见的无效栏目占位 | Proposal 交付的 Storyline 主张（示例） |
+| --- | --- |
+| “消费者洞察” / “放一张调研图” | **“增长的优先任务，是降低新客首次选择的难度。”**<br>• 新客难以区分产品，选择障碍集中在首次购买前<br>• 现有沟通强调参数，未对应具体使用场景<br>• 因此应先按场景组织推荐，再展开性能优势 |
 
-- 只要求普通摘要、翻译或润色；
-- 直接生成最终视觉设计或 PPT 文件；
-- 把未经审阅的历史结论机械套用到新项目；
-- 用脚本代替策略判断、创意判断或人的最终承诺。
+---
 
-## 安装
+## 什么时候选我 vs 选别的 Skill
 
-### Skills CLI
+| 你的当下需求 | 用哪个 Skill | 分工 |
+| --- | --- | --- |
+| 有 Brief 和参考资料，要先讨论策略方向、排出能说服人的 PPT 主线结构 | **本 Skill (`planners-proposal-system`)** | 只盯“策略判断 + 主线结构 + 可编辑 Storyline” |
+| 已经有确认的主线，或只需直接把一堆资料写成完整逐页正文、配图并核查数字 | [`planners-bypage`](https://github.com/thePlannerIvan/planners-bypage) | 负责把每页主张扩写成完整可见文案、配图和事实审计 |
+| 手上只有个单点业务矛盾卡点，只想跟 AI 讨论出破局洞察，还不到排 PPT 的阶段 | [`sparkling`](https://github.com/thePlannerIvan/sparkling) | 轻量高摩擦单点研讨（Proposal 内部讨论阶段也会自动调用它） |
+
+---
+
+## 快速开始与安装
+
+### 1. DSH 用户（推荐）
+
+通过 [Planners Form](https://github.com/thePlannerIvan/planners-form) 在 DSH 设置里勾选 `planners-proposal-system` 一键安装（会连同配套协同组件一起装好）。
+
+### 2. Codex / Claude Code 用户
 
 ```bash
 npx skills add https://github.com/thePlannerIvan/Planners-Proposal-System --skill planners-proposal-system
 ```
 
-## 公共模组（缺了会自动装）
-
-本 Skill 依赖若干**公共模组**（独立发布的条目，不是本仓库的一部分）：
-
-- [`planners-review-core`](https://github.com/thePlannerIvan/planners-review-core) —— 审阅面契约、桥与本地宿主
-- [`planners-source-index`](https://github.com/thePlannerIvan/planners-source-index) —— 来源索引契约与唯一校验器
-- `planners-method-wiki` —— 方法库查询、应用与维护；生产时调用只读查询分支
-
-方法层按任务读取当前环境中的 `sparkling`、`storytelling`、`slide-copy`，取证时可使用 `research`。这些原子 Skill 不在本仓库中；缺少时应说明可用能力，不能声称已经调用。完整内容的独立事实核查由 By-page 继续负责。
-
-某个模组不在本地时，本 Skill 的适配器会**自动从 GitHub 装它**，不需要手动准备。适配器找的地方按顺序：
-
-1. `$PLANNERS_MODULES_HOME/<模组名>`
-2. 本 Skill 的兄弟目录 `<skills-root>/<模组名>`（发布后的主路径）
-3. monorepo 里 `02-skills-library/<分类>/<模组名>`
-4. **用户级安装根**：`$PLANNERS_MODULES_INSTALL_DIR` → `$PLANNERS_MODULES_HOME`（仅当它已含该模组，或那目录还不存在）→ 默认 `~/.planners-modules/<模组名>`
-
-前三条都没有时才自动安装（顺序不变，**本地永远优先、不会无条件联网**）；装到第 4 条那个**库外**用户级目录，**绝不写进** `02-skills-library` 工作树、`~/.codex|~/.claude|~/.gemini` 的技能目录、或任何系统目录。安装过程**不静默**：会打印缺哪个、找过哪些路径、从哪个 URL 装、装到哪、用的是 `git clone --depth 1` 还是 `npx skills add`、以及装到的 **commit**。装完先在暂存目录里验证（`SKILL.md` + 该模组声明的契约/校验器锚点文件都在），再用 rename 原子就位；**任何失败都会清掉暂存、不留半成品**，并给出可复制的手动安装命令。
-
-要它**只报不装**（CI／离线／审计）：
+或克隆到本地 Skill 目录：
 
 ```bash
-PLANNERS_NO_AUTO_INSTALL=1 <你的命令>
+git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git ~/.codex/skills/planners-proposal-system
+# 或
+git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git ~/.claude/skills/planners-proposal-system
 ```
 
-| 环境变量 | 作用 |
-|---|---|
-| `PLANNERS_MODULES_HOME` | 指定已有模组所在目录（解析第 1 条，也兼作安装根） |
-| `PLANNERS_MODULES_INSTALL_DIR` | 只指定**自动安装**的落点（优先级高于上面那条） |
-| `PLANNERS_MODULES_REF` | 要钉的 tag 或分支（不设 = 装默认分支 HEAD） |
-| `PLANNERS_NO_AUTO_INSTALL=1` | 只报不装；缺依赖时如实失败并打印手动命令 |
-
-装的是**默认分支 HEAD**，日志里**永远打 commit**；HEAD 恰好被某个 tag 指着时，tag 也一并打出来。想钉版本就设 `PLANNERS_MODULES_REF`：
-
-```bash
-PLANNERS_MODULES_REF=v1.0.0 <你的命令>     # 钉在 tag 上
-PLANNERS_MODULES_REF=main   <你的命令>     # 钉在某个分支上
-```
-
-钉了不存在的 ref 会**如实失败**（不会悄悄退回 HEAD），错误里带正确的可复制命令。
-
-### 两条命令别搞混：谁装 Skill，谁抓依赖
-
-**用户装一个 Skill** —— 用 Skills CLI，它会把条目放进各 agent 的技能目录：
-
-```bash
-npx skills add https://github.com/thePlannerIvan/<Skill 名> --skill <Skill 名>
-```
-
-**Skill 自己抓一个公共模组（内部依赖）** —— 用 `git clone`，落在库外的单一安装根：
-
-```bash
-git clone --depth 1 https://github.com/thePlannerIvan/<模组名>.git \
-  "$HOME/.planners-modules/<模组名>"
-# 想钉版本：加 --branch v1.0.0
-```
-
-**内部依赖为什么不走 `npx skills add`**：它没有 `--dir` 之类的落点参数，只会写进 `~/.claude/skills`、`~/.codex/skills` 这类 **runtime 技能目录**（那是发布器的领地，写进去等于多一份漂移副本）；而且它下载的目录**不带 `.git`**，拿不到 commit、也就没法追溯装的是哪一版。**门面命令归用户，内部依赖归 clone** —— 上面自动安装走的就是这条。
-
-
-### Codex
-
-```bash
-git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git \
-  ~/.codex/skills/planners-proposal-system
-```
-
-### Claude Code
-
-```bash
-git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git \
-  ~/.claude/skills/planners-proposal-system
-```
-
-重启对应客户端或重新加载 Skill 后即可调用。
-
-## 典型用法
+### 3. 直接这样开始
 
 ```text
-使用 $planners-proposal-system，先完整阅读这个项目文件夹的 Brief 和研究资料，
-和我一起确定策略方向，再形成 Storyline 和结构参考，审阅后交给 planners-bypage。
+使用 $planners-proposal-system 完整阅读这个项目目录里的 Brief 和调研资料：
+先帮我理清核心矛盾与策略取舍，再组织出 Storyline 打开审阅台让我修改。
 ```
 
-```text
-使用 $planners-proposal-system，把这份已明确方向的汇报组织成结论先行的 Storyline。
-```
+### 运行时依赖与配套能力
 
-```text
-使用 $planners-proposal-system，检查当前主线、工作台版本与来源，
-给出可以直接交给 planners-bypage 的活动文件路径、已确认判断和发展空间。
-```
+- **环境要求**：Node.js 20+。有 DSH 时直接挂入侧栏（配合 `dsh-review-dock`），没有 DSH 时由审阅底座在本地浏览器拉起同一页面。
+- **公共底座（缺了会自动拉取至 `~/.planners-modules/`）**：
+  - [`planners-review-core`](https://github.com/thePlannerIvan/planners-review-core) —— Storyline 自动保存工作台与双宿主运行底座
+  - [`planners-source-index`](https://github.com/thePlannerIvan/planners-source-index) —— 资料来源路径与未读盲区账本
+  - [`planners-method-wiki`](https://github.com/thePlannerIvan/planners-method-wiki) —— 按具体问题检索策略视角与论证配方
+- **按需协同的同伴 Skill**（当前环境已安装时自动衔接）：[`sparkling`](https://github.com/thePlannerIvan/sparkling)（研讨）、[`storytelling`](https://github.com/thePlannerIvan/storytelling)（叙事动量）、[`slide-copy`](https://github.com/thePlannerIvan/slide-copy)（标题链表达）、[`planners-fact-check`](https://github.com/thePlannerIvan/planners-fact-check)（事实变动的按需复核）。
 
-## 目录
+---
+
+<details>
+<summary>开发者说明：环境变量、工作产物、目录结构与本地验收（普通用户可忽略）</summary>
+
+### 活动工作区文件
+
+工作过程会在项目下生成 `<Project>/.proposal-work/` 活动目录，交付下游 `planners-bypage` 时直接复用同一批文件：
+- `project-memory.md`：项目理解、收敛判断、用户决定与采用方法记录
+- `source-index.json`：来源定位、阅读覆盖与盲区清单
+- `page-architecture.json`：当前唯一 3.0 格式 Storyline（供 `planners-bypage` 默认直读）
+
+### 公共模组解析顺序与离线控制
+
+适配器（`proposal-co-creation/scripts/lib/planners-modules.mjs`）按以下顺序优先使用本地模组：
+`$PLANNERS_MODULES_HOME/<名>` → `<skills-root>/<名>` → `02-skills-library/<分类>/<名>` → 自动安装至库外用户目录（`$PLANNERS_MODULES_INSTALL_DIR` → `$PLANNERS_MODULES_HOME` → `~/.planners-modules/`）。
+
+- 设 `PLANNERS_NO_AUTO_INSTALL=1` 可禁止自动联网安装；设 `PLANNERS_MODULES_REF` 可锁定分支/tag。
+- 旧 `proposal-library-maintenance/scripts/query-wiki.mjs` 仅保留作兼容转发，不再内置方法库。
+
+### 本地校验与目录结构
+
+```bash
+npm ci && npm test
+node --test proposal-co-creation/scripts/lib/planners-modules-install.test.mjs
+
+# 校验与单独打开工作台
+node proposal-co-creation/scripts/validate-page-architectures.mjs "<Project>/.proposal-work/page-architecture.json" --ready
+node proposal-co-creation/scripts/start-page-review.mjs --architecture "<Project>/.proposal-work/page-architecture.json" --review-dir "<Project>/.proposal-work/reviews/structure"
+```
 
 ```text
 planners-proposal-system/
 ├── SKILL.md
 ├── agents/
-├── proposal-co-creation/
-├── evals/
+├── proposal-co-creation/   # 3.0 主线契约、工作台生成与模块适配器
+├── evals/                  # Storyline 编辑、版本与下游交接回归测试
 └── package.json
 ```
 
-`proposal-system-maintenance`、系统架构、升级记录、内部真实案例和历史归档不属于公开发布内容。
+</details>
 
-## 本地验证
+---
 
-```bash
-npm ci
-npm test
+## 品牌边界、开源协议与商业合作
 
-# 公共模组自动安装器自己的测试
-node --test proposal-co-creation/scripts/lib/planners-modules-install.test.mjs
-```
+- **许可协议**：以 [GNU Affero General Public License v3.0](LICENSE) 开源发布，可商业使用，修改版或网络服务须公开对应源码。
+- **署名边界**：过程文档与工作台保留来源识别，默认不得写入客户最终提案、PPT 或交付文档；修改与 fork 规范见 [TRADEMARK.md](TRADEMARK.md)，归属声明见 [NOTICE](NOTICE)。
+- **商业支持**：私有部署、企业提案流定制或闭源授权，请联系 `Lawyif@163.com` 或访问 [demyth.info](https://demyth.info)，详见 [COMMERCIAL.md](COMMERCIAL.md)。
 
-当前格式为 3.0：每页一句主张、支撑判断和必要备注；工作台自动保存，并提供历史版本与恢复。`evals/co-creation/storyline.mjs` 覆盖当前主线编辑、任务与 By-page 接收接口。旧 inbox、approve/revise 相关用例仅用于 legacy 兼容，不定义当前生产流程。完整浏览器与跨 Skill 联合验证按维护计划执行，未运行不能视为通过。方法维护在 `planners-method-wiki` 测试，逐页内容在 `planners-bypage` 测试；工程通过不等于真实客户稿的说服力已经验收。
+## 相关项目
 
-## 品牌、署名与最终交付
-
-仓库文档、过程 HTML、审阅页面和验证页面可以显示项目来源与作者署名。Skill 默认不得把 Planners-Proposal-System、作者或网站标识写入客户最终提案、PPT、图片和交付文档。
-
-开源许可证不授予冒充官方项目、作者背书或商业品牌授权的权利，详见 [TRADEMARK.md](TRADEMARK.md)。
-
-## 开源与商业合作
-
-本项目采用 [GNU Affero General Public License v3.0](LICENSE)。私有部署、企业流程适配、闭源授权、培训与咨询见 [COMMERCIAL.md](COMMERCIAL.md)。
-
-## 自动验证环境
-
-公开 CI 安装 Chromium，并检出公开的跨 Skill 依赖运行完整验收。
+- [Planners Bypage](https://github.com/thePlannerIvan/planners-bypage) —— 接收 Storyline 展开完整逐页文案与配图
+- [Planners Method Wiki](https://github.com/thePlannerIvan/planners-method-wiki) —— 可复用策略方法库（11 大模块）
+- [Sparkling](https://github.com/thePlannerIvan/sparkling) / [Storytelling](https://github.com/thePlannerIvan/storytelling) / [Slide Copy](https://github.com/thePlannerIvan/slide-copy)
