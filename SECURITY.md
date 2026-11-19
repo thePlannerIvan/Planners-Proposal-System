@@ -26,4 +26,4 @@
 
 ## 敏感资料
 
-不要向公开仓库提交客户 Brief、研究数据、未发布提案、`.proposal-work/`、`deliverable/`、环境变量、浏览器状态或内部测试材料。
+不要向公开仓库提交客户 Brief、研究数据、未发布提案、`.planners/`、`.proposal-work/`、`deliverable/`、环境变量、浏览器状态或内部测试材料。

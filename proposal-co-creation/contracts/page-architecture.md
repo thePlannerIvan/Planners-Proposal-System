@@ -1,6 +1,8 @@
-# Storyline 主稿格式
+# Storyline 主稿格式（旧 JSON，只读）
 
-新项目使用 `contract_version: "3.0.0"`，文件名沿用 `.proposal-work/page-architecture.json`。机器字段见 [schema](page-architecture.schema.json)，可填写例子见 [模板](../templates/page-architecture.json)。
+> **旧项目只读，不再是新项目入口。** 新项目把主线写进 [`.planners/storyline.md`](storyline.md)，从 [Storyline 模板](../templates/storyline.md) 起。本文件与同目录 schema、[旧模板](../templates/page-architecture.json)、`validate-page-architectures.mjs` 只服务已有 2.0 / 3.0 项目与兼容测试：不迁移、不新建、不兼容改写。
+
+旧项目沿用 `contract_version: "3.0.0"`，文件名 `.proposal-work/page-architecture.json`。机器字段见 [schema](page-architecture.schema.json)，可填写例子见 [旧模板](../templates/page-architecture.json)。
 
 | 内容 | 字段 | 规则 |
 |---|---|---|

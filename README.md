@@ -30,10 +30,10 @@
 
 ## 你具体会拿到什么工作台体验？
 
-完成讨论后，它不会只丢给你一串 Markdown 大纲，而是直接打开一个**实时交互的 Storyline 工作台**（支持 DSH 侧栏，没有 DSH 也能在本地浏览器打开）：
+完成讨论后，它不会只丢给你一串 Markdown 大纲，而是把主线写成一份 `.planners/storyline.md`，再打开**实时交互的 Storyline 工作台**（本地浏览器；DSH 里把同一个工作台 URL 交给你）：
 
-- **直接改字 & 拖曳排序**：每行就是一页 PPT 的核心主张，点开即可直接改标题、用回车增删下方支撑要点、鼠标拖曳或按 `Alt + ↑/↓` 调换页序，**编辑全程自动保存，带历史版本可随时恢复**；
-- **行内精准唤改**：只想让 AI 重写某一页？点那一行右侧批注，单独提交那一页意见；双方同时改到同一页时会标出冲突提示，绝不静默覆盖你的手稿；
+- **直接改字 & 拖曳排序**：每一页就是一条主线判断，点开即可改主张、用回车增删支撑要点、拖块首手柄或页标题调整顺序、按 `Alt + ↑/↓` 移动，**编辑全程自动保存，带历史版本可随时恢复**；
+- **块级精准唤改**：只想让 AI 重写某一块？选中它或点块尾批注按钮，单独提交那块意见；双方同时改到同一块时会标出待核对，绝不静默覆盖你的手稿；
 - **拒绝“目录占位符”**：每一页产出的是真判断而不是废话栏目名——
 
 | 常见的无效栏目占位 | Proposal 交付的 Storyline 主张（示例） |
@@ -76,14 +76,14 @@ git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git ~/.clau
 
 ```text
 使用 $planners-proposal-system 完整阅读这个项目目录里的 Brief 和调研资料：
-先帮我理清核心矛盾与策略取舍，再组织出 Storyline 打开审阅台让我修改。
+先帮我理清核心矛盾与策略取舍，把 Storyline 写成 storyline.md，再打开工作台让我修改。
 ```
 
 ### 运行时依赖与配套能力
 
-- **环境要求**：Node.js 20+。有 DSH 时直接挂入侧栏（配合 `dsh-review-dock`），没有 DSH 时由审阅底座在本地浏览器拉起同一页面。
+- **环境要求**：Node.js 20+。工作台是本地 loopback 服务，用 URL 在浏览器打开；DSH 里把同一个 URL 交给用户。
 - **公共底座（缺了会自动拉取至 `~/.planners-modules/`）**：
-  - [`planners-review-core`](https://github.com/thePlannerIvan/planners-review-core) —— Storyline 自动保存工作台与双宿主运行底座
+  - [`planners-review-core`](https://github.com/thePlannerIvan/planners-review-core) —— `planners-doc/1` 文字工作台、块级反馈与自动保存底座
   - [`planners-source-index`](https://github.com/thePlannerIvan/planners-source-index) —— 资料来源路径与未读盲区账本
   - [`planners-method-wiki`](https://github.com/thePlannerIvan/planners-method-wiki) —— 按具体问题检索策略视角与论证配方
 - **按需协同的同伴 Skill**（当前环境已安装时自动衔接）：[`sparkling`](https://github.com/thePlannerIvan/sparkling)（研讨）、[`storytelling`](https://github.com/thePlannerIvan/storytelling)（叙事动量）、[`slide-copy`](https://github.com/thePlannerIvan/slide-copy)（标题链表达）、[`planners-fact-check`](https://github.com/thePlannerIvan/planners-fact-check)（事实变动的按需复核）。
@@ -95,10 +95,12 @@ git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git ~/.clau
 
 ### 活动工作区文件
 
-工作过程会在项目下生成 `<Project>/.proposal-work/` 活动目录，交付下游 `planners-bypage` 时直接复用同一批文件：
+工作过程会在项目下生成 `<Project>/.planners/` 活动目录，交付下游 `planners-bypage` 时直接复用同一批文件：
+- `storyline.md`：当前唯一 Storyline 工作稿，按 `planners-doc/1` 写（每页一句 `主张：` 加支撑）
 - `project-memory.md`：项目理解、收敛判断、用户决定与采用方法记录
 - `source-index.json`：来源定位、阅读覆盖与盲区清单
-- `page-architecture.json`：当前唯一 3.0 格式 Storyline（供 `planners-bypage` 默认直读）
+
+旧的 `<Project>/.proposal-work/page-architecture.json` 只读保留，不再是新项目入口，也不迁移。
 
 ### 公共模组解析顺序与离线控制
 
@@ -114,17 +116,17 @@ git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git ~/.clau
 npm ci && npm test
 node --test proposal-co-creation/scripts/lib/planners-modules-install.test.mjs
 
-# 校验与单独打开工作台
-node proposal-co-creation/scripts/validate-page-architectures.mjs "<Project>/.proposal-work/page-architecture.json" --ready
-node proposal-co-creation/scripts/start-page-review.mjs --architecture "<Project>/.proposal-work/page-architecture.json" --review-dir "<Project>/.proposal-work/reviews/structure"
+# 校验与打开工作台
+node proposal-co-creation/scripts/validate-storyline-doc.mjs "<Project>/.planners/storyline.md"
+node "<planners-review-core>/scripts/doc-workbench.mjs" "<Project>/.planners/storyline.md" --open
 ```
 
 ```text
 planners-proposal-system/
 ├── SKILL.md
 ├── agents/
-├── proposal-co-creation/   # 3.0 主线契约、工作台生成与模块适配器
-├── evals/                  # Storyline 编辑、版本与下游交接回归测试
+├── proposal-co-creation/   # 文档形态契约、提案校验、模板与模块适配器
+├── evals/                  # Storyline 文档、工作台与旧 JSON 兼容回归测试
 └── package.json
 ```
 

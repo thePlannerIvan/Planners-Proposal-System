@@ -101,5 +101,6 @@ const skill = readFileSync(resolve(root, 'SKILL.md'), 'utf8');
 const workbenchGuide = readFileSync(resolve(root, 'references/workbench.md'), 'utf8');
 assert(workbenchGuide.indexOf('review-inbox.mjs') < workbenchGuide.indexOf('validate-page-review-feedback.mjs'), 'legacy 路径先收件再校验');
 assert(workbenchGuide.includes('新项目不用 inbox、legacy feedback 或 overall_decision'), '当前主流程不用旧审批门');
-assert(workbenchGuide.includes('读新 head 与主稿继续'), '后续工作消费当前主稿');
+assert(workbenchGuide.includes('doc-workbench.mjs') && workbenchGuide.includes('doc-inbox.mjs'), '工作台操作指向文档工作台');
+assert(workbenchGuide.includes('以磁盘上的文档为准'), '工作台没开时直接改文件，下次打开以磁盘为准');
 pass('Co-creation 结构与真实 Review；主文件交接约定');

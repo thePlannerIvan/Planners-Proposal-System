@@ -1,3 +1,11 @@
+## 2026-11-19 — Storyline 落到一份 planners-doc/1 文档
+
+- 新项目的主线改写成 `.planners/storyline.md`：`#` 文档、`##` 章节、`###` 页，每页一段 `主张：` 加两三条列表支撑；锚点交给工作台补写。
+- 新增 `proposal-co-creation/templates/storyline.md` 与真实样例 `evals/fixtures/labbrand-storyline.md`（朗标笔试案，5 章 10 页）。
+- 新增 `validate-storyline-doc.mjs`：结构校验交给 planners-review-core 的 `validate-doc.mjs`，只加「每页有主张、有支撑」两条提案规则，复用同一套切块。
+- 工作台改用 planners-review-core 的 `doc-workbench.mjs`；SKILL 只描述文档形态与交互，不再描述页级 JSON 字段。
+- 旧 `page-architecture.json` 流程退出新项目入口，工作台只读；旧脚本、旧模板与旧测试保留作兼容。
+
 ## 2026-11-07 — Storyline 工作台改为行内编辑，反馈与保存按页拆开
 
 - 故事线一页一行，正文点哪改哪：不信点击手柄展开，支撑点常显在行内，Enter 增一条、空行 Backspace 删一条。

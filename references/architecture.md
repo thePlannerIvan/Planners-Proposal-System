@@ -4,17 +4,22 @@
 
 | 所属方 | 职责与接口 |
 |---|---|
-| Proposal | 理解项目、推进讨论、形成主线；维护同一 project-memory.md、source-index.json 与 page-architecture.json |
+| Proposal | 理解项目、推进讨论、形成主线；维护同一 `.planners/` 下的 `storyline.md`、`project-memory.md` 与 `source-index.json` |
 | sparkling / Method Wiki / storytelling / slide-copy | 研讨、专业知识与方法、认知推进、幻灯片表达；按各 Skill 指引调用 |
 | planners-source-index | 定义并校验来源契约，Proposal 负责真实阅读与登记 |
-| Proposal adapter | 将 3.0 主张、支撑与备注映射到工作台，回写同一原件；2.0 仅为旧项目兼容 |
-| planners-review-core | 当前交互规则、自动保存、版本管理、草稿与受限命令传输；唯一实现，不复制审阅壳 |
-| planners-bypage | 接收主线并发展完整内容；转换器支持 3.0 和旧 2.0，上游文件保留原位置 |
+| planners-review-core | 定义 `planners-doc/1` 文档结构与 `planners-doc-task/1` 块级任务；提供工作台、自动保存、版本管理、待核对与收件箱。唯一实现，不复制工作台 |
+| planners-bypage | 接收 `storyline.md`、项目记忆与来源索引，发展完整内容；旧 JSON 转换器只保留给旧项目 |
 
 ## 当前规则与维护范围
 
-修改审阅行为前读取 `planners-review-core/references/content-review.md`。底层 save 命令是内部实现，用户操作是编辑、查看或恢复版本、提交修改意见；不据旧说明加回手动保存按钮。宿主差异限于打开与唤醒能力，不改变自动保存行为。
+- 新项目只有一份主线工作稿：`.planners/storyline.md`，按 `planners-review-core/contracts/planners-doc.md` 的结构写，按 [文档形态](../proposal-co-creation/contracts/storyline.md) 的提案规则写。
+- 工作台入口是 `planners-review-core/scripts/doc-workbench.mjs`。用户操作是就地改块、拖块与页、查看或恢复版本、提交块级反馈；没有手动保存按钮。宿主差异只影响打开与唤醒，不改变自动保存行为。
+- 提案自己的校验是 `proposal-co-creation/scripts/validate-storyline-doc.mjs`：结构复用公共校验器，只加「每页有主张、有支撑」两类规则，不另写解析器。
+- 旧 `.proposal-work/page-architecture.json` 与 [旧 JSON 格式](../proposal-co-creation/contracts/page-architecture.md)、`validate-page-architectures.mjs`、`start-page-review.mjs`、`review-inbox.mjs` 只服务已有项目和兼容测试，不再是新项目入口，工作台只读打开。
 
-当前 schema 与模板只表达 3.0，旧 schema 在 contracts/legacy，旧测试夹具在 evals/fixtures。默认工作台测试走 co-creation/storyline.mjs；旧 inbox 和反馈用例仅验证兼容分支。维护格式时同时检查 builder、回写 adapter、By-page 转换器与实际用例。
+## 测试分工
 
-根入口负责内容判据；[主线格式](../proposal-co-creation/contracts/page-architecture.md) 负责字段；[工作台操作](workbench.md) 负责启动、任务处理和兼容说明。历史记录不参与日常生产。
+- `evals/co-creation/storyline-doc.mjs`：模板与真实样例过校验、删支撑/删主张被拒、工作台按块读出。默认工作台的格式判据走这里。
+- `evals/co-creation/storyline.mjs`、`co-creation/run.mjs`、`co-creation/edits.mjs`、`co-creation/workbench-ui.mjs`、`workflow/run.mjs`：旧 JSON 主稿的兼容用例。它们继续通过，不定义新项目的写作形态。
+
+根入口负责内容判据；[文档形态](../proposal-co-creation/contracts/storyline.md) 负责怎么写、怎么校验；[工作台操作](workbench.md) 负责启动、任务处理与兼容说明。历史记录不参与日常生产。
