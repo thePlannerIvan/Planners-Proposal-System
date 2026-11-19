@@ -1,48 +1,58 @@
 # Storyline 工作台操作
 
-适用于生成工作台、处理用户批注与恢复旧项目。交互规则先读 `planners-review-core/references/content-review.md`；本文件仅说明 Proposal 的入口和文件归属。
+适用于打开 `.planners/storyline.md`、处理块级反馈与待核对。文档怎么写见 [文档形态](../proposal-co-creation/contracts/storyline.md)；结构权威是 `planners-review-core/contracts/planners-doc.md`，任务形状是 `planners-review-core/contracts/planners-doc-task.md`。
 
-`<C>` 为本 Skill 的 `proposal-co-creation/scripts`，`<A>` 为当前 `page-architecture.json` 绝对路径，`<R>` 为同一项目的 `.proposal-work/reviews/structure`。
+`<C>` 为本 Skill 的 `proposal-co-creation/scripts`，`<K>` 为 `planners-review-core` 根目录，`<D>` 为当前 `storyline.md` 的绝对路径。
 
-## 启动与恢复
-
-先运行 `node "<C>/validate-page-architectures.mjs" "<A>"`，再运行：
+## 先校验，再打开
 
 ```bash
-node "<C>/start-page-review.mjs" --architecture "<A>" --review-dir "<R>"
+node "<C>/validate-storyline-doc.mjs" "<D>"
+node "<K>/scripts/doc-workbench.mjs" "<D>" --open
 ```
 
-DSH 有 `review_open` 时加 `--surface-only`，把返回的 surface 绝对路径交给插件打开；仅生成 surface 不代表已经打开。没有插件时同一入口启动或复用本地宿主并打开浏览器。测试或只检查产物时用 `--no-open`。
+- 校验失败先修文档，不带错打开。
+- `--open` 在本地打开浏览器；DSH 里把工作台 URL 交给用户。工作台是本地 loopback 服务，不是一份 `review-surface.json`。
+- 第一次打开会补写缺失锚点并落盘。锚点是块身份，不是内容改动；重复锚点会重建。
+- 打开后用 `GET /api/doc` 确认真的读出了页与块：回执里有 `contract` / `doc` / `project` / `sha256` / `pages` / `blocks` / `repairs` / `errors`。进程起来不等于工作台读对了文档。
+- 工作台是长驻进程：启动后不要等它退出，也不要在人操作期间轮询；人回来说改完再继续。
 
-读取返回的 `canonical_path`、`review_context` 和 `workbench_head`。head 在工作台第一次连接后建立；正式交接前确认它真实存在并与主稿对应。恢复已有项目继续同一目录，先查看 head 与主稿，保护尚未消费的草稿。
+## 人在工作台里怎么改
 
-## 处理修改任务
+- 左侧目录按「章节 → 页」两级，点页跳转，滚动高亮当前页。
+- 点任意块直接改；回车分块，删空合并；拖块首六点句柄移块，拖页标题移整页，也可 `Alt+↑↓`。
+- 自动保存，没有手动保存按钮；历史版本可查看与恢复，恢复是一次新编辑，旧记录不抹。
+- 选中文字吸附到完整块；块尾批注、选中浮出按钮、顶部「整体反馈」（整页 / 整份）都能提交。提交是请求模型修改，不是保存，也不是批准。
 
-1. 读取 `<R>/workbench/head.json` 的 pending tasks，以及 canonical 主稿。任务按页绑定：`pages` 是提交时的显示页号，`page_keys` 是本轮页身份，`page_hashes` 是那几页提交时的内容指纹。处理前对照当前主稿内容；`page_drift` 表示提交时磁盘上已变化的页，`stale_pages`（resolve 回执）表示提交后用户又改过那几页，都先重新读再动手。批注提交只校验页集合，模型改一页不妨碍用户提交另一页的批注。
-2. 根据 task 的 pages/entries 和意见处理指定页面，必要时检查前后论证；其他待处理任务不一并标记完成。遇到策略选择回到用户讨论。
-3. 修改主稿并完成必要的内容检查后，在重新生成工作台之前标记已处理任务：
+## 模型接反馈
 
-```bash
-node "<C>/finish-review-task.mjs" --review-dir "<R>" --task-id "<id>"
-```
+1. **有侧栏插件时**：插件唤醒模型。任务在 `GET /api/tasks`；`POST /api/task/claim` 锁定任务绑定的块，`POST /api/patch` 按锚点写回。回执里的 `deferred_blocks` 是进「待核对」的块，不覆盖任何一方。
+2. **没有插件时**：任务落在文档同目录的 `.doc-workbench/inbox/`。人说完再读：
 
-任务不再要求整份 revision/source_hash 相等；`--revision` / `--source-hash` 仍被接受，只作记录。此命令只更新任务状态，不表示用户批准。多条任务逐条处理并标记；模型编辑期间仍须保护新到达的用户修改。
+   ```bash
+   node "<K>/scripts/doc-inbox.mjs" list "<D>"     # 未处理任务
+   node "<K>/scripts/doc-inbox.mjs" take "<D>"     # pending → processing
+   ```
 
-4. 用同一启动命令重建工作台；以实际回执确认成功。读新 head 与主稿继续，不从旧反馈猜测当前内容。
+   每条任务带块身份、提交时的内容指纹与人的意见原文。按任务里的锚点读文件、只改指定块。处理后重跑校验并重新打开工作台；收件箱不会因为文件被改就自动标记完成。
+3. **工作台开着时只提交 patch**，不重写全文；**工作台没开时**可以直接编辑文件，下次打开以磁盘上的文档为准。
+4. 处理前后核对任务里的块指纹。块已经不在文档里（`task_stale`）就不要硬改，请用户重新提交反馈。
+5. 处理指定页时检查它和前后论证的衔接。策略取舍回到讨论；事实变动回查材料，必要时调用 `planners-fact-check`，不把主线检查当作完整稿核查。
+6. 保存、派发、取走任务都不等于用户同意进入下游。
 
-保存与反馈按页生效：模型改了 A 页，用户对 B 页的编辑仍会保存并保留 A 页的模型改动；同一页被双方改过时该页进入回执 `deferred_pages`，页面标“待核对”等人选择，不要绕过它覆盖用户草稿。模型重建工作台后，页面会提示刷新；旧页面内嵌数据不用于继续保存。
+## 待核对
 
-## 历史版本
+`GET /api/conflicts` 读每一块的两个版本，人用 `POST /api/conflict/decide` 选 `mine` / `model` / `discard`。三种裁决都解锁并删除这条待核对；不要替人决定。工作台会提示刷新，刷新前的编辑留在草稿里。
 
-工作台自动保存当前内容并保留历史；用户在版本列表选择历史版本、点击“恢复此版”，页内再次确认后自动保存为新的修改。恢复失败或版本不兼容时保留当前内容并说明原因，不假报成功。模型重新生成导致编辑基线变化时，旧基线历史仍可保留供追溯；不能把旧草稿直接套到新基线。
+## 旧项目兼容（只读）
 
-## 仅用于旧项目的 legacy 路径
+旧的 `.proposal-work/page-architecture.json` 也能用同一个工作台打开，但**只读**：顶部写明原因，保存、重排、派发都返回 `409 readonly`，磁盘一个字节都不动。旧项目不迁移；需要时按 `planners-doc/1` 重建 storyline.md。
 
-只有明确恢复使用旧反馈提交的 2.0 项目时加 `--legacy-review true`。该模式才产生 `review-submissions.json`，按顺序运行：
+旧 JSON 主稿流程的脚本保留在 `proposal-co-creation/scripts/`：`validate-page-architectures.mjs`、`start-page-review.mjs`、`review-inbox.mjs`、`validate-page-review-feedback.mjs`。只有恢复使用旧反馈提交的 2.0 项目时，才按顺序运行（`<R>` 是旧项目的审阅目录，`<A>` 是旧 `page-architecture.json` 的绝对路径）：
 
 ```bash
 node "<C>/review-inbox.mjs" --review-dir "<R>"
 node "<C>/validate-page-review-feedback.mjs" --feedback "<R>/review-feedback.json" --architecture "<A>"
 ```
 
-新项目不用 inbox、legacy feedback 或 overall_decision 作为继续工作的批准门。兼容界面的提交机制不改变当前 Workbench 的自动保存约定。
+新项目不用 inbox、legacy feedback 或 overall_decision 作为继续工作的批准门；兼容界面的提交机制不改变当前工作台的自动保存约定。

@@ -15,6 +15,6 @@
 <!-- 区分工程验证、语义验证和仍需人工判断的部分。 -->
 
 - [ ] 已运行 `npm test`
-- [ ] 未提交客户资料、`.proposal-work/`、`deliverable/`或密钥
+- [ ] 未提交客户资料、`.planners/`、`.proposal-work/`、`deliverable/`或密钥
 - [ ] 没有用新增字段或 Validator 掩盖 Prompt 不清
 - [ ] 已删除或归档被替代的活动内容
