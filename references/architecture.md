@@ -7,7 +7,7 @@
 | Proposal | 理解项目、推进讨论、形成主线；维护同一 `.planners/` 下的 `storyline.md`、`project-memory.md` 与 `source-index.json` |
 | sparkling / Method Wiki / storytelling / slide-copy | 研讨、专业知识与方法、认知推进、幻灯片表达；按各 Skill 指引调用 |
 | planners-source-index | 定义并校验来源契约，Proposal 负责真实阅读与登记 |
-| planners-review-core | 定义 `planners-doc/1` 文档结构与 `planners-doc-task/1` 块级任务；提供工作台、自动保存、版本管理、待核对与收件箱。唯一实现，不复制工作台 |
+| planners-review-core | 定义 `planners-doc/2` 文档结构与 `planners-doc-task/1` 块级任务；提供工作台、自动保存、版本管理、待核对与收件箱。唯一实现，不复制工作台 |
 | planners-bypage | 接收 `storyline.md`、项目记忆与来源索引，发展完整内容；旧 JSON 转换器只保留给旧项目 |
 
 ## 当前规则与维护范围

@@ -46,7 +46,7 @@ node "<K>/scripts/doc-workbench.mjs" "<D>" --open
 
 ## 旧项目兼容（只读）
 
-旧的 `.proposal-work/page-architecture.json` 也能用同一个工作台打开，但**只读**：顶部写明原因，保存、重排、派发都返回 `409 readonly`，磁盘一个字节都不动。旧项目不迁移；需要时按 `planners-doc/1` 重建 storyline.md。
+旧的 `.proposal-work/page-architecture.json` 也能用同一个工作台打开，但**只读**：顶部写明原因，保存、重排、派发都返回 `409 readonly`，磁盘一个字节都不动。旧项目不迁移；需要时按 `planners-doc/2` 重建 storyline.md。
 
 旧 JSON 主稿流程的脚本保留在 `proposal-co-creation/scripts/`：`validate-page-architectures.mjs`、`start-page-review.mjs`、`review-inbox.mjs`、`validate-page-review-feedback.mjs`。只有恢复使用旧反馈提交的 2.0 项目时，才按顺序运行（`<R>` 是旧项目的审阅目录，`<A>` 是旧 `page-architecture.json` 的绝对路径）：
 

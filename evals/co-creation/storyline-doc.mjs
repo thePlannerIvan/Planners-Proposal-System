@@ -24,7 +24,7 @@ function coreScript(relPath) {
   try {
     return moduleScript('planners-review-core', relPath);
   } catch (error) {
-    throw new Error(`本测试依赖含 planners-doc/1 的 planners-review-core；`
+    throw new Error(`本测试依赖含 planners-doc/2 的 planners-review-core；`
       + `设 PLANNERS_REVIEW_CORE_HOME=<检出目录> 再跑。\n${error.message}`);
   }
 }
@@ -40,25 +40,25 @@ function run(script, args, status) {
 }
 const validate = (file, status = 0) => JSON.parse(run(validator, [file], status));
 
-// 页的正文到第一个 #### 小节为止；主张与支撑只在这一段里数。
+// 页的正文到第一个 `###` 标题块为止；主张与支撑只在这一段里数。
 function mapPageBody(text, title, change) {
-  const start = text.indexOf(`### ${title}`);
+  const start = text.indexOf(`## ${title}`);
   assert(start >= 0, `样例里找不到页「${title}」`);
-  const next = text.indexOf('\n### ', start + 4);
+  const next = text.indexOf('\n## ', start + 3);
   const end = next === -1 ? text.length : next;
   const body = text.slice(start, end);
-  const cut = body.search(/^#### /m);
+  const cut = body.search(/^#{3,6} /m);
   const head = cut === -1 ? body : body.slice(0, cut);
   const tail = cut === -1 ? '' : body.slice(cut);
   return text.slice(0, start) + change(head) + tail + text.slice(end);
 }
 
-// 1. 模板与真实样例都先过 planners-doc/1 的结构校验：提案规则不另造解析器。
+// 1. 模板与真实样例都先过 planners-doc/2 的结构校验：提案规则不另造解析器。
 for (const file of [template, sample]) run(contractValidator, [file], 0);
 
-// 2. 模板：每页一句主张、两三条支撑，页末可选 Sources。
+// 2. 模板：每页一句主张、两三条支撑，页末可选出处（页末连续的引用）。
 const templateReceipt = validate(template);
-assert(templateReceipt.contract === 'planners-doc/1' && templateReceipt.valid === true,
+assert(templateReceipt.contract === 'planners-doc/2' && templateReceipt.valid === true,
   '模板必须通过提案校验', JSON.stringify(templateReceipt.errors));
 assert(templateReceipt.checked.doc === 'storyline' && templateReceipt.checked.project,
   '模板文档头要有 doc 与 project');
@@ -66,7 +66,7 @@ assert(templateReceipt.checked.pages === 3, '模板展示 2 章 3 页', JSON.str
 assert(templateReceipt.checked.claims === templateReceipt.checked.pages, '模板每页都要有主张');
 assert(templateReceipt.checked.supports >= templateReceipt.checked.pages * 2, '模板每页至少两条支撑');
 
-// 3. 真实样例：LabbrandCaseStudy 的 10 页主线，每页一句主张加支撑，来源写在页末。
+// 3. 真实样例：LabbrandCaseStudy 的 10 页主线，每页一句主张加支撑，页末连续的引用即出处。
 const sampleReceipt = validate(sample);
 assert(sampleReceipt.valid === true, '真实样例必须通过提案校验', JSON.stringify(sampleReceipt.errors));
 assert(sampleReceipt.checked.chapters === 5, '样例是 5 章', JSON.stringify(sampleReceipt.checked));
@@ -74,9 +74,10 @@ assert(sampleReceipt.checked.pages === 10, '样例是 10 页', JSON.stringify(sa
 assert(sampleReceipt.checked.claims === 10, '每页恰好一句主张', JSON.stringify(sampleReceipt.checked));
 assert(sampleReceipt.checked.supports === 30, '每页三条支撑', JSON.stringify(sampleReceipt.checked));
 const sampleText = readFileSync(sample, 'utf8');
-for (const phrase of ['植物节律液（Botanical Circadian Elixir）', '微季候 / MIKORA', '#### Sources']) {
-  assert(sampleText.includes(phrase), `样例要保留真实项目的判断：「${phrase}」`);
+for (const phrase of ['植物节律液（Botanical Circadian Elixir）', '微季候 / MIKORA', '> 笔试任务书：']) {
+  assert(sampleText.includes(phrase), `样例要保留真实项目的判断与页末出处：「${phrase}」`);
 }
+assert(!/^#### /m.test(sampleText), '页是 ##，页内标题块是 ### 起，样例不再有 #### 结构');
 
 // 4. 提案自己的规则：删掉某页支撑 → 被拒；删掉主张 → 被拒；一页两句主张 → 被拒。
 const dir = mkdtempSync(join(tmpdir(), 'proposal-storyline-doc-'));
@@ -116,7 +117,7 @@ try {
   const response = await fetch(`${workbench.url}/api/doc`);
   assert(response.ok, 'GET /api/doc 必须返回 200');
   const snapshot = await response.json();
-  assert(snapshot.contract === 'planners-doc/1' && snapshot.doc === 'storyline' && snapshot.project,
+  assert(snapshot.contract === 'planners-doc/2' && snapshot.doc === 'storyline' && snapshot.project,
     '工作台要读出文档头三元组');
   assert(snapshot.pages.length === 10, '工作台要按页读出 10 页', JSON.stringify(snapshot.pages.length));
   assert(snapshot.blocks.length >= 40, '工作台要按块读出页与块', JSON.stringify(snapshot.blocks.length));

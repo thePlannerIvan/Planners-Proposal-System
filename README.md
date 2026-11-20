@@ -83,7 +83,7 @@ git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git ~/.clau
 
 - **环境要求**：Node.js 20+。工作台是本地 loopback 服务，用 URL 在浏览器打开；DSH 里把同一个 URL 交给用户。
 - **公共底座（缺了会自动拉取至 `~/.planners-modules/`）**：
-  - [`planners-review-core`](https://github.com/thePlannerIvan/planners-review-core) —— `planners-doc/1` 文字工作台、块级反馈与自动保存底座
+  - [`planners-review-core`](https://github.com/thePlannerIvan/planners-review-core) —— `planners-doc/2` 文字工作台、块级反馈与自动保存底座
   - [`planners-source-index`](https://github.com/thePlannerIvan/planners-source-index) —— 资料来源路径与未读盲区账本
   - [`planners-method-wiki`](https://github.com/thePlannerIvan/planners-method-wiki) —— 按具体问题检索策略视角与论证配方
 - **按需协同的同伴 Skill**（当前环境已安装时自动衔接）：[`sparkling`](https://github.com/thePlannerIvan/sparkling)（研讨）、[`storytelling`](https://github.com/thePlannerIvan/storytelling)（叙事动量）、[`slide-copy`](https://github.com/thePlannerIvan/slide-copy)（标题链表达）、[`planners-fact-check`](https://github.com/thePlannerIvan/planners-fact-check)（事实变动的按需复核）。
@@ -96,7 +96,7 @@ git clone https://github.com/thePlannerIvan/Planners-Proposal-System.git ~/.clau
 ### 活动工作区文件
 
 工作过程会在项目下生成 `<Project>/.planners/` 活动目录，交付下游 `planners-bypage` 时直接复用同一批文件：
-- `storyline.md`：当前唯一 Storyline 工作稿，按 `planners-doc/1` 写（每页一句 `主张：` 加支撑）
+- `storyline.md`：当前唯一 Storyline 工作稿，按 `planners-doc/2` 写（`#` 章节、`##` 页；每页一句 `主张：` 加支撑，页末连续的引用即出处）
 - `project-memory.md`：项目理解、收敛判断、用户决定与采用方法记录
 - `source-index.json`：来源定位、阅读覆盖与盲区清单
 

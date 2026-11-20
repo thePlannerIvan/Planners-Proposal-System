@@ -1,6 +1,14 @@
-## 2026-11-19 — Storyline 落到一份 planners-doc/1 文档
+## 2026-11-20 — 文档契约升到 planners-doc/2：层级上移一位，文档名只来自 project
 
-- 新项目的主线改写成 `.planners/storyline.md`：`#` 文档、`##` 章节、`###` 页，每页一段 `主张：` 加两三条列表支撑；锚点交给工作台补写。
+- 迁移：`planners-doc/1` → `planners-doc/2`。每级标题上移一位：正文不再有文档标题行（文档名只从文档头 `project` 出）；旧的 `##` 章节变成 `#` 章节、`###` 页变成 `##` 页，页内 `####` 小节变成 `###`–`######` 的普通标题块。存量文档用 `planners-review-core/scripts/migrate-doc.mjs 1 2 <file> --sources-to-quote` 一次性迁过来。
+- 出处改成「页末连续的引用」：`Sources` 不再是标题块，依据与来源逐条写成页末的 `> …`，位置就是语义；页中引用照常显示、不算出处。
+- `validate-storyline-doc.mjs` 跟着换契约版本；「主张写在页内第一个标题块之前、支撑是列表项」这两条提案规则不变。
+- 模板与真实样例（`proposal-co-creation/templates/storyline.md`、`evals/fixtures/labbrand-storyline.md`）已用迁移器迁到 /2，逐字核对过文字未变、页末出处是引用。
+- 文档相关的 evals 按 /2 写：需要含 `/2` 与 `scripts/migrate-doc.mjs` 的 planners-review-core。库里 vendored 的 `00-system/planners-review-core` 要到 PR 合并 / 正式发布那一步才同步，在那之前用 `PLANNERS_MODULES_HOME`（或 `PLANNERS_REVIEW_CORE_HOME`）指向 /2 的检出目录再跑。
+
+## 2026-11-19 — Storyline 落到一份工作稿文档
+
+- 新项目的主线改写成 `.planners/storyline.md`：文档头加章节 / 页，每页一段 `主张：` 加两三条列表支撑；锚点交给工作台补写。
 - 新增 `proposal-co-creation/templates/storyline.md` 与真实样例 `evals/fixtures/labbrand-storyline.md`（朗标笔试案，5 章 10 页）。
 - 新增 `validate-storyline-doc.mjs`：结构校验交给 planners-review-core 的 `validate-doc.mjs`，只加「每页有主张、有支撑」两条提案规则，复用同一套切块。
 - 工作台改用 planners-review-core 的 `doc-workbench.mjs`；SKILL 只描述文档形态与交互，不再描述页级 JSON 字段。

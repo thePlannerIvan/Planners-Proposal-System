@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 /**
- * Proposal 的 Storyline 校验：在 planners-doc/1 之上，只加提案自己的两条内容规则。
+ * Proposal 的 Storyline 校验：在 planners-doc/2 之上，只加提案自己的两条内容规则。
  *
  * 用法：node validate-storyline-doc.mjs <storyline.md> [--text]
  *
  * 它不另造解析器：
- *   · 结构校验（文档头、页与块的层级、锚点、图片、空页）交给 planners-review-core 的
+ *   · 结构校验（文档头、章节/页/标题块层级、锚点、图片、空页、页末出处）交给 planners-review-core 的
  *     `scripts/validate-doc.mjs`，回执与退出码原样合并；
  *   · 提案规则复用同一个切块实现 `scripts/lib/doc-blocks.mjs` 的 parseDocument，
  *     只读 pages[].blocks，不重新切一遍 Markdown。
  *
  * 它加的规则（只评价「每页有没有把主张与支撑写出来」，不评价判断对不对）：
  *   · 每页用一段以「主张：」开头的正文写一句完整判断；
- *   · 每页至少一条列表项支撑，写在页内小节（####）之前；
+ *   · 每页至少一条列表项支撑，写在页内标题块（`###`–`######`）之前；
  *   · 一页只有一句主张，且主张写在支撑之前。
  * 两三条支撑是写作指引，不是硬限制：只有一条或超过四条时给警告，不阻断。
  *
@@ -24,7 +24,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { moduleScript } from './lib/planners-modules.mjs';
 
-const CONTRACT = 'planners-doc/1';
+const CONTRACT = 'planners-doc/2';
 const CLAIM_RE = /^主张[：:]/;
 
 const usage = () => {
@@ -107,7 +107,7 @@ const fail = (code, message, block, label) => errors.push({
 
 for (const page of (isStoryline ? parsed.pages : [])) {
   const label = pageLabel(page);
-  // 页内小节（#### Sources / #### 依据与边界）之后不再是主张与支撑的地盘。
+  // 页内标题块（`### 依据与边界` 之类）之后不再是主张与支撑的地盘；出处是页末引用，不是列表。
   const firstSection = page.blocks.findIndex((block) => block.type === 'heading');
   const body = firstSection === -1 ? page.blocks : page.blocks.slice(0, firstSection);
   const pageClaims = body.filter((block) => block.type === 'paragraph' && CLAIM_RE.test(block.raw.trimStart()));
@@ -119,7 +119,7 @@ for (const page of (isStoryline ? parsed.pages : [])) {
   if (!claim) {
     errors.push({
       code: 'page_claim_missing',
-      message: '每页要有一句主张：用一段以「主张：」开头的正文写，放在支撑之前、页内小节之前',
+      message: '每页要有一句主张：用一段以「主张：」开头的正文写，放在支撑之前、页内标题块之前',
       line: page.line,
       page: label,
       block: null,

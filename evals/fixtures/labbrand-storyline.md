@@ -1,14 +1,12 @@
 ---
-contract: planners-doc/1
+contract: planners-doc/2
 doc: storyline
 project: 朗标笔试案
 ---
 
-# 朗标笔试案 · 主线
+# 一、赛道与市场
 
-## 一、赛道与市场
-
-### 锁定 RTD 赛道，用高毛利精品模型以小博大
+## 锁定 RTD 赛道，用高毛利精品模型以小博大
 
 主张：锁定预包装即饮（RTD）软饮料，初创品牌放弃巨头的大流通规模幻想，以 15 元、75% 毛利的精品模型以小博大。
 
@@ -16,16 +14,18 @@ project: 朗标笔试案
 - 可口可乐、农夫山泉与元气森林垄断百万级终端冰柜与深度分销网络，初创品牌缺乏铺货筹码，进入平价大众市场必遭价格战清场。
 - 增长预期改由高客单价、高毛利与高势能圈层渗透构成，成功标尺从全国铺货率换成高净值人群的心智独占与复购。
 
-#### 依据与边界
+### 依据与边界
 - 单瓶 BOM 2.8–3.5 元、15 元零售、毛利 75%–80% 是工程报告的成本估算，未经真实供应链询价。
 
-#### Sources
-- 笔试任务书：`04-brief/LABBRAND-Written-Test_Verbal.md`（10 页上限、48 小时、品牌名需中英文）。
-- 赛道与定位判断：`思路大纲.md` P01（2026-11-13）。
-- 价格带与渠道结构：`02-beverage-trends/sources/raw/2024-2026-chinese-wellness-water-industry-case.md`。
-- 成本与工艺：`05-deep-research/reports/01-herbal-food-tech-research.md`（执行摘要，BOM 2.8–3.5 元）。
+> 笔试任务书：`04-brief/LABBRAND-Written-Test_Verbal.md`（10 页上限、48 小时、品牌名需中英文）。
 
-### 现制茶饮截流之后，RTD 只剩两条路
+> 赛道与定位判断：`思路大纲.md` P01（2026-11-13）。
+
+> 价格带与渠道结构：`02-beverage-trends/sources/raw/2024-2026-chinese-wellness-water-industry-case.md`。
+
+> 成本与工艺：`05-deep-research/reports/01-herbal-food-tech-research.md`（执行摘要，BOM 2.8–3.5 元）。
+
+## 现制茶饮截流之后，RTD 只剩两条路
 
 主张：现制茶饮抽空包装饮料的情绪价值，迫使 RTD 分化为平价水替与轻量化补剂两极，小品牌唯有切入高客单的科技加法赛道。
 
@@ -33,15 +33,17 @@ project: 朗标笔试案
 - 自然减法退守为「替代水」：无糖茶与中式养生水主打各种 000，市场大但客单低（4–6 元），东方树叶独占无糖茶七成以上份额，2025 年赛道已陷入负增长内卷。
 - 科技加法把高价值营养与活性物质做成保健品的轻量化即饮替代，市场更细分、客单更高，巨头尚未垄断，是初创品牌唯一能站住的位置。
 
-#### Sources
-- 市场分化与价格带：`02-beverage-trends/derived/01-beverage-trend-evolution-timeline.md`。
-- 功能饮料竞争格局：`02-beverage-trends/sources/raw/2024-2026-ipsos-china-beverage-and-functional-drinks.md`。
-- 无糖茶份额与增速：`02-beverage-trends/sources/raw/2024-2026-chinese-wellness-water-industry-case.md`（农夫山泉 2024 年报口径）。
-- 健康诉求：`01-health-supplements/sources/raw/2024-2025-mckinsey-future-of-wellness-global-report.md`。
+> 市场分化与价格带：`02-beverage-trends/derived/01-beverage-trend-evolution-timeline.md`。
 
-## 二、神话与人群
+> 功能饮料竞争格局：`02-beverage-trends/sources/raw/2024-2026-ipsos-china-beverage-and-functional-drinks.md`。
 
-### 用神话学调和「自然」与「科技」
+> 无糖茶份额与增速：`02-beverage-trends/sources/raw/2024-2026-chinese-wellness-water-industry-case.md`（农夫山泉 2024 年报口径）。
+
+> 健康诉求：`01-health-supplements/sources/raw/2024-2025-mckinsey-future-of-wellness-global-report.md`。
+
+# 二、神话与人群
+
+## 用神话学调和「自然」与「科技」
 
 主张：借列维·斯特劳斯神话学调和「自然」与「科技」的二元对立，用前沿现代科技确证传统本草，开辟「自然且科技」的强机能赛道。
 
@@ -49,15 +51,16 @@ project: 朗标笔试案
 - 列维·斯特劳斯在结构人类学中指出，神话的本质功能是调和看似无法兼容的巨大二元矛盾——这正是本草与科技在本案中的关系。
 - 传统中草药（药食同源）自带天然温润的文化信任，却常被质疑是否真有效、是否安全；用分子生物学与食品工程把它研究透、提纯好，才能交付「自然且科技的强功能性」。
 
-#### 依据与边界
+### 依据与边界
 - 这是用于构造品类逻辑的符号学方法，不是消费者实证；它解释「为什么这样讲得通」，不证明「消费者一定会买」。
 
-#### Sources
-- 列维·斯特劳斯二元对立与神话调和：`05-deep-research/reports/02-semiotics-and-naming-research.md` 第一章。
-- 反超加工与清洁标签趋势：`02-beverage-trends/sources/raw/2024-2026-anti-upf-and-clean-label-global-monitor.md`。
-- 药食同源法规边界：`05-deep-research/reports/01-herbal-food-tech-research.md` 议题一。
+> 列维·斯特劳斯二元对立与神话调和：`05-deep-research/reports/02-semiotics-and-naming-research.md` 第一章。
 
-### 人群卖的是「掌控状态」，不是「补身体」
+> 反超加工与清洁标签趋势：`02-beverage-trends/sources/raw/2024-2026-anti-upf-and-clean-label-global-monitor.md`。
+
+> 药食同源法规边界：`05-deep-research/reports/01-herbal-food-tech-research.md` 议题一。
+
+## 人群卖的是「掌控状态」，不是「补身体」
 
 主张：锚定月入 3 万+ 的高压都市精英，回应其抗拒「保健品病耻感」、渴望在高压下自主掌控身体状态的深层心理。
 
@@ -65,18 +68,20 @@ project: 朗标笔试案
 - 健康认知已经从「补充不足」走到「补全营养」，再进到「调节状态」；第三阶要的是主动掌控全天身心节律，而不是被动补给。
 - 核心人群是一线都市脑力精英：高压下容易失眠，把瑜伽、攀岩、越野跑当作日常信仰，需要随时把身体调校回最佳状态。
 
-#### 依据与边界
+### 依据与边界
 - 3 万元收入线来自定性判断与生活切片，没有量化调研来源；写进正式提案前需补一手访谈或收入分布数据。
 
-#### Sources
-- 健康认知三阶与病耻感：`01-health-supplements/derived/03-lifestyle-shifts-and-psychological-drivers.md`。
-- 睡眠与运动补剂需求：`01-health-supplements/derived/02-sleep-and-active-mechanisms-comparison.md`。
-- 健康关注度：`01-health-supplements/sources/raw/2023-2024-ipsos-china-adult-health-management-survey.md`。
-- 全球健康消费趋势：`01-health-supplements/sources/raw/2024-2025-mckinsey-future-of-wellness-global-report.md`。
+> 健康认知三阶与病耻感：`01-health-supplements/derived/03-lifestyle-shifts-and-psychological-drivers.md`。
 
-## 三、品类与产品
+> 睡眠与运动补剂需求：`01-health-supplements/derived/02-sleep-and-active-mechanisms-comparison.md`。
 
-### 新品类叫「植物节律液」，卖的是状态切换
+> 健康关注度：`01-health-supplements/sources/raw/2023-2024-ipsos-china-adult-health-management-survey.md`。
+
+> 全球健康消费趋势：`01-health-supplements/sources/raw/2024-2025-mckinsey-future-of-wellness-global-report.md`。
+
+# 三、品类与产品
+
+## 新品类叫「植物节律液」，卖的是状态切换
 
 主张：定义新品类「植物节律液（Botanical Circadian Elixir）」，以 150ml 浓缩形态锚定「调整状态」，替代褪黑素、旧式运动饮料与日常咖啡。
 
@@ -84,12 +89,13 @@ project: 朗标笔试案
 - 保留草本真实风味印记，像高定香氛（Aromachology）一样提供嗅觉与味觉刺激，配合开盖清脆阻尼声，把「我要工作了 / 我要运动了 / 我要睡觉了」做成状态切换仪式。
 - 三大系列各自替掉一个更差的选择：焕活替咖啡与奶茶，运动替旧式运动饮料与红牛魔爪，安眠替褪黑素。
 
-#### Sources
-- 品类定义与三系列：`思路大纲.md` P05。
-- 替代品与场景：`02-beverage-trends/derived/03-global-breakthrough-concepts-matrix.md`。
-- 定价与形态：`05-deep-research/reports/01-herbal-food-tech-research.md` 执行摘要。
+> 品类定义与三系列：`思路大纲.md` P05。
 
-### 用工程链把「有效」做成可交付
+> 替代品与场景：`02-beverage-trends/derived/03-global-breakthrough-concepts-matrix.md`。
+
+> 定价与形态：`05-deep-research/reports/01-herbal-food-tech-research.md` 执行摘要。
+
+## 用工程链把「有效」做成可交付
 
 主张：三大道地本草配方锁定明确分子靶点，配合微射流纳米化与靶向脱苦工艺，实现无药味、高吸收、零防腐剂的商业化交付。
 
@@ -97,17 +103,18 @@ project: 朗标笔试案
 - 四步工程链解决草本难喝、浑浊、难吸收：低温超声提取保热敏成分，大孔树脂脱除 85% 涩单宁并用 β-环糊精包合苦味，150–200MPa 微射流粉碎至 10–50nm（浊度低于 3 NTU，吸收率 3–5 倍），UHT 137℃ 3 秒瞬灭加百级冷灌做到 0 防腐剂与 12–18 个月常温保质。
 - 商业可行性托底：单瓶 BOM 2.8–3.5 元，15 元零售对应 75%–80% 毛利，原料落在药食同源与新食品原料目录内。
 
-#### 依据与边界
+### 依据与边界
 - α 脑电波、TNF-α/IL-6、AMPK 等是文献级机制推断，没有做配方实测；法规准入需按现行目录逐项复核。
 
-#### Sources
-- 三大系列成分与靶点：`05-deep-research/reports/01-herbal-food-tech-research.md` 议题一。
-- 提取、脱苦、纳米化与冷灌装参数：同上，议题二、三。
-- 法规目录与 BOM：同上，执行摘要与配方章节。
+> 三大系列成分与靶点：`05-deep-research/reports/01-herbal-food-tech-research.md` 议题一。
 
-## 四、渠道与冷启动
+> 提取、脱苦、纳米化与冷灌装参数：同上，议题二、三。
 
-### 复刻 Oatly 的伴生渠道，先立心智再谈铺货
+> 法规目录与 BOM：同上，执行摘要与配方章节。
+
+# 四、渠道与冷启动
+
+## 复刻 Oatly 的伴生渠道，先立心智再谈铺货
 
 主张：复刻 Oatly 渠道伴生路径，从精品瑜伽馆、攀岩馆与高阶商超切入，借圈层势能完成高心智、低渠道负担的冷启动。
 
@@ -115,17 +122,18 @@ project: 朗标笔试案
 - 用 40% 毛利分成与极简桌面冷柜把场馆主理人变成渠道合伙人；常温仓储、冰镇即饮、零损耗，压低初创品牌的履约负担。
 - 单瓶尝鲜必须转成周期复购：线下场馆完成首瓶仪式感，扫码进入线上私域承接「28 天状态节律订阅盒」，补上工位与居家的日常频次。
 
-#### 依据与边界
+### 依据与边界
 - 40% 分成、冷柜与进场成本需按单店测算，现在只有模式假设，没有签约或报价。
 
-#### Sources
-- 冷启动路径与 Oatly 案例：`02-beverage-trends/derived/03-global-breakthrough-concepts-matrix.md`。
-- 渠道与「第三空间」判断：`思路大纲.md` P07。
-- 消费场景与复购：`02-beverage-trends/quali_analysis/report.md`。
+> 冷启动路径与 Oatly 案例：`02-beverage-trends/derived/03-global-breakthrough-concepts-matrix.md`。
 
-## 五、品牌命名
+> 渠道与「第三空间」判断：`思路大纲.md` P07。
 
-### 青刻 / VERNODE：把「准时切换」做成刻度
+> 消费场景与复购：`02-beverage-trends/quali_analysis/report.md`。
+
+# 五、品牌命名
+
+## 青刻 / VERNODE：把「准时切换」做成刻度
 
 主张：青刻 / VERNODE 以精确时刻的刻度感立住工位与运动三时段打卡心智，作为强刻度备选方案。
 
@@ -133,15 +141,16 @@ project: 朗标笔试案
 - 二阶神话把喝功能饮自然化为「校准生物钟」，用「青」消解仪器冷感、用「刻」消解中药慢玄；qīng kè 在四方言中无歧义。
 - 合规初筛：「青刻」公开无头部茶饮占用，但开放库见同音「轻刻」（29 类）、好丽友「馋轻刻」（30 类）及 32 类「粒刻」，vernode.com 为云主机；列第一备选并备「青刻饮 / VERMARQ」。
 
-#### 依据与边界
+### 依据与边界
 - 商标近似与域名状态是初筛，需在定稿前逐项复核 29/30/32 类与 .com 可用性。
 
-#### Sources
-- 命名符号学与音韵：`05-deep-research/reports/02-semiotics-and-naming-research.md`。
-- 朗标五维命名方法：`03-brand-naming/derived/notes-methods-core.md`。
-- 方案与备选：`思路大纲.md` P08。
+> 命名符号学与音韵：`05-deep-research/reports/02-semiotics-and-naming-research.md`。
 
-### 变奏 / SERENO：把松弛做成声音
+> 朗标五维命名方法：`03-brand-naming/derived/notes-methods-core.md`。
+
+> 方案与备选：`思路大纲.md` P08。
+
+## 变奏 / SERENO：把松弛做成声音
 
 主张：变奏 / SERENO 走反内卷的情绪声律路线，用松弛对抗咖啡因式焦虑，换来更柔的调性但失去草本锚点。
 
@@ -149,15 +158,16 @@ project: 朗标笔试案
 - 二阶神话把饮品升格为「掌控自我节奏的乐章」；双去声读起来稳重提气，契合瑜伽与夜通勤场景，但缺草本锚点。
 - 合规初筛：未见独立瓶装水大牌，但属 30/43 类高频词，蓝瓶「三非变奏」与雀巢已占咖啡心智，sereno.com 已被占用；淘汰「缓奏」（撞杭州咖啡馆），作对照组并备「轻奏 / TUNIO」。
 
-#### 依据与边界
+### 依据与边界
 - 作为对照组保留，用来交代声律路线的上限与代价，不进入最终推荐。
 
-#### Sources
-- 音韵与声律方法：`03-brand-naming/derived/notes-methods-sound.md`。
-- 符号学评估框架：`05-deep-research/reports/02-semiotics-and-naming-research.md`。
-- 方案与备选：`思路大纲.md` P09。
+> 音韵与声律方法：`03-brand-naming/derived/notes-methods-sound.md`。
 
-### 微季候 / MIKORA：与节气同频的掌心微节律
+> 符号学评估框架：`05-deep-research/reports/02-semiotics-and-naming-research.md`。
+
+> 方案与备选：`思路大纲.md` P09。
+
+## 微季候 / MIKORA：与节气同频的掌心微节律
 
 主张：微季候 / MIKORA 是三选一的首选推荐：把日常饮升格为与自然节气同频的掌心微节律，支撑 15 元全时段溢价。
 
@@ -165,10 +175,11 @@ project: 朗标笔试案
 - 二阶神话把日常饮水升格为「与自然节气同频」：微科学祛掉中医的老气，季候柔化科技的冰冷；先平后落顺口无歧义，Mi-ko-ra 记忆零摩擦。
 - 合规初筛：公开全网与开放库均无「微季候」精确重名，小红书、抖音零同名品牌，mikora.cn 可布局；CNIPA 只需排查女装「季候风」跨类并区分「微气候」，建议列主品牌首报确权。
 
-#### 依据与边界
+### 依据与边界
 - 已交付 deck（2026-11-13）把青刻列为首选、微季候列次选，与思路大纲相反；定稿前必须在两者中二选一，不能两处并存。
 
-#### Sources
-- 方案与推荐：`思路大纲.md` P10。
-- 命名方法与证据边界：`03-brand-naming/README.md`（只覆盖中文官网）。
-- 符号学与神话系统：`05-deep-research/reports/02-semiotics-and-naming-research.md`。
+> 方案与推荐：`思路大纲.md` P10。
+
+> 命名方法与证据边界：`03-brand-naming/README.md`（只覆盖中文官网）。
+
+> 符号学与神话系统：`05-deep-research/reports/02-semiotics-and-naming-research.md`。

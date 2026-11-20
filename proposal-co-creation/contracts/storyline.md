@@ -1,6 +1,6 @@
 # Storyline 工作稿格式
 
-新项目的 Proposal 主线只有一份工作稿：`<Project>/.planners/storyline.md`。它是一份普通的 `planners-doc/1` 文档，结构由 `planners-review-core` 的 `contracts/planners-doc.md` 定义；本文件只规定 Proposal 怎么把判断写进去，以及提案自己的两条校验规则。
+新项目的 Proposal 主线只有一份工作稿：`<Project>/.planners/storyline.md`。它是一份普通的 `planners-doc/2` 文档，结构由 `planners-review-core` 的 `contracts/planners-doc.md` 定义；本文件只规定 Proposal 怎么把判断写进去，以及提案自己的两条校验规则。
 
 - 模板：[`proposal-co-creation/templates/storyline.md`](../templates/storyline.md)
 - 真实样例：[`evals/fixtures/labbrand-storyline.md`](../../evals/fixtures/labbrand-storyline.md)（朗标笔试案，5 章 10 页）
@@ -12,39 +12,38 @@
 
 ```md
 ---
-contract: planners-doc/1
+contract: planners-doc/2
 doc: storyline
 project: 朗标笔试案
 ---
 
-# 朗标笔试案 · 主线
+# 一、判断
 ```
 
 | 字段 | 值 |
 |---|---|
-| `contract` | 固定 `planners-doc/1` |
+| `contract` | 固定 `planners-doc/2` |
 | `doc` | 固定 `storyline` |
-| `project` | 项目名，非空 |
+| `project` | 项目名，非空。**它就是文档名**，工作台用它显示「这是哪份稿」 |
 
-字段写法、闭合、重复与未知字段的处理跟随 `planners-doc/1`；这里不加第二个文档头。
+字段写法、闭合、重复与未知字段的处理跟随 `planners-doc/2`；这里不加第二个文档头。正文里不再写文档标题行：文件头之后的第一条结构就是 `#` 章节。
 
 ## 2. 层级
 
 | 写法 | 是什么 |
 |---|---|
-| `#` | 文档标题，全篇一个，在最前面 |
-| `##` | 章节 |
-| `###` | 页，交付时的「一屏」 |
-| `####` | 页内小节：`Sources`（来源）或 `依据与边界`（限定、缺口） |
+| `#` | 章节 |
+| `##` | 页，交付时的「一屏」 |
+| `###`–`######` | 标题块，按层级出字号；提案用它写页内标题块 |
 
-页号由顺序决定，不写进正文；页与页之间不加分隔线。内容块必须写在某个 `###` 页里。
+页号由顺序决定，不写进正文；页与页之间不加分隔线。内容块必须写在某个 `##` 页里，直接挂在 `#` 章节下的块会被拒绝。
 
 ## 3. 每页怎么写
 
-一页 = 一句主张 + 两三条支撑。主张用段首标记 `主张：`，支撑用列表项，都写在页内小节之前：
+一页 = 一句主张 + 两三条支撑。主张用段首标记 `主张：`，支撑用列表项，都写在页内第一个标题块之前：
 
 ```md
-### 新品类叫「植物节律液」，卖的是状态切换
+## 新品类叫「植物节律液」，卖的是状态切换
 
 主张：定义新品类「植物节律液」，以 150ml 浓缩形态锚定「调整状态」。
 
@@ -52,19 +51,18 @@ project: 朗标笔试案
 - 150ml 与 15 元对应的是状态切换，不是解渴容量。
 - 三大系列各自替掉一个更差的选择：咖啡、旧式运动饮料、褪黑素。
 
-#### 依据与边界
+### 依据与边界
 - 15 元定价是工程报告的成本推算，未做真实价格测试。
 
-#### Sources
-- 思路大纲 P05（2026-11-13）。
+> 思路大纲 P05（2026-11-13）。
 ```
 
 规则：
 
 - **一句主张**：页内只能有一处段首 `主张：`，且写在支撑之前。它代替了旧 JSON 里的 `claim` 字段。
-- **至少一条支撑**：页内至少一个列表项，写在第一个 `####` 之前。只有一条或超过四条时校验器给警告，不阻断；两三条是写作指引。
-- **页内小节不算主张与支撑**：`#### Sources`、`#### 依据与边界` 之后的列表项既不算支撑，也不参与条数。需要什么小节就写什么，契约不给它特殊语义。
-- **页末可选 Sources**：来源是文档的一部分，随文档交付；不写核查角标。
+- **至少一条支撑**：页内至少一个列表项，写在第一个标题块之前。只有一条或超过四条时校验器给警告，不阻断；两三条是写作指引。
+- **页内标题块不算主张与支撑**：`### 依据与边界` 之后的列表项既不算支撑，也不参与条数。用什么标题、分几级由作者定，契约不给它特殊语义。
+- **页末出处**：依据与来源写成页末连续的引用（`> …`），位置就是语义；页中段的引用照常显示、不算出处。出处条数不设限，有没有出处由作者判断。
 - **不手写锚点**：块身份（`<!-- b:xxxxxx -->`）由工作台首次打开时补写。手写容易重复，重复锚点会被拒绝。
 - **不写页号、不写栏目名**：`消费者分析 / 沟通问题 / 优化建议` 是栏目名；`放一张调研图` 是取材任务。两者都不能替代支撑判断。
 
@@ -75,7 +73,7 @@ node proposal-co-creation/scripts/validate-storyline-doc.mjs "<Project>/.planner
 node proposal-co-creation/scripts/validate-storyline-doc.mjs "<Project>/.planners/storyline.md" --text
 ```
 
-它先调用 `planners-review-core/scripts/validate-doc.mjs` 完成结构校验（文档头、页与块层级、锚点、图片、空页），再用同一个切块实现 `lib/doc-blocks.mjs` 读页与块，加上提案规则。**没有第二套解析器。**
+它先调用 `planners-review-core/scripts/validate-doc.mjs` 完成结构校验（文档头、章节 / 页 / 标题块层级、锚点、图片、空页、页末出处），再用同一个切块实现 `lib/doc-blocks.mjs` 读页与块，加上提案规则。**没有第二套解析器。**
 
 退出码：
 
@@ -89,7 +87,7 @@ JSON 回执沿用公共校验器的形状，`checked` 额外给出 `claims` 与 
 
 ```json
 {
-  "contract": "planners-doc/1",
+  "contract": "planners-doc/2",
   "valid": false,
   "errors": [
     {
@@ -132,13 +130,14 @@ node "<planners-review-core>/scripts/doc-workbench.mjs" "<Project>/.planners/sto
 
 | 旧 JSON | 新文档 |
 |---|---|
-| `storyline_thesis` | `#` 文档标题下的一段总判断，或第一章的主张 |
-| `sections[].title` | `##` 章节 |
-| `pages[]` 顺序 | `###` 页的顺序，页号不写进正文 |
+| `project_id` | 文档头的 `project`（文档名只在这里） |
+| `storyline_thesis` | 第一章第一页的主张 |
+| `sections[].title` | `#` 章节 |
+| `pages[]` 顺序 | `##` 页的顺序，页号不写进正文 |
 | `claim` | 段首 `主张：` |
 | `supports[]` | 列表项支撑 |
-| `notes` | `#### 依据与边界` 或写进支撑 |
-| `page_number`、`section_id`、`project_id` | 不再由人维护：页序、章节归属由位置决定，项目名写在文档头 |
+| `notes` | 页内一个标题块（如 `### 依据与边界`），或写进支撑 |
+| `page_number`、`section_id` | 不再由人维护：页序、章节归属由位置决定 |
 
 ## 7. 它不做什么
 

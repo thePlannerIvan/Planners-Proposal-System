@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
-import { assert, pass } from '../lib/assert.mjs';
+import { assert, firstJsonObject, pass } from '../lib/assert.mjs';
 import { hostAlive, hostState, stopHost } from '../lib/review-host-bridge.mjs';
 import { moduleScript } from '../../proposal-co-creation/scripts/lib/planners-modules.mjs';
 
@@ -32,7 +32,7 @@ function run(script, args, expectedStatus = 0) {
   });
   assert(result.status === expectedStatus,
     `${script}: expected exit ${expectedStatus}, got ${result.status}\n${result.stdout}\n${result.stderr}`);
-  return JSON.parse(result.stdout.trim());
+  return firstJsonObject(result.stdout, { stdout: result.stdout, stderr: result.stderr });
 }
 
 function check(condition, label, details = null) {
@@ -40,6 +40,23 @@ function check(condition, label, details = null) {
   evidence.push({ label, passed: true, ...(details === null ? {} : { details }) });
   pass(label);
 }
+
+// 子进程 stdout 前面可能有 node 自己的提示行（带代理环境时就会打一行 UNDICI-EHPA warning）。
+// 解析要先剥掉不以 `{` 开头的前导行，再去取第一个能解析的对象。
+check(firstJsonObject([
+  '(node:123) [UNDICI-EHPA] Warning: EnvHttpProxyAgent is experimental, expect it to change at any time.',
+  '(Use `node --trace-warnings ...` to show where the warning was created)',
+  '{"ok":false,"error":"unavailable"}',
+].join('\n')).ok === false, 'Preamble warning lines before JSON do not break parsing');
+
+let unparseable = null;
+try {
+  firstJsonObject('(node:123) Warning: boom\nno json here');
+} catch (error) {
+  unparseable = error;
+}
+check(unparseable !== null && unparseable.message.includes('no json here'),
+  'Unparseable stdout throws and carries the full output', unparseable?.message.split('\n')[0]);
 
 function sourcePaths(indexFile) {
   const index = readJson(indexFile);
@@ -59,7 +76,7 @@ function canHandoff(reviewDir) {
   if (!index.valid || !sourcePaths(indexPath).every(existsSync)) return false;
   const result = spawnSync(process.execPath, [join(c, 'validate-page-review-feedback.mjs'),
     '--feedback', files[3], '--architecture', architecturePath], { encoding: 'utf8' });
-  return result.status === 0 && JSON.parse(result.stdout).valid
+  return result.status === 0 && firstJsonObject(result.stdout).valid
     && readJson(files[3]).overall_decision === 'approve';
 }
 
@@ -162,7 +179,9 @@ try {
   const zero = run(wikiQuery, ['--wiki-dir', customWiki, '--query', 'unsupported-fixture-term', '--limit', '5']);
   check(zero.returned === 0 && zero.results.length === 0, 'Zero-result Wiki query remains empty, not invented evidence');
   const missing = spawnSync(process.execPath, [wikiQuery, '--wiki-dir', join(project, 'missing-wiki'), '--query', 'commuter'], { encoding: 'utf8' });
-  check(missing.status === 2 && JSON.parse(missing.stdout || missing.stderr).ok === false, 'Unavailable Wiki reports a real failure');
+  check(missing.status === 2
+    && firstJsonObject(missing.stdout || missing.stderr, { stdout: missing.stdout, stderr: missing.stderr }).ok === false,
+    'Unavailable Wiki reports a real failure');
 
   writeFileSync(memoryPath, `# TEST FIXTURE: project memory\n\nDecision: select one pilot, not a production rollout.\nEvidence: brief.md#Decision; consumer-feedback.md#Observations.\nWiki application: ${specified.results[0].analysis_operations[0]}; ${specified.results[0].boundaries[0]}.\nSimulated question: prioritize strap testing or pocket testing?\nSimulated input: prioritize strap testing; retain a no-market-prevalence caveat.\nOpen issue: effectiveness and costs need a pilot; no market-wide claim.\n`);
   const page = (number, title, claim, requirement, transition) => ({
