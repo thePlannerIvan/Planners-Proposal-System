@@ -123,11 +123,12 @@ try {
   const feedback = readFileSync(feedbackFile, 'utf8');
   check(brief.includes('one pilot') && feedback.includes('Four of six'), 'Read actual fixture source bytes before indexing');
   writeJson(indexPath, {
-    contract_version: 'source-index/2.0.0', source_root: '../sources',
+    contract_version: 'source-index/2.1.0', source_root: '../sources',
     sources: [briefFile, feedbackFile].map((file, index) => ({
       source_id: index ? 'src-feedback' : 'src-brief',
       origin: { path: relative(sources, file), sha256: hash(readFileSync(file)), bytes: readFileSync(file).length },
       kind: 'document', role: index ? 'Pilot hypothesis and sample limitations' : 'Project decision and budget',
+      provenance: 'primary',
       audit_layer: { mode: 'source_file' }, coverage: { status: 'full', scope: 'All Markdown lines' },
       anchors: [{ kind: 'heading', value: index ? 'Observations' : 'Decision' }],
     })), blind_spots: [],
