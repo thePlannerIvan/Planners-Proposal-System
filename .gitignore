@@ -5,6 +5,7 @@ development-plan.md
 
 # Project and customer artifacts
 .proposal-work/
+.planners/
 deliverable/
 output/
 outputs/
@@ -13,6 +14,7 @@ build/
 _output/
 proposal-skill-system-vnext-tests/
 planners-proposal-system-tests/
+planners-proposal-tests/
 
 # Secrets and local configuration
 .env

@@ -43,7 +43,7 @@ export const LIBRARY_DIR_NAME = '02-skills-library';
  */
 export const MODULE_SPECS = {
   'planners-method-wiki': {
-    anchors: ['SKILL.md', 'base-wiki/wiki-index.json', 'scripts/query-wiki.mjs', 'scripts/build-wiki-snapshot.mjs'],
+    anchors: ['SKILL.md', 'base-wiki/SCHEMA.md', 'base-wiki/index.md', 'scripts/query-wiki.mjs', 'scripts/lint-wiki.mjs'],
   },
   'planners-review-core': {
     anchors: [

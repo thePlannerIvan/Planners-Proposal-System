@@ -4,7 +4,7 @@ import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { assert, pass } from '../lib/assert.mjs';
-import { moduleScript } from '../../proposal-co-creation/scripts/lib/planners-modules.mjs';
+import { moduleScript } from '../../scripts/lib/planners-modules.mjs';
 
 // 集成分支里的 planners-review-core 还没发布：PLANNERS_REVIEW_CORE_HOME 直接指向检出目录，
 // 这里把它接进既有的 PLANNERS_MODULES_HOME 解析顺序；正式环境只靠 planners-modules 找模组。
@@ -17,7 +17,7 @@ if (localCore) {
 }
 
 const root = resolve(import.meta.dirname, '../..');
-const skillRoot = resolve(root, 'proposal-co-creation');
+const skillRoot = root;
 const validator = resolve(skillRoot, 'scripts/validate-storyline-doc.mjs');
 
 function coreScript(relPath) {
@@ -155,7 +155,7 @@ try {
 const skill = readFileSync(resolve(root, 'SKILL.md'), 'utf8');
 for (const needle of [
   '.planners/storyline.md',
-  'proposal-co-creation/templates/storyline.md',
+  'templates/storyline.md',
   'validate-storyline-doc.mjs',
   'doc-workbench.mjs',
 ]) assert(skill.includes(needle), `SKILL 必须指向新入口：${needle}`);

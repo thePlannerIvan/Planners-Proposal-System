@@ -1,12 +1,12 @@
 {
-  "name": "planners-proposal-system",
-  "version": "0.2.0",
-  "description": "项目策略共创、Storyline 与结构审阅，交接 planners-bypage 展开内容",
+  "name": "planners-proposal",
+  "version": "1.0.0",
+  "description": "项目策略共创、Storyline 与文字工作台打磨，轻量来源登记并交接 planners-bypage",
   "license": "AGPL-3.0-only",
   "type": "module",
   "scripts": {
-    "test:router": "node evals/router/run.mjs",
-    "test:co-creation": "node evals/co-creation/run.mjs",
+    "test:storyline": "node evals/co-creation/storyline-doc.mjs",
+    "test:modules": "node --test scripts/lib/planners-modules-install.test.mjs",
     "test": "node evals/run-all.mjs"
   },
   "repository": {

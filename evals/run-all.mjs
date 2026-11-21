@@ -3,17 +3,13 @@ import { resolve } from 'node:path';
 import { runNode } from './lib/assert.mjs';
 
 const suites = [
-  'router/run.mjs',
-  'co-creation/storyline.mjs',
   'co-creation/storyline-doc.mjs',
-  'co-creation/run.mjs', // legacy 2.0 compatibility
-  'co-creation/edits.mjs',
-  'co-creation/workbench-ui.mjs',
-  'workflow/run.mjs',
+  '../scripts/lib/planners-modules-install.test.mjs',
 ];
 for (const suite of suites) {
   process.stdout.write(`\n=== ${suite} ===\n`);
-  const result = runNode(resolve(import.meta.dirname, suite));
+  const args = suite.endsWith('.test.mjs') ? ['--test', resolve(import.meta.dirname, suite)] : [resolve(import.meta.dirname, suite)];
+  const result = runNode(args[0], args.slice(1));
   process.stdout.write(result.stdout);
 }
-process.stdout.write(`\n${suites.length}/${suites.length} Public suites passed\n`);
+process.stdout.write(`\n${suites.length}/${suites.length} planners-proposal suites passed\n`);

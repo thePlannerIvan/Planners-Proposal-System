@@ -22,11 +22,11 @@ jobs:
       REVIEW_TEST_NO_OPEN: '1'
     defaults:
       run:
-        working-directory: 02-skills-library/02-content-assembly/planners-proposal-system
+        working-directory: 02-skills-library/02-content-assembly/planners-proposal
     steps:
       - uses: actions/checkout@v4
         with:
-          path: 02-skills-library/02-content-assembly/planners-proposal-system
+          path: 02-skills-library/02-content-assembly/planners-proposal
       - uses: actions/checkout@v4
         with:
           repository: thePlannerIvan/planners-review-core
@@ -56,7 +56,7 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: 02-skills-library/02-content-assembly/planners-proposal-system/package-lock.json
+          cache-dependency-path: 02-skills-library/02-content-assembly/planners-proposal/package-lock.json
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

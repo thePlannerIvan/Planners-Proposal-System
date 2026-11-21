@@ -1,4 +1,4 @@
 interface:
-  display_name: "Planners-Proposal-System"
-  short_description: "共创策略判断与 Storyline，在工作台改完交给 By-page"
-  default_prompt: "使用 $planners-proposal-system 理解项目资料、共创关键判断、把主线写成 storyline.md，打开工作台一起改完再准备交给 planners-bypage。"
+  display_name: "Planners Proposal"
+  short_description: "消化调研材料并多轮共创 Storyline，在实时工作台打磨后交给 By-page"
+  default_prompt: "使用 $planners-proposal 完整阅读项目 Brief 与资料、登记主要来源、多轮研讨收敛策略判断，把主线写成 storyline.md，在工作台一起改顺再交给 planners-bypage。"

@@ -2,9 +2,9 @@
 
 新项目的 Proposal 主线只有一份工作稿：`<Project>/.planners/storyline.md`。它是一份普通的 `planners-doc/2` 文档，结构由 `planners-review-core` 的 `contracts/planners-doc.md` 定义；本文件只规定 Proposal 怎么把判断写进去，以及提案自己的两条校验规则。
 
-- 模板：[`proposal-co-creation/templates/storyline.md`](../templates/storyline.md)
-- 真实样例：[`evals/fixtures/labbrand-storyline.md`](../../evals/fixtures/labbrand-storyline.md)（朗标笔试案，5 章 10 页）
-- 校验：`proposal-co-creation/scripts/validate-storyline-doc.mjs`
+- 模板：[`templates/storyline.md`](../templates/storyline.md)
+- 真实样例：[`evals/fixtures/labbrand-storyline.md`](../evals/fixtures/labbrand-storyline.md)（朗标笔试案，5 章 10 页）
+- 校验：`scripts/validate-storyline-doc.mjs`
 
 ## 1. 文档头
 
