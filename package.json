@@ -11,10 +11,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thePlannerIvan/Planners-Proposal-System.git"
+    "url": "git+https://github.com/thePlannerIvan/planners-proposal.git"
   },
   "bugs": {
-    "url": "https://github.com/thePlannerIvan/Planners-Proposal-System/issues"
+    "url": "https://github.com/thePlannerIvan/planners-proposal/issues"
   },
-  "homepage": "https://github.com/thePlannerIvan/Planners-Proposal-System#readme"
+  "homepage": "https://github.com/thePlannerIvan/planners-proposal#readme"
 }

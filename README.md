@@ -1,7 +1,7 @@
 # Planners Proposal
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
-[![Tests](https://github.com/thePlannerIvan/Planners-Proposal-System/actions/workflows/validate.yml/badge.svg)](https://github.com/thePlannerIvan/Planners-Proposal-System/actions/workflows/validate.yml)
+[![Tests](https://github.com/thePlannerIvan/planners-proposal/actions/workflows/validate.yml/badge.svg)](https://github.com/thePlannerIvan/planners-proposal/actions/workflows/validate.yml)
 
 **拿着零散 Brief 和调研材料，和 AI 一起磨出靠谱的策略判断，并生成一张在线可拖拽、可直接改字批注的 Storyline 提案工作台。**
 
